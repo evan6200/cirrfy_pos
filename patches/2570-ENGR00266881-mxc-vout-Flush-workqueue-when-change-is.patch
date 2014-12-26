@@ -1,0 +1,44 @@
+From df551ae02c600f8bc9244441700f7da7ac62ac88 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Thu, 13 Jun 2013 12:50:27 +0800
+Subject: [PATCH 2570/2666] ENGR00266881 mxc vout:Flush workqueue when change
+ is needed for streaming
+
+We currently call cancel_work_sync() to have all left work be done. But,
+this is not safe to make sure all left work being done successfully.
+Instead, chances are that some work may be cancelled before starting
+to be done, which may cause frame lost and make us hang at upcoming
+wait_event_interruptible() in videobuf_waiton() called from video buffer
+core v1 framework's dqbuf API. This patch replaces the function
+call cancel_work_sync() with flush_workqueue() to fix the issue.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ drivers/media/video/mxc/output/mxc_vout.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/video/mxc/output/mxc_vout.c b/drivers/media/video/mxc/output/mxc_vout.c
+index 27a52e6..4ea6630 100644
+--- a/drivers/media/video/mxc/output/mxc_vout.c
++++ b/drivers/media/video/mxc/output/mxc_vout.c
+@@ -1423,7 +1423,7 @@ static int mxc_vidioc_s_crop(struct file *file, void *fh,
+ 
+ 	/* wait current work finish */
+ 	if (vout->vbq.streaming)
+-		cancel_work_sync(&vout->disp_work);
++		flush_workqueue(vout->v4l_wq);
+ 
+ 	mutex_lock(&vout->task_lock);
+ 
+@@ -1577,7 +1577,7 @@ static int mxc_vidioc_s_ctrl(struct file *file, void *fh,
+ 
+ 	/* wait current work finish */
+ 	if (vout->vbq.streaming)
+-		cancel_work_sync(&vout->disp_work);
++		flush_workqueue(vout->v4l_wq);
+ 
+ 	mutex_lock(&vout->task_lock);
+ 	switch (ctrl->id) {
+-- 
+1.7.7.4
+

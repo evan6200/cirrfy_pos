@@ -1,0 +1,46 @@
+From c483abdca0011c1342bad42f16925dd5a2c7c091 Mon Sep 17 00:00:00 2001
+From: Jason Liu <r64343@freescale.com>
+Date: Sat, 20 Jul 2013 11:20:58 +0800
+Subject: [PATCH 2653/2666] ENGR00271977-1 imx6_defconfig: enable
+ PL310_ERRATA_769419
+
+The PL310 version we are using on the i.MX6Q/DL is r3p1-50rel0,
+thus, we need enable this errata for i.MX6DQ/DL/SOLO.
+
+i.MX6SL has the PL310 version: r3p2, no need enable this errata.
+
+Signed-off-by: Jason Liu <r64343@freescale.com>
+---
+ arch/arm/configs/imx6_defconfig         |    2 +-
+ arch/arm/configs/imx6_updater_defconfig |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/configs/imx6_defconfig b/arch/arm/configs/imx6_defconfig
+index fc897ed..7c7797c 100644
+--- a/arch/arm/configs/imx6_defconfig
++++ b/arch/arm/configs/imx6_defconfig
+@@ -391,7 +391,7 @@ CONFIG_ARM_AMBA=y
+ # CONFIG_ARCH_SUPPORTS_MSI is not set
+ # CONFIG_PCCARD is not set
+ CONFIG_ARM_ERRATA_764369=y
+-# CONFIG_PL310_ERRATA_769419 is not set
++CONFIG_PL310_ERRATA_769419=y
+ 
+ #
+ # Kernel Features
+diff --git a/arch/arm/configs/imx6_updater_defconfig b/arch/arm/configs/imx6_updater_defconfig
+index e562767..d8bc2b2 100644
+--- a/arch/arm/configs/imx6_updater_defconfig
++++ b/arch/arm/configs/imx6_updater_defconfig
+@@ -401,7 +401,7 @@ CONFIG_ARM_AMBA=y
+ # CONFIG_ARCH_SUPPORTS_MSI is not set
+ # CONFIG_PCCARD is not set
+ # CONFIG_ARM_ERRATA_764369 is not set
+-# CONFIG_PL310_ERRATA_769419 is not set
++CONFIG_PL310_ERRATA_769419=y
+ 
+ #
+ # Kernel Features
+-- 
+1.7.7.4
+

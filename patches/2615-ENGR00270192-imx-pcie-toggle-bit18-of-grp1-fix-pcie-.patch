@@ -1,0 +1,52 @@
+From d95fc35f88e270b67df7bacbffa374c57be4a164 Mon Sep 17 00:00:00 2001
+From: Richard Zhu <r65037@freescale.com>
+Date: Tue, 9 Jul 2013 13:40:07 +0800
+Subject: [PATCH 2615/2666] ENGR00270192 imx: pcie: toggle bit18 of grp1 fix
+ pcie pm issue.
+
+Set bit18 of gpr1 before enter into supend, and clean it
+after resume, can fix the following errata.
+Errata ERR005723_PCIe PCIe does not support L2 Power Down.
+
+Signed-off-by: Richard Zhu <r65037@freescale.com>
+---
+ arch/arm/mach-mx6/pm.c |   16 ++++++++++++++++
+ 1 files changed, 16 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/pm.c b/arch/arm/mach-mx6/pm.c
+index 6e306c2..46d8196 100644
+--- a/arch/arm/mach-mx6/pm.c
++++ b/arch/arm/mach-mx6/pm.c
+@@ -342,6 +342,14 @@ static int mx6_suspend_enter(suspend_state_t state)
+ 		return -EINVAL;
+ 	}
+ 
++	/*
++	 * L2 can exit by 'reset' or Inband beacon (from remote EP)
++	 * toggling phy_powerdown has same effect as 'inband beacon'
++	 * So, toggle bit18 of GPR1, to fix errata
++	 * "PCIe PCIe does not support L2 Power Down"
++	 */
++	__raw_writel(__raw_readl(IOMUXC_GPR1) | (1 << 18), IOMUXC_GPR1);
++
+ 	if (state == PM_SUSPEND_MEM || state == PM_SUSPEND_STANDBY) {
+ 
+ 		local_flush_tlb_all();
+@@ -405,6 +413,14 @@ static int mx6_suspend_enter(suspend_state_t state)
+ 			cpu_do_idle();
+ 	}
+ 
++	/*
++	 * L2 can exit by 'reset' or Inband beacon (from remote EP)
++	 * toggling phy_powerdown has same effect as 'inband beacon'
++	 * So, toggle bit18 of GPR1, to fix errata
++	 * "PCIe PCIe does not support L2 Power Down"
++	 */
++	__raw_writel(__raw_readl(IOMUXC_GPR1) & (~(1 << 18)), IOMUXC_GPR1);
++
+ 	return 0;
+ }
+ 
+-- 
+1.7.7.4
+

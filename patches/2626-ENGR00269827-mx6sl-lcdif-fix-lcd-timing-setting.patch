@@ -1,0 +1,48 @@
+From c01565783f2ce224b65e6bc0f54cd571109cf738 Mon Sep 17 00:00:00 2001
+From: Robby Cai <R63905@freescale.com>
+Date: Fri, 5 Jul 2013 15:38:08 +0800
+Subject: [PATCH 2626/2666] ENGR00269827 mx6sl: lcdif: fix lcd timing setting
+
+The commit 0c0334779a08cca6c5a509570c944fe229837a21
+corrected the v_period/v_wait_cnt, h_period/h_wait_cnt caculation in elcdif
+framebuffer driver but in WVGA panel timing setting the left_margin and
+upper_margin includes the length of hsyn_len and vsyn_len.
+Thus the timing setting for lcd panel is not correct.
+This patch fixes it.
+
+Signed-off-by: Robby Cai <R63905@freescale.com>
+(cherry picked from commit 9c04adb3c7b95459153873556ff0566d837ee325)
+---
+ arch/arm/mach-mx6/board-mx6sl_arm2.c |    2 +-
+ arch/arm/mach-mx6/board-mx6sl_evk.c  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/board-mx6sl_arm2.c b/arch/arm/mach-mx6/board-mx6sl_arm2.c
+index b6f3382..63fd579 100755
+--- a/arch/arm/mach-mx6/board-mx6sl_arm2.c
++++ b/arch/arm/mach-mx6/board-mx6sl_arm2.c
+@@ -1092,7 +1092,7 @@ static struct platform_pwm_backlight_data mx6_arm2_pwm_backlight_data = {
+ static struct fb_videomode video_modes[] = {
+ 	{
+ 	 /* 800x480 @ 57 Hz , pixel clk @ 32MHz */
+-	 "SEIKO-WVGA", 60, 800, 480, 29850, 99, 164, 33, 10, 10, 10,
++	 "SEIKO-WVGA", 60, 800, 480, 29850, 89, 164, 23, 10, 10, 10,
+ 	 FB_SYNC_CLK_LAT_FALL,
+ 	 FB_VMODE_NONINTERLACED,
+ 	 0,},
+diff --git a/arch/arm/mach-mx6/board-mx6sl_evk.c b/arch/arm/mach-mx6/board-mx6sl_evk.c
+index 3ae48c6..082845b 100644
+--- a/arch/arm/mach-mx6/board-mx6sl_evk.c
++++ b/arch/arm/mach-mx6/board-mx6sl_evk.c
+@@ -1304,7 +1304,7 @@ static struct platform_pwm_backlight_data mx6_evk_pwm_backlight_data = {
+ static struct fb_videomode wvga_video_modes[] = {
+ 	{
+ 	 /* 800x480 @ 57 Hz , pixel clk @ 32MHz */
+-	 "SEIKO-WVGA", 60, 800, 480, 29850, 99, 164, 33, 10, 10, 10,
++	 "SEIKO-WVGA", 60, 800, 480, 29850, 89, 164, 23, 10, 10, 10,
+ 	 FB_SYNC_CLK_LAT_FALL,
+ 	 FB_VMODE_NONINTERLACED,
+ 	 0,},
+-- 
+1.7.7.4
+

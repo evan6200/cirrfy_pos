@@ -1,0 +1,31 @@
+From 10bfcdde328e3522218d107518fc417b05b62b3e Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Sat, 8 Jun 2013 16:00:47 +0800
+Subject: [PATCH 2579/2666] ENGR00266285-3 mm: dmapool: export for normal case
+
+It is the same issue with ENGR00217721, and it is also needed
+for normal usb case.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ include/linux/dmapool.h |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/dmapool.h b/include/linux/dmapool.h
+index 4509501..c3c41ef 100644
+--- a/include/linux/dmapool.h
++++ b/include/linux/dmapool.h
+@@ -22,10 +22,8 @@ void dma_pool_destroy(struct dma_pool *pool);
+ void *dma_pool_alloc(struct dma_pool *pool, gfp_t mem_flags,
+ 		     dma_addr_t *handle);
+ 
+-#ifdef CONFIG_FSL_UTP
+ void *dma_pool_alloc_nonbufferable(struct dma_pool *pool, gfp_t mem_flags,
+ 		     dma_addr_t *handle);
+-#endif
+ 
+ void dma_pool_free(struct dma_pool *pool, void *vaddr, dma_addr_t addr);
+ 
+-- 
+1.7.7.4
+

@@ -1,0 +1,73 @@
+From a5d3c7982cb8c0327162ede83a54d34ae3000c79 Mon Sep 17 00:00:00 2001
+From: Fugang Duan <B38611@freescale.com>
+Date: Thu, 11 Jul 2013 19:07:50 +0800
+Subject: [PATCH 2634/2666] ENGR00270697-2 net:fec: correct fec MDC clock
+ source
+
+For imx6 serial silicon, fec MDC clock parent is ipg 66MHz.
+The current clock file define the clock source is enet_pll8 50Mhz.
+So, the MDC clock is more than 2.5Mhz after divider.
+
+The phy Ar8031 work fine in current MDC clock, which shows the phy
+have exceeding flexibility. Correct the parent clock source to make
+MDC clock little than 2.5Mhz.
+
+Signed-off-by: Fugang Duan  <B38611@freescale.com>
+---
+ drivers/net/fec.c |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/fec.c b/drivers/net/fec.c
+index 1b646ed..50fe801 100755
+--- a/drivers/net/fec.c
++++ b/drivers/net/fec.c
+@@ -196,6 +196,7 @@ struct fec_enet_private {
+ 	struct net_device *netdev;
+ 
+ 	struct clk *clk;
++	struct clk *mdc_clk;
+ 
+ 	/* The saved address of a sent-in-place packet/buffer, for skfree(). */
+ 	unsigned char *tx_bounce[TX_RING_SIZE];
+@@ -1139,9 +1140,8 @@ static int fec_enet_mii_init(struct platform_device *pdev)
+ 	/*
+ 	 * Set MII speed to 2.5 MHz (= clk_get_rate() / 2 * phy_speed)
+ 	 */
+-	fep->phy_speed = DIV_ROUND_UP(clk_get_rate(fep->clk),
++	fep->phy_speed = DIV_ROUND_UP(clk_get_rate(fep->mdc_clk),
+ 					(FEC_ENET_MII_CLK << 2)) << 1;
+-
+ 	/* set hold time to 2 internal clock cycle */
+ 	if (cpu_is_mx6q() || cpu_is_mx6dl())
+ 		fep->phy_speed |= FEC_ENET_HOLD_TIME;
+@@ -1900,6 +1900,11 @@ fec_probe(struct platform_device *pdev)
+ 		ret = PTR_ERR(fep->clk);
+ 		goto failed_clk;
+ 	}
++	fep->mdc_clk = clk_get(&pdev->dev, "fec_mdc_clk");
++	if (IS_ERR(fep->mdc_clk)) {
++		ret = PTR_ERR(fep->mdc_clk);
++		goto failed_clk;
++	}
+ 	clk_enable(fep->clk);
+ 
+ 	ret = fec_enet_init(ndev);
+@@ -1943,6 +1948,7 @@ failed_mii_init:
+ failed_init:
+ 	clk_disable(fep->clk);
+ 	clk_put(fep->clk);
++	clk_put(fep->mdc_clk);
+ failed_clk:
+ 	if (pdata->gpio_irq < 0)
+ 		free_irq(irq, ndev);
+@@ -1975,6 +1981,7 @@ fec_drv_remove(struct platform_device *pdev)
+ 	fec_enet_mii_remove(fep);
+ 	clk_disable(fep->clk);
+ 	clk_put(fep->clk);
++	clk_put(fep->mdc_clk);
+ 	iounmap((void __iomem *)ndev->base_addr);
+ 	if (fep->ptimer_present)
+ 		fec_ptp_cleanup(fep->ptp_priv);
+-- 
+1.7.7.4
+

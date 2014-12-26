@@ -1,0 +1,40 @@
+From 3e048f92c60afd4f04fb90ff86502ef53b331e14 Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 23 Jul 2013 08:22:01 +0800
+Subject: [PATCH 2656/2666] ENGR00272135 msl-mx6: usb-h1: Fix the bug that
+ using the wrong register
+
+At host 1 code, we should use UH1_XXXX. The wrong register
+access causing a bug that the u-disk disconnion at host 1
+can't be recognized after system resume.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/mach-mx6/usb_h1.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/usb_h1.c b/arch/arm/mach-mx6/usb_h1.c
+index a95bcde..657c1cb 100644
+--- a/arch/arm/mach-mx6/usb_h1.c
++++ b/arch/arm/mach-mx6/usb_h1.c
+@@ -260,7 +260,7 @@ static void usbh1_platform_rh_resume_swfix(struct fsl_usb2_platform_data *pdata)
+ {
+ 	u32 index = 0;
+ 
+-	if ((UOG_PORTSC1 & (PORTSC_PORT_SPEED_MASK)) != PORTSC_PORT_SPEED_HIGH)
++	if ((UH1_PORTSC1 & (PORTSC_PORT_SPEED_MASK)) != PORTSC_PORT_SPEED_HIGH)
+ 		return ;
+ 	while ((UH1_PORTSC1 & PORTSC_PORT_FORCE_RESUME)
+ 			&& (index < 1000)) {
+@@ -293,7 +293,7 @@ static void usbh1_platform_rh_resume(struct fsl_usb2_platform_data *pdata)
+ 	/*for mx6sl ,we do not need any sw fix*/
+ 	if (cpu_is_mx6sl())
+ 		return ;
+-	if ((UOG_PORTSC1 & (PORTSC_PORT_SPEED_MASK)) != PORTSC_PORT_SPEED_HIGH)
++	if ((UH1_PORTSC1 & (PORTSC_PORT_SPEED_MASK)) != PORTSC_PORT_SPEED_HIGH)
+ 		return ;
+ 	while ((UH1_PORTSC1 & PORTSC_PORT_FORCE_RESUME)
+ 			&& (index < 1000)) {
+-- 
+1.7.7.4
+

@@ -1,0 +1,35 @@
+From b3c23e81079a2758863055905ac359c38d69e254 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Wed, 10 Jul 2013 10:56:45 +0800
+Subject: [PATCH 2613/2666] ENGR00255920-1 mxc vout:Remove cancel_work_sync()
+ when streamoff
+
+We hope the queued works can be done before streamoff, since the
+works will render expiring video buffers to display. But, the
+function cancel_work_sync() cannot guarantee this. Instead, it
+may cancel some queued works before they starts to work. This
+patch removes the function call cancel_work_sync() when streamoff.
+We rely on the function flush_workqueue() right after it to make
+sure queued works be done before streamoff.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+(cherry picked from commit d88f6f7eaf3b78e667de46aa355cf366a1142e47)
+---
+ drivers/media/video/mxc/output/mxc_vout.c |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/media/video/mxc/output/mxc_vout.c b/drivers/media/video/mxc/output/mxc_vout.c
+index e0840bf..622042c 100644
+--- a/drivers/media/video/mxc/output/mxc_vout.c
++++ b/drivers/media/video/mxc/output/mxc_vout.c
+@@ -1922,7 +1922,6 @@ static int mxc_vidioc_streamoff(struct file *file, void *fh,
+ 	int ret = 0;
+ 
+ 	if (q->streaming) {
+-		cancel_work_sync(&vout->disp_work);
+ 		flush_workqueue(vout->v4l_wq);
+ 
+ 		hrtimer_cancel(&vout->timer);
+-- 
+1.7.7.4
+

@@ -1,0 +1,1 @@
+cmd_drivers/usb/otg/built-in.o :=  /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/usb/otg/built-in.o drivers/usb/otg/otg.o drivers/usb/otg/fsl_otg_arc.o 

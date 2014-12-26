@@ -1,0 +1,34 @@
+From 8538a8d2d7481a7dce510f5bac23bd20e053e3af Mon Sep 17 00:00:00 2001
+From: Fugang Duan <B38611@freescale.com>
+Date: Mon, 15 Jul 2013 13:41:03 +0800
+Subject: [PATCH 2635/2666] ENGR00270996 net:fec: fix fec probe fail due to
+ gpio_irq check error
+
+Board files correctly define fec gpio irq to wake up wait mode since FEC
+interrupt cannot connect to GPC, otherwise board files define fec gpio irq
+to -1. So, fec probe function check the gpio irq to decide whether fec use
+gpio irq or fec irq.
+
+Current irq checking logic is incorrect. Correct the gpio irq checking.
+
+Signed-off-by: Fugang Duan  <B38611@freescale.com>
+---
+ drivers/net/fec.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/net/fec.c b/drivers/net/fec.c
+index 50fe801..71e0abc 100755
+--- a/drivers/net/fec.c
++++ b/drivers/net/fec.c
+@@ -1867,7 +1867,7 @@ fec_probe(struct platform_device *pdev)
+ 	if (pdata)
+ 		fep->phy_interface = pdata->phy;
+ 
+-	if (pdata->gpio_irq < 0) {
++	if (pdata->gpio_irq > 0) {
+ 		gpio_request(pdata->gpio_irq, "gpio_enet_irq");
+ 		gpio_direction_input(pdata->gpio_irq);
+ 
+-- 
+1.7.7.4
+

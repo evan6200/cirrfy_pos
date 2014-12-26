@@ -1,0 +1,1 @@
+cmd_drivers/hwmon/built-in.o :=  /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/hwmon/built-in.o drivers/hwmon/hwmon.o drivers/hwmon/max17135-hwmon.o drivers/hwmon/mag3110.o drivers/hwmon/mxc_mma8451.o 

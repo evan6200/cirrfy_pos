@@ -1,0 +1,38 @@
+From 98894af902b374bcbc1769f18662d587c3859304 Mon Sep 17 00:00:00 2001
+From: Robby Cai <R63905@freescale.com>
+Date: Thu, 8 Aug 2013 17:45:17 +0800
+Subject: [PATCH 2664/2666] ENGR00274493 mx6sl: csi/v4l: Fix capture incorrect
+ data with format UYVY
+
+There's an interim buffer which should only be used when PxP CSC is used.
+Otherwise the video buffer gets incorrect data by copying the content of
+interim buffer. The patch fixes this by moving the memcpy to the right place.
+
+Signed-off-by: Robby Cai <R63905@freescale.com>
+(cherry picked from commit 8e0b8ff485dd7cdeabc653f1e27c271ac923710e)
+---
+ drivers/media/video/mxc/capture/csi_v4l2_capture.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/video/mxc/capture/csi_v4l2_capture.c b/drivers/media/video/mxc/capture/csi_v4l2_capture.c
+index 045a388..adc77d3 100644
+--- a/drivers/media/video/mxc/capture/csi_v4l2_capture.c
++++ b/drivers/media/video/mxc/capture/csi_v4l2_capture.c
+@@ -1065,11 +1065,11 @@ static int csi_v4l_dqueue(cam_data *cam, struct v4l2_buffer *buf)
+ 			return retval;
+ 		}
+ 		pxp_complete_update(cam);
++		memcpy(cam->frame[buf->index].vaddress,
++			cam->frame[req_buf_number].vaddress,
++			cam->v2f.fmt.pix.sizeimage);
+ 	}
+ 	up(&cam->busy_lock);
+-	memcpy(cam->frame[buf->index].vaddress,
+-		cam->frame[req_buf_number].vaddress,
+-		cam->v2f.fmt.pix.sizeimage);
+ 
+ 	return retval;
+ }
+-- 
+1.7.7.4
+

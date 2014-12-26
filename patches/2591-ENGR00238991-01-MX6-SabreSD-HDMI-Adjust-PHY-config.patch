@@ -1,0 +1,29 @@
+From 56d5f2926568ecc96e88bf7028495f35b4fa1148 Mon Sep 17 00:00:00 2001
+From: Sandor <R01008@freescale.com>
+Date: Sat, 27 Apr 2013 10:23:20 +0800
+Subject: [PATCH 2591/2666] ENGR00238991-01 MX6 SabreSD HDMI Adjust PHY config
+
+Adjust MX6 SabreSD board HDMI PHY configuration
+to pass HDMI CTS.
+
+Signed-off-by: Sandor <R01008@freescale.com>
+---
+ arch/arm/mach-mx6/board-mx6q_sabresd.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/board-mx6q_sabresd.c b/arch/arm/mach-mx6/board-mx6q_sabresd.c
+index 3f90df0..b3f7bdd 100644
+--- a/arch/arm/mach-mx6/board-mx6q_sabresd.c
++++ b/arch/arm/mach-mx6/board-mx6q_sabresd.c
+@@ -1358,6 +1358,8 @@ static struct fsl_mxc_hdmi_platform_data hdmi_data = {
+ 	.init = hdmi_init,
+ 	.enable_pins = hdmi_enable_ddc_pin,
+ 	.disable_pins = hdmi_disable_ddc_pin,
++	.phy_reg_vlev = 0x0294,
++	.phy_reg_cksymtx = 0x800d,
+ };
+ 
+ static struct fsl_mxc_hdmi_core_platform_data hdmi_core_data = {
+-- 
+1.7.7.4
+

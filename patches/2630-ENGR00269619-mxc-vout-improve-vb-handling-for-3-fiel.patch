@@ -1,0 +1,82 @@
+From 242316e5cf9c9aa6cb0727c23916bee13c489e75 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Thu, 11 Jul 2013 16:21:48 +0800
+Subject: [PATCH 2630/2666] ENGR00269619 mxc vout:improve vb handling for 3
+ field deinterlacing
+
+We need 2 video buffers to get a deinterlaced frame in VDI low motion
+mode or medium motion mode. When there is no enough video buffer in
+the active list, no one triggers the video buffer timer, then users
+may be blocked at dqueue buffer ioctrl if they are in blocking mode.
+In order to fix this issue, we may peek the first available video
+buffer in the queue list so that the buffer may be taken as a reference
+video buffer to do deinterlacing. If there is no video buffer in the
+queue list, we should make users be able to trigger the timer again
+when they queue buffers to the driver.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+(cherry picked from commit 52d0e3f01afbf49d8d16225dede18cc71daa0570)
+---
+ drivers/media/video/mxc/output/mxc_vout.c |   29 ++++++++++++++++++++---------
+ 1 files changed, 20 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/media/video/mxc/output/mxc_vout.c b/drivers/media/video/mxc/output/mxc_vout.c
+index 187145d..452c573 100644
+--- a/drivers/media/video/mxc/output/mxc_vout.c
++++ b/drivers/media/video/mxc/output/mxc_vout.c
+@@ -606,10 +606,21 @@ static void disp_work_func(struct work_struct *work)
+ 	}
+ 	if (deinterlace_3_field(vout)) {
+ 		if (list_is_singular(&vout->active_list)) {
+-			v4l2_warn(vout->vfd->v4l2_dev,
+-				"no enough entry for 3 fields deinterlacer\n");
+-			spin_unlock_irqrestore(q->irqlock, flags);
+-			return;
++			if (list_empty(&vout->queue_list)) {
++				vout->timer_stop = true;
++				spin_unlock_irqrestore(q->irqlock, flags);
++				v4l2_warn(vout->vfd->v4l2_dev,
++					"no enough entry for 3 fields "
++					"deinterlacer\n");
++				return;
++			}
++
++			/*
++			 * We need to use the next vb even if it is
++			 * not on the active list.
++			 */
++			vb_next = list_first_entry(&vout->queue_list,
++					struct videobuf_buffer, queue);
+ 		} else
+ 			vb_next = list_first_entry(vout->active_list.next,
+ 						struct videobuf_buffer, queue);
+@@ -868,21 +879,21 @@ static void mxc_vout_buffer_queue(struct videobuf_queue *q,
+ 			  struct videobuf_buffer *vb)
+ {
+ 	struct mxc_vout_output *vout = q->priv_data;
++	struct videobuf_buffer *active_vb;
+ 
+ 	list_add_tail(&vb->queue, &vout->queue_list);
+ 	vb->state = VIDEOBUF_QUEUED;
+ 
+ 	if (vout->timer_stop) {
+ 		if (deinterlace_3_field(vout) &&
+-			list_empty(&vout->active_list)) {
+-			vb = list_first_entry(&vout->queue_list,
++			!list_empty(&vout->active_list)) {
++			active_vb = list_first_entry(&vout->active_list,
+ 					struct videobuf_buffer, queue);
+-			list_del(&vb->queue);
+-			list_add_tail(&vb->queue, &vout->active_list);
++			setup_buf_timer(vout, active_vb);
+ 		} else {
+ 			setup_buf_timer(vout, vb);
+-			vout->timer_stop = false;
+ 		}
++		vout->timer_stop = false;
+ 	}
+ }
+ 
+-- 
+1.7.7.4
+

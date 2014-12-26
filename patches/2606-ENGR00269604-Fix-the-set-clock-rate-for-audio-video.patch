@@ -1,0 +1,41 @@
+From f77c9af5292af5592d0580b888ad5481973a4158 Mon Sep 17 00:00:00 2001
+From: Mahesh Mahadevan <Mahesh.Mahadevan@freescale.com>
+Date: Wed, 26 Jun 2013 09:44:59 -0500
+Subject: [PATCH 2606/2666] ENGR00269604 Fix the set clock-rate for audio &
+ video
+
+There is single method to set clock-rate for both audio and video pll-s
+in i.MX6q clock system implementation. That's possible due to they have
+similar set of registers with a different bases. But there is also one
+common register: CCM_ANALOG_MISC2, which contains post-dividers.
+
+In current implementation, independently of whether audio or video clock
+is going to be set, the mask 0xc0000000 is applied to MISC2 register.
+This means, that if the audio clock rate is changed, the video clock
+post-dividers possibly will be corrupted.
+
+This patch fixes the issue described above.
+
+Signed-off-by: Alexander Smirnov <alex.bluesman.smirnov@gmail.com>
+Signed-off-by: Mahesh Mahadevan <Mahesh.Mahadevan@freescale.com>
+---
+ arch/arm/mach-mx6/clock.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/clock.c b/arch/arm/mach-mx6/clock.c
+index 6b4fcea..e813418 100644
+--- a/arch/arm/mach-mx6/clock.c
++++ b/arch/arm/mach-mx6/clock.c
+@@ -1024,7 +1024,8 @@ static int _clk_audio_video_set_rate(struct clk *clk, unsigned long rate)
+ 	__raw_writel(mfn, pllbase + PLL_NUM_DIV_OFFSET);
+ 	__raw_writel(mfd, pllbase + PLL_DENOM_DIV_OFFSET);
+ 
+-	if (rev >= IMX_CHIP_REVISION_1_1) {
++	if (rev >= IMX_CHIP_REVISION_1_1) &&
++		(pllbase == PLL5_VIDEO_BASE_ADDR)) {
+ 		reg = __raw_readl(ANA_MISC2_BASE_ADDR)
+ 			& ~ANADIG_ANA_MISC2_CONTROL3_MASK;
+ 		reg |= control3 << ANADIG_ANA_MISC2_CONTROL3_OFFSET;
+-- 
+1.7.7.4
+

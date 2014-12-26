@@ -1,0 +1,32 @@
+From d875e36721642f687548058c168654e803e72520 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Fri, 21 Jun 2013 12:09:46 +0800
+Subject: [PATCH 2646/2666] ENGR00268119 ASoC: WM8962: Fix tilted left-right
+ volume setting for ADC
+
+In probe(), we set LEFT_ADC_VOLUME but failed to set RIGHT_ADC_VOLUME due to
+typo during coding, thus fix it.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit ae3eb591ed9f61579a4217c6ddfd19d32e8f3cc5)
+---
+ sound/soc/codecs/wm8962.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index b370349..b54ddb7 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -4111,7 +4111,7 @@ static int wm8962_probe(struct snd_soc_codec *codec)
+ 			    WM8962_INR_VOL_MASK, 0x3f);
+ 	snd_soc_update_bits(codec, WM8962_LEFT_ADC_VOLUME,
+ 			    WM8962_ADCL_VOL_MASK, 0xd8);
+-	snd_soc_update_bits(codec, WM8962_LEFT_ADC_VOLUME,
++	snd_soc_update_bits(codec, WM8962_RIGHT_ADC_VOLUME,
+ 			    WM8962_ADCR_VOL_MASK, 0xd8);
+ 	snd_soc_update_bits(codec, WM8962_RIGHT_INPUT_MIXER_VOLUME,
+ 			    WM8962_IN3R_MIXINR_VOL_MASK, 0x7);
+-- 
+1.7.7.4
+

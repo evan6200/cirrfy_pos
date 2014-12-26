@@ -1,0 +1,1 @@
+cmd_drivers/input/touchscreen/built-in.o :=  /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/input/touchscreen/built-in.o drivers/input/touchscreen/egalax_ts.o drivers/input/touchscreen/elan_ts.o 

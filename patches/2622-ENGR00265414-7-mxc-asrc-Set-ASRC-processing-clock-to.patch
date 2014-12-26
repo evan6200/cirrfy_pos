@@ -1,0 +1,35 @@
+From 80bd077845a49473cc2c50eb1d5735c063eb251b Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Mon, 1 Jul 2013 16:53:37 +0800
+Subject: [PATCH 2622/2666] ENGR00265414-7 mxc: asrc: Set ASRC processing
+ clock to recommended value
+
+Set ASRC processing clock 56k/76k with the recommended value from spec.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit 0519d385f5ed78f3526b72a211ccf22ac77c102e)
+---
+ drivers/mxc/asrc/mxc_asrc.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index 0aa3974..b428a61 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -798,10 +798,10 @@ static int mxc_init_asrc(void)
+ 	__raw_writel(0x001f00, g_asrc->vaddr + ASRC_ASRTFR1);
+ 
+ 	/* Set the processing clock for 76KHz, 133M  */
+-	__raw_writel(0x30E, g_asrc->vaddr + ASRC_ASR76K_REG);
++	__raw_writel(0x06D6, g_asrc->vaddr + ASRC_ASR76K_REG);
+ 
+ 	/* Set the processing clock for 56KHz, 133M */
+-	__raw_writel(0x0426, g_asrc->vaddr + ASRC_ASR56K_REG);
++	__raw_writel(0x0947, g_asrc->vaddr + ASRC_ASR56K_REG);
+ 
+ 	return 0;
+ }
+-- 
+1.7.7.4
+

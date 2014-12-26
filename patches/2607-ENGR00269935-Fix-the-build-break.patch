@@ -1,0 +1,28 @@
+From d065667cad75172fe3d6b8368b3a7830dcb88e07 Mon Sep 17 00:00:00 2001
+From: Mahesh Mahadevan <Mahesh.Mahadevan@freescale.com>
+Date: Fri, 5 Jul 2013 15:34:11 -0500
+Subject: [PATCH 2607/2666] ENGR00269935 Fix the build break
+
+Add missing parenthesis
+
+Signed-off-by: Mahesh Mahadevan <Mahesh.Mahadevan@freescale.com>
+---
+ arch/arm/mach-mx6/clock.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/clock.c b/arch/arm/mach-mx6/clock.c
+index e813418..61bedb5 100644
+--- a/arch/arm/mach-mx6/clock.c
++++ b/arch/arm/mach-mx6/clock.c
+@@ -1024,7 +1024,7 @@ static int _clk_audio_video_set_rate(struct clk *clk, unsigned long rate)
+ 	__raw_writel(mfn, pllbase + PLL_NUM_DIV_OFFSET);
+ 	__raw_writel(mfd, pllbase + PLL_DENOM_DIV_OFFSET);
+ 
+-	if (rev >= IMX_CHIP_REVISION_1_1) &&
++	if ((rev >= IMX_CHIP_REVISION_1_1) &&
+ 		(pllbase == PLL5_VIDEO_BASE_ADDR)) {
+ 		reg = __raw_readl(ANA_MISC2_BASE_ADDR)
+ 			& ~ANADIG_ANA_MISC2_CONTROL3_MASK;
+-- 
+1.7.7.4
+

@@ -1,0 +1,1 @@
+cmd_drivers/mxc/asrc/built-in.o :=  /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/mxc/asrc/built-in.o drivers/mxc/asrc/mxc_asrc.o 

@@ -1,0 +1,99 @@
+From 011e49591a0e2624fcbc294754c2820453646cc4 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Wed, 8 May 2013 16:16:48 +0800
+Subject: [PATCH 2539/2666] ENGR00261860 IPUv3 dev:Correct uv offset for
+ non-tiled formats
+
+This patch corrects the formulae to calculate uv offset for
+several non-tiled planar yuv pixel formats:
+
+1) NV12(partial interleaved):
+A part of the formula does math in this way: (width * pos_y)/2.
+This is wrong for odd crop pos_y. We should rigidly get half
+of crop pos_y and then have the result multiply stride(in this
+case, width) instead: width * (pos_y/2). The issue could be
+reproduced by the following unit test case:
+/unit_tests/mxc_v4l2_output.out -iw 1024 -ih 768
+-cr 496, 377, 264, 195 -ow 1024 -oh 768  -fr 30
+-f NV12 ./test_nv12_xga.yuv
+
+2) YUV420/YVU420(non-interleaved):
+Similar to NV12, the wrong part '(width/2 * pos_y/2)' should
+be changed to '(width/2) * (pos_y/2)', otherwise, odd crop
+pos_y would cause wrong uv offset. Moreover, although height
+should be a muliply of 2 according to the IPUv3 spec, it still
+probably can process frames with odd height, i.e, the last y
+line might consume an additional line for u and v respectively.
+So, this patch rounds up height to even value by '(height+1)',
+which doesn't hurt in any way. The issue could be reproduced
+by the following unit test case:
+/unit_tests/mxc_v4l2_output.out -iw 1024 -ih 768
+-cr 496, 378, 272, 195 -ow 1024 -oh 768  -fr 30
+./test_yuv420_xga.yuv
+
+3) YUV422/YVU422(non-interleaved):
+Within the context, the width parameter in the function
+update_offset() is equal to stride line. The function
+ipu_init_channel_buffer() requires stride line to be 4-byte
+aligned, so, for this part, code change only is done without
+any logic modification to make the calculation be straightforward
+to be understood.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ drivers/mxc/ipu3/ipu_device.c |   20 +++++++++++---------
+ 1 files changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/mxc/ipu3/ipu_device.c b/drivers/mxc/ipu3/ipu_device.c
+index b3509ba..2f90b36 100644
+--- a/drivers/mxc/ipu3/ipu_device.c
++++ b/drivers/mxc/ipu3/ipu_device.c
+@@ -733,26 +733,28 @@ static void update_offset(unsigned int fmt,
+ 	case IPU_PIX_FMT_YUV420P:
+ 		*off = pos_y * width + pos_x;
+ 		*uoff = (width * (height - pos_y) - pos_x)
+-			+ ((width/2 * pos_y/2) + pos_x/2);
+-		*voff = *uoff + (width/2 * height/2);
++			+ (width/2) * (pos_y/2) + pos_x/2;
++		/* In case height is odd, round up to even */
++		*voff = *uoff + (width/2) * ((height+1)/2);
+ 		break;
+ 	case IPU_PIX_FMT_YVU420P:
+ 		*off = pos_y * width + pos_x;
+ 		*voff = (width * (height - pos_y) - pos_x)
+-			+ ((width/2 * pos_y/2) + pos_x/2);
+-		*uoff = *voff + (width/2 * height/2);
++			+ (width/2) * (pos_y/2) + pos_x/2;
++		/* In case height is odd, round up to even */
++		*uoff = *voff + (width/2) * ((height+1)/2);
+ 		break;
+ 	case IPU_PIX_FMT_YVU422P:
+ 		*off = pos_y * width + pos_x;
+ 		*voff = (width * (height - pos_y) - pos_x)
+-			+ ((width * pos_y)/2 + pos_x/2);
+-		*uoff = *voff + (width * height)/2;
++			+ (width/2) * pos_y + pos_x/2;
++		*uoff = *voff + (width/2) * height;
+ 		break;
+ 	case IPU_PIX_FMT_YUV422P:
+ 		*off = pos_y * width + pos_x;
+ 		*uoff = (width * (height - pos_y) - pos_x)
+-			+ (width * pos_y)/2 + pos_x/2;
+-		*voff = *uoff + (width * height)/2;
++			+ (width/2) * pos_y + pos_x/2;
++		*voff = *uoff + (width/2) * height;
+ 		break;
+ 	case IPU_PIX_FMT_YUV444P:
+ 		*off = pos_y * width + pos_x;
+@@ -762,7 +764,7 @@ static void update_offset(unsigned int fmt,
+ 	case IPU_PIX_FMT_NV12:
+ 		*off = pos_y * width + pos_x;
+ 		*uoff = (width * (height - pos_y) - pos_x)
+-			+ width * pos_y/2 + pos_x;
++			+ width * (pos_y/2) + pos_x;
+ 		break;
+ 	case IPU_PIX_FMT_TILED_NV12:
+ 		/*
+-- 
+1.7.7.4
+

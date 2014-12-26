@@ -1,0 +1,29 @@
+From 8ce033cd65fef259f5d1ab5ef31682b2b85fffc0 Mon Sep 17 00:00:00 2001
+From: Anson Huang <b20788@freescale.com>
+Date: Tue, 25 Jun 2013 13:36:34 +0800
+Subject: [PATCH 2590/2666] ENGR00267926 mx6: do not need to enable warm reset
+
+There is no need to enable warm reset of SRC_SCR
+register when we only need to do a VPU reset.
+
+Signed-off-by: Anson Huang <b20788@freescale.com>
+---
+ arch/arm/plat-mxc/devices/platform-imx_vpu.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/plat-mxc/devices/platform-imx_vpu.c b/arch/arm/plat-mxc/devices/platform-imx_vpu.c
+index 9e00b2f..f0295ad 100755
+--- a/arch/arm/plat-mxc/devices/platform-imx_vpu.c
++++ b/arch/arm/plat-mxc/devices/platform-imx_vpu.c
+@@ -123,7 +123,7 @@ void mx6q_vpu_reset(void)
+ 	 __raw_writel(reg, src_base + 0x18);
+ 
+ 	reg = __raw_readl(src_base);
+-	reg |= 0x5;    /* warm reset vpu */
++	reg |= 0x4;    /* warm reset vpu */
+ 	__raw_writel(reg, src_base);
+ 	while (__raw_readl(src_base) & 0x04)
+ 		;
+-- 
+1.7.7.4
+

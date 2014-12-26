@@ -1,0 +1,149 @@
+From 881e21c1275dcc40ccd63fb4fa46b990eeb4fb00 Mon Sep 17 00:00:00 2001
+From: Ranjani Vaidyanathan <ra5478@freescale.com>
+Date: Fri, 12 Jul 2013 17:24:40 -0500
+Subject: [PATCH 2651/2666] ENGR00270573-2 [MX6SL]Add support for dynamic
+ Power Gating of the display MIX
+
+The display MIX can be power gated when EPDC, PXP and LCDIF are all inactive.
+This will save around 1.5mW-1.8mW of power in system IDLE mode.
+Need to re-initialize the EPDC and PXP whenever the display MIX is
+powered up as all the register state is lost when the display MIX is
+power gated.
+
+Signed-off-by: Ranjani Vaidyanathan <ra5478@freescale.com>
+---
+ drivers/dma/pxp/pxp_dma_v2.c      |   25 ++++++++++++++++++-------
+ drivers/video/mxc/mxc_elcdif_fb.c |    9 +++++++++
+ drivers/video/mxc/mxc_epdc_fb.c   |    5 ++++-
+ include/linux/fsl_devices.h       |    1 +
+ 4 files changed, 32 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/dma/pxp/pxp_dma_v2.c b/drivers/dma/pxp/pxp_dma_v2.c
+index c609877..f0b50b7 100644
+--- a/drivers/dma/pxp/pxp_dma_v2.c
++++ b/drivers/dma/pxp/pxp_dma_v2.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2010-2012 Freescale Semiconductor, Inc.
++ * Copyright (C) 2010-2013 Freescale Semiconductor, Inc.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -800,6 +800,8 @@ static void pxp_clk_enable(struct pxps *pxp)
+ 	}
+ 
+ 	clk_enable(pxp->clk);
++	/* Pull PxP out of reset */
++	__raw_writel(0, pxp->base + HW_PXP_CTRL);
+ 	pxp->clk_stat = CLK_STAT_ON;
+ 
+ 	mutex_unlock(&pxp->clk_mutex);
+@@ -818,6 +820,13 @@ static void pxp_clk_disable(struct pxps *pxp)
+ 
+ 	spin_lock_irqsave(&pxp->lock, flags);
+ 	if ((pxp->pxp_ongoing == 0) && list_empty(&head)) {
++		/* Put the PXP into reset as the Display MIX is going
++		  * to be Power gated.
++		  */
++		while (__raw_readl(pxp->base + HW_PXP_CTRL)
++			& BM_PXP_CTRL_ENABLE)
++			;
++		__raw_writel(BM_PXP_CTRL_SFTRST, pxp->base + HW_PXP_CTRL);
+ 		spin_unlock_irqrestore(&pxp->lock, flags);
+ 		clk_disable(pxp->clk);
+ 		pxp->clk_stat = CLK_STAT_OFF;
+@@ -1627,11 +1636,11 @@ static int pxp_suspend(struct platform_device *pdev, pm_message_t state)
+ {
+ 	struct pxps *pxp = platform_get_drvdata(pdev);
+ 
++	/* Need to call the enable/disable sequence here to
++	  * ensure that the PXP is in the right state before the
++	  * SOC enters suspend state.
++	  */
+ 	pxp_clk_enable(pxp);
+-	while (__raw_readl(pxp->base + HW_PXP_CTRL) & BM_PXP_CTRL_ENABLE)
+-		;
+-
+-	__raw_writel(BM_PXP_CTRL_SFTRST, pxp->base + HW_PXP_CTRL);
+ 	pxp_clk_disable(pxp);
+ 
+ 	return 0;
+@@ -1641,9 +1650,11 @@ static int pxp_resume(struct platform_device *pdev)
+ {
+ 	struct pxps *pxp = platform_get_drvdata(pdev);
+ 
++	/* Need to call the enable/disable sequence here to
++	  * ensure that the PXP is in the right state after the
++	  * SOC exits suspend state.
++	  */
+ 	pxp_clk_enable(pxp);
+-	/* Pull PxP out of reset */
+-	__raw_writel(0, pxp->base + HW_PXP_CTRL);
+ 	pxp_clk_disable(pxp);
+ 
+ 	return 0;
+diff --git a/drivers/video/mxc/mxc_elcdif_fb.c b/drivers/video/mxc/mxc_elcdif_fb.c
+index 023d594..9cfee38 100644
+--- a/drivers/video/mxc/mxc_elcdif_fb.c
++++ b/drivers/video/mxc/mxc_elcdif_fb.c
+@@ -78,6 +78,7 @@ struct mxc_elcdif_fb_data {
+ 	struct semaphore flip_sem;
+ 	struct fb_var_screeninfo var;
+ 	u32 pseudo_palette[16];
++	bool pg_display_mix;
+ };
+ 
+ struct elcdif_signal_cfg {
+@@ -1170,6 +1171,12 @@ static int mxc_elcdif_fb_blank(int blank, struct fb_info *info)
+ 	}
+ 
+ 	if (data->cur_blank != FB_BLANK_UNBLANK) {
++
++		if (data->pg_display_mix) {
++			mxc_elcdif_stop();
++			mxc_elcdif_dma_release();
++			data->running = false;
++		}
+ 		if (g_elcdif_axi_clk_enable) {
+ 			clk_disable(g_elcdif_axi_clk);
+ 			g_elcdif_axi_clk_enable = false;
+@@ -1476,6 +1483,8 @@ static int mxc_elcdif_fb_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err3;
+ 
++	data->pg_display_mix = pdata->pg_display_mix;
++
+ 	platform_set_drvdata(pdev, fbi);
+ 
+ 	return 0;
+diff --git a/drivers/video/mxc/mxc_epdc_fb.c b/drivers/video/mxc/mxc_epdc_fb.c
+index 4103498..71697f2 100644
+--- a/drivers/video/mxc/mxc_epdc_fb.c
++++ b/drivers/video/mxc/mxc_epdc_fb.c
+@@ -1089,7 +1089,10 @@ static void epdc_powerup(struct mxc_epdc_fb_data *fb_data)
+ 	clk_enable(fb_data->epdc_clk_axi);
+ 	clk_enable(fb_data->epdc_clk_pix);
+ 
+-	__raw_writel(EPDC_CTRL_CLKGATE, EPDC_CTRL_CLEAR);
++	if (fb_data->pdata->pg_display_mix)
++		epdc_init_settings(fb_data);
++	else
++		__raw_writel(EPDC_CTRL_CLKGATE, EPDC_CTRL_CLEAR);
+ 
+ 	/* Enable power to the EPD panel */
+ 	ret = regulator_enable(fb_data->display_regulator);
+diff --git a/include/linux/fsl_devices.h b/include/linux/fsl_devices.h
+index ac56f18..892cba5 100644
+--- a/include/linux/fsl_devices.h
++++ b/include/linux/fsl_devices.h
+@@ -247,6 +247,7 @@ struct mxc_fb_platform_data {
+ 	int num_modes;
+ 	char *mode_str;
+ 	u32 interface_pix_fmt;
++	bool pg_display_mix;
+ };
+ 
+ struct fsl_mxc_lcd_platform_data {
+-- 
+1.7.7.4
+

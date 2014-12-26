@@ -1,0 +1,32 @@
+From 3a5b7b9b4fc672e6d1b52e7514f26f1f0fb1b668 Mon Sep 17 00:00:00 2001
+From: b02247 <b02247@freescale.com>
+Date: Mon, 14 May 2012 09:54:27 +0800
+Subject: [PATCH 2573/2666] ENGR00181680-2 No audio when play 3 streams after
+ 3~10 seconds sometimes
+
+sdma: bd is bufferable dma buffer, interrupt handler can not get correct
+      data after sdma script updated. Which will cause there is no interrupt
+      after failed period number times in the interrupt handler.
+This is a workaround.
+
+Signed-off-by: b02247 <b02247@freescale.com>
+---
+ drivers/dma/imx-sdma.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 934307f..15bc476 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -926,7 +926,7 @@ static int sdma_request_channel(struct sdma_channel *sdmac)
+ 	sdmac->bd = sdma_iram_malloc(sizeof(sdmac->bd),
+ 					(unsigned long)&sdmac->bd_phys);
+ #else
+-	sdmac->bd = dma_alloc_coherent(NULL, PAGE_SIZE, &sdmac->bd_phys, GFP_KERNEL);
++	sdmac->bd = dma_alloc_noncached(NULL, PAGE_SIZE, &sdmac->bd_phys, GFP_KERNEL);
+ #endif
+ 	if (!sdmac->bd) {
+ 		ret = -ENOMEM;
+-- 
+1.7.7.4
+

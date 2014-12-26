@@ -1,0 +1,60 @@
+From 6298035b4c96312512c88aaecfaba55c0df0ed4a Mon Sep 17 00:00:00 2001
+From: Loren HUANG <b02279@freescale.com>
+Date: Fri, 31 May 2013 18:29:58 +0800
+Subject: [PATCH 2565/2666] ENGR00265130 gpu:Correct section mismatch in gpu
+ kernel driver
+
+-Remove the __devinit for suspend/resume function.
+-Replace __devinit to __devexit for remove function.
+
+Cherry-pick from 3.5.7 branch.
+
+Signed-off-by: Loren HUANG <b02279@freescale.com>
+Acked-by: Lily Zhang
+---
+ .../hal/os/linux/kernel/gc_hal_kernel_driver.c     |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_driver.c b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_driver.c
+index 06876ca..163919b 100644
+--- a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_driver.c
++++ b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_driver.c
+@@ -1108,7 +1108,7 @@ static int __devinit gpu_probe(struct platform_device *pdev)
+     return ret;
+ }
+ 
+-static int __devinit gpu_remove(struct platform_device *pdev)
++static int __devexit gpu_remove(struct platform_device *pdev)
+ {
+     gcmkHEADER();
+ #if gcdENABLE_FSCALE_VAL_ADJUST
+@@ -1120,7 +1120,7 @@ static int __devinit gpu_remove(struct platform_device *pdev)
+     return 0;
+ }
+ 
+-static int __devinit gpu_suspend(struct platform_device *dev, pm_message_t state)
++static int gpu_suspend(struct platform_device *dev, pm_message_t state)
+ {
+     gceSTATUS status;
+     gckGALDEVICE device;
+@@ -1170,7 +1170,7 @@ static int __devinit gpu_suspend(struct platform_device *dev, pm_message_t state
+     return 0;
+ }
+ 
+-static int __devinit gpu_resume(struct platform_device *dev)
++static int gpu_resume(struct platform_device *dev)
+ {
+     gceSTATUS status;
+     gckGALDEVICE device;
+@@ -1281,7 +1281,7 @@ static const struct dev_pm_ops gpu_pm_ops = {
+ 
+ static struct platform_driver gpu_driver = {
+     .probe      = gpu_probe,
+-    .remove     = gpu_remove,
++    .remove     = __devexit_p(gpu_remove),
+ 
+     .suspend    = gpu_suspend,
+     .resume     = gpu_resume,
+-- 
+1.7.7.4
+

@@ -1,0 +1,29 @@
+From 083c14b333dbf756dcf380ab08953337614b99a3 Mon Sep 17 00:00:00 2001
+From: Jay Monkman <jay.monkman@freescale.com>
+Date: Thu, 27 Jun 2013 15:11:52 -0500
+Subject: [PATCH 2594/2666] ENGR00268864 Fix build break
+
+Minor correction that broke build.
+
+Signed-off-by: Jay Monkman <jay.monkman@freescale.com>
+---
+ arch/arm/mach-mx6/board-mx6q_sabrelite.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/board-mx6q_sabrelite.c b/arch/arm/mach-mx6/board-mx6q_sabrelite.c
+index 92c5119..14f87ee 100644
+--- a/arch/arm/mach-mx6/board-mx6q_sabrelite.c
++++ b/arch/arm/mach-mx6/board-mx6q_sabrelite.c
+@@ -1325,8 +1325,8 @@ static struct sys_timer mx6_sabrelite_timer = {
+ 
+ static void __init mx6q_sabrelite_reserve(void)
+ {
+-#if defined(CONFIG_MXC_GPU_VIV) || defined(CONFIG_MXC_GPU_VIV_MODULE)
+ 	phys_addr_t phys;
++#if defined(CONFIG_MXC_GPU_VIV) || defined(CONFIG_MXC_GPU_VIV_MODULE)
+ 
+ 	if (imx6q_gpu_pdata.reserved_mem_size) {
+ 		phys = memblock_alloc_base(imx6q_gpu_pdata.reserved_mem_size,
+-- 
+1.7.7.4
+

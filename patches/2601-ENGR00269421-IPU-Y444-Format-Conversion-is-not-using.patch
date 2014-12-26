@@ -1,0 +1,28 @@
+From 3c524af5298eb48349a2ac8e42ebc65e21bb68cb Mon Sep 17 00:00:00 2001
+From: Oliver Brown <oliver.brown@freescale.com>
+Date: Tue, 2 Jul 2013 16:08:02 -0500
+Subject: [PATCH 2601/2666] ENGR00269421 [IPU] - Y444 Format Conversion is not
+ using correct bpp.
+
+Correct bytes per pixel for the Y444 pixel format.
+
+Signed-off-by: Oliver Brown <oliver.brown@freescale.com>
+---
+ drivers/mxc/ipu3/ipu_common.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/mxc/ipu3/ipu_common.c b/drivers/mxc/ipu3/ipu_common.c
+index ca9f66c..c2b5717 100644
+--- a/drivers/mxc/ipu3/ipu_common.c
++++ b/drivers/mxc/ipu3/ipu_common.c
+@@ -2845,6 +2845,7 @@ uint32_t bytes_per_pixel(uint32_t fmt)
+ 		break;
+ 	case IPU_PIX_FMT_BGR24:
+ 	case IPU_PIX_FMT_RGB24:
++	case IPU_PIX_FMT_YUV444:
+ 		return 3;
+ 		break;
+ 	case IPU_PIX_FMT_GENERIC_32:	/*generic data */
+-- 
+1.7.7.4
+

@@ -1,0 +1,46 @@
+From 18059b6f37c7b19cf82bab2d99df62f0779bb300 Mon Sep 17 00:00:00 2001
+From: Wayne Zou <b36644@freescale.com>
+Date: Fri, 1 Mar 2013 16:05:47 +0800
+Subject: [PATCH 2518/2666] ENGR00239959 V4L2 output: Fix video playback bug
+ if pulling window out of screen
+
+Add strict input parameters check for v4l2 output drivers. The part of window
+inside the display boundary is shown if pulling window out of screen.
+
+About this issue: video playback error if pulling window out of screen
+Using totem to play a video and using the mouse to pull the video window
+out of the screen, it will print the follow errors:
+imx-ipuv3 imx-ipuv3.0: ERR:[0xbad85200]-no:0x15c0 "wait_for_comp_timeo
+ut" ret:0,line:2768
+imx-ipuv3 imx-ipuv3.0: ERR: [0xbad85200] no-0x15c0, timeout:1000ms!
+imx-ipuv3 imx-ipuv3.0: ERR: no-0x15c0,ipu_queue_task err:-110
+mxc_v4l2_output mxc_v4l2_output.0: display work fail ret = -110
+imx-ipuv3 imx-ipuv3.0: warning: disable ipu dma channel 21 during its busy state
+
+Signed-off-by: Wayne Zou <b36644@freescale.com>
+---
+ drivers/media/video/mxc/output/mxc_vout.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/media/video/mxc/output/mxc_vout.c b/drivers/media/video/mxc/output/mxc_vout.c
+index 626bad5..727c07a 100644
+--- a/drivers/media/video/mxc/output/mxc_vout.c
++++ b/drivers/media/video/mxc/output/mxc_vout.c
+@@ -1379,6 +1379,14 @@ static int mxc_vidioc_s_crop(struct file *file, void *fh,
+ 	/* stride line limitation */
+ 	crop->c.height -= crop->c.height % 8;
+ 	crop->c.width -= crop->c.width % 8;
++	if ((crop->c.width <= 0) || (crop->c.height <= 0) ||
++		((crop->c.left + crop->c.width) > (b->left + b->width)) ||
++		((crop->c.top + crop->c.height) > (b->top + b->height))) {
++		v4l2_err(vout->vfd->v4l2_dev, "s_crop err: %d, %d, %d, %d",
++			crop->c.left, crop->c.top,
++			crop->c.width, crop->c.height);
++		return -EINVAL;
++	}
+ 
+ 	/* the same setting, return */
+ 	if (vout->disp_support_windows) {
+-- 
+1.7.7.4
+

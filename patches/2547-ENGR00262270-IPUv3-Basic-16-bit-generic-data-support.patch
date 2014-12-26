@@ -1,0 +1,112 @@
+From 0a2caa2e4d7e29344fbbe8be02f1fa5a2238571c Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Mon, 13 May 2013 13:09:11 +0800
+Subject: [PATCH 2547/2666] ENGR00262270 IPUv3:Basic 16-bit generic data
+ support for SMFC chan
+
+This patch adds basic 16-bit generic data support for SMFC channel.
+Although we didn't verify capturing frames with 16-bit generic
+data, this could be a good starting point for developers to go on
+with.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ drivers/mxc/ipu3/ipu_capture.c   |    1 +
+ drivers/mxc/ipu3/ipu_common.c    |   14 +++++++++++---
+ drivers/mxc/ipu3/ipu_param_mem.h |   10 +++++++++-
+ include/linux/ipu.h              |    1 +
+ 4 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mxc/ipu3/ipu_capture.c b/drivers/mxc/ipu3/ipu_capture.c
+index c768d8b..3e2acf2 100644
+--- a/drivers/mxc/ipu3/ipu_capture.c
++++ b/drivers/mxc/ipu3/ipu_capture.c
+@@ -98,6 +98,7 @@ ipu_csi_init_interface(struct ipu_soc *ipu, uint16_t width, uint16_t height,
+ 		cfg_param.data_fmt = CSI_SENS_CONF_DATA_FMT_RGB_YUV444;
+ 		break;
+ 	case IPU_PIX_FMT_GENERIC:
++	case IPU_PIX_FMT_GENERIC_16:
+ 		cfg_param.data_fmt = CSI_SENS_CONF_DATA_FMT_BAYER;
+ 		break;
+ 	case IPU_PIX_FMT_RGB565:
+diff --git a/drivers/mxc/ipu3/ipu_common.c b/drivers/mxc/ipu3/ipu_common.c
+index 9c47cd9..c069b72 100644
+--- a/drivers/mxc/ipu3/ipu_common.c
++++ b/drivers/mxc/ipu3/ipu_common.c
+@@ -1165,10 +1165,17 @@ int32_t ipu_init_channel_buffer(struct ipu_soc *ipu, ipu_channel_t channel,
+ 			rot_mode);
+ 	} else if (_ipu_is_smfc_chan(dma_chan)) {
+ 		burst_size = _ipu_ch_param_get_burst_size(ipu, dma_chan);
+-		if ((pixel_fmt == IPU_PIX_FMT_GENERIC) &&
+-			((_ipu_ch_param_get_bpp(ipu, dma_chan) == 5) ||
+-			(_ipu_ch_param_get_bpp(ipu, dma_chan) == 3)))
++		/*
++		 * This is different from IPUv3 spec, but it is confirmed
++		 * in IPUforum that SMFC burst size should be NPB[6:3]
++		 * when IDMAC works in 16-bit generic data mode.
++		 */
++		if (pixel_fmt == IPU_PIX_FMT_GENERIC)
++			/* 8 bits per pixel */
+ 			burst_size = burst_size >> 4;
++		else if (pixel_fmt == IPU_PIX_FMT_GENERIC_16)
++			/* 16 bits per pixel */
++			burst_size = burst_size >> 3;
+ 		else
+ 			burst_size = burst_size >> 2;
+ 		_ipu_smfc_set_burst_size(ipu, channel, burst_size-1);
+@@ -2790,6 +2797,7 @@ uint32_t bytes_per_pixel(uint32_t fmt)
+ 	case IPU_PIX_FMT_YUV444P:
+ 		return 1;
+ 		break;
++	case IPU_PIX_FMT_GENERIC_16:	/* generic data */
+ 	case IPU_PIX_FMT_RGB565:
+ 	case IPU_PIX_FMT_YUYV:
+ 	case IPU_PIX_FMT_UYVY:
+diff --git a/drivers/mxc/ipu3/ipu_param_mem.h b/drivers/mxc/ipu3/ipu_param_mem.h
+index 1387c49..6d0a470 100644
+--- a/drivers/mxc/ipu3/ipu_param_mem.h
++++ b/drivers/mxc/ipu3/ipu_param_mem.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright 2005-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  */
+ 
+ /*
+@@ -285,6 +285,13 @@ static inline void _ipu_ch_param_init(struct ipu_soc *ipu, int ch,
+ 		ipu_ch_param_set_field(&params, 1, 78, 7, 63);	/* burst size */
+ 
+ 		break;
++	case IPU_PIX_FMT_GENERIC_16:
++		/* Represents 16-bit generic data */
++		ipu_ch_param_set_field(&params, 0, 107, 3, 3);	/* bits/pixel */
++		ipu_ch_param_set_field(&params, 1, 85, 4, 6);	/* pix format */
++		ipu_ch_param_set_field(&params, 1, 78, 7, 31);	/* burst size */
++
++		break;
+ 	case IPU_PIX_FMT_GENERIC_32:
+ 		/*Represents 32-bit Generic data */
+ 		break;
+@@ -695,6 +702,7 @@ static inline void _ipu_ch_offset_update(struct ipu_soc *ipu,
+ 
+ 	switch (pixel_fmt) {
+ 	case IPU_PIX_FMT_GENERIC:
++	case IPU_PIX_FMT_GENERIC_16:
+ 	case IPU_PIX_FMT_GENERIC_32:
+ 	case IPU_PIX_FMT_RGB565:
+ 	case IPU_PIX_FMT_BGR24:
+diff --git a/include/linux/ipu.h b/include/linux/ipu.h
+index ef55d80..358d315 100644
+--- a/include/linux/ipu.h
++++ b/include/linux/ipu.h
+@@ -94,6 +94,7 @@ typedef enum {
+ /*! @{ */
+ #define IPU_PIX_FMT_GENERIC fourcc('I', 'P', 'U', '0')	/*!< IPU Generic Data */
+ #define IPU_PIX_FMT_GENERIC_32 fourcc('I', 'P', 'U', '1')	/*!< IPU Generic Data */
++#define IPU_PIX_FMT_GENERIC_16 fourcc('I', 'P', 'U', '2')	/*!< IPU Generic Data */
+ #define IPU_PIX_FMT_LVDS666 fourcc('L', 'V', 'D', '6')	/*!< IPU Generic Data */
+ #define IPU_PIX_FMT_LVDS888 fourcc('L', 'V', 'D', '8')	/*!< IPU Generic Data */
+ /*! @} */
+-- 
+1.7.7.4
+

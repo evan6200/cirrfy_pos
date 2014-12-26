@@ -1,0 +1,33 @@
+From ac4783bcf78727695f4b7e1bd5a5fbda4f15e1ac Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Thu, 25 Jul 2013 14:28:04 +0800
+Subject: [PATCH 2658/2666] ENGR00272597 mx6-msl: usb: fix building warning
+ when only build host driver
+
+CC      arch/arm/mach-mx6/usb_h1.o
+/home/b29397/work/projects/linux-2.6-imx/arch/arm/mach-mx6/usb_dr.c:
+In function '_host_wakeup_enable':
+/home/b29397/work/projects/linux-2.6-imx/arch/arm/mach-mx6/usb_dr.c:
+522: warning: unused variable 'phy_reg'
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/mach-mx6/usb_dr.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/usb_dr.c b/arch/arm/mach-mx6/usb_dr.c
+index c02158b4..40bb978 100644
+--- a/arch/arm/mach-mx6/usb_dr.c
++++ b/arch/arm/mach-mx6/usb_dr.c
+@@ -519,7 +519,7 @@ static void _host_phy_lowpower_suspend(struct fsl_usb2_platform_data *pdata, boo
+ 
+ static void _host_wakeup_enable(struct fsl_usb2_platform_data *pdata, bool enable)
+ {
+-	void __iomem *phy_reg = MX6_IO_ADDRESS(USB_PHY0_BASE_ADDR);
++	void __iomem *phy_reg __maybe_unused = MX6_IO_ADDRESS(USB_PHY0_BASE_ADDR);
+ 	__wakeup_irq_enable(pdata, enable, ENABLED_BY_HOST);
+ #ifdef CONFIG_USB_OTG
+ 	if (enable) {
+-- 
+1.7.7.4
+

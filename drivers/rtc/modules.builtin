@@ -1,0 +1,2 @@
+kernel/drivers/rtc/rtc-bq32k.ko
+kernel/drivers/rtc/rtc-snvs.ko

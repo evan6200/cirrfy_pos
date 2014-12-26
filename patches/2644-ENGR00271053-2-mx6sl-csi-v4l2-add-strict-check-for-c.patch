@@ -1,0 +1,43 @@
+From 3d72fd5d3a7ba51786bb8020242f3aa9152e0a08 Mon Sep 17 00:00:00 2001
+From: Robby Cai <R63905@freescale.com>
+Date: Mon, 15 Jul 2013 18:50:09 +0800
+Subject: [PATCH 2644/2666] ENGR00271053-2 mx6sl: csi/v4l2: add strict check
+ for crop setting
+
+add the strict check for crop setting in S_CROP ioctl
+
+Signed-off-by: Robby Cai <R63905@freescale.com>
+---
+ drivers/media/video/mxc/capture/csi_v4l2_capture.c |   16 ++++++++++++++++
+ 1 files changed, 16 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/media/video/mxc/capture/csi_v4l2_capture.c b/drivers/media/video/mxc/capture/csi_v4l2_capture.c
+index 48d2278..6574ca7 100644
+--- a/drivers/media/video/mxc/capture/csi_v4l2_capture.c
++++ b/drivers/media/video/mxc/capture/csi_v4l2_capture.c
+@@ -1370,6 +1370,22 @@ static long csi_v4l_do_ioctl(struct file *file,
+ 			break;
+ 		}
+ 
++		crop->c.top = (crop->c.top < b->top) ? b->top
++			      : crop->c.top;
++		if (crop->c.top > b->top + b->height)
++			crop->c.top = b->top + b->height - 1;
++		if (crop->c.height > b->top + b->height - crop->c.top)
++			crop->c.height =
++				b->top + b->height - crop->c.top;
++
++		crop->c.left = (crop->c.left < b->left) ? b->left
++		    : crop->c.left;
++		if (crop->c.left > b->left + b->width)
++			crop->c.left = b->left + b->width - 1;
++		if (crop->c.width > b->left - crop->c.left + b->width)
++			crop->c.width =
++				b->left - crop->c.left + b->width;
++
+ 		crop->c.width -= crop->c.width % 8;
+ 		crop->c.height -= crop->c.height % 8;
+ 
+-- 
+1.7.7.4
+

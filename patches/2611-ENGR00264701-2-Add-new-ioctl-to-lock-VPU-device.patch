@@ -1,0 +1,40 @@
+From ddea6c35a8a6e3a88439a899c34eefdb6a8eeb62 Mon Sep 17 00:00:00 2001
+From: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+Date: Wed, 29 May 2013 18:23:05 +0800
+Subject: [PATCH 2611/2666] ENGR00264701-2 Add new ioctl to lock VPU device
+
+Add VPU_IOC_LOCK_DEV to lock VPU device
+
+Signed-off-by: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+---
+ drivers/mxc/vpu/mxc_vpu.c |   14 ++++++++++++++
+ 1 files changed, 14 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/mxc/vpu/mxc_vpu.c b/drivers/mxc/vpu/mxc_vpu.c
+index fa00052..8c36d6a 100644
+--- a/drivers/mxc/vpu/mxc_vpu.c
++++ b/drivers/mxc/vpu/mxc_vpu.c
+@@ -528,6 +528,20 @@ static long vpu_ioctl(struct file *filp, u_int cmd,
+ 		}
+ 		break;
+ 	}
++	case VPU_IOC_LOCK_DEV:
++		{
++			u32 lock_en;
++
++			if (get_user(lock_en, (u32 __user *) arg))
++				return -EFAULT;
++
++			if (lock_en)
++				mutex_lock(&vpu_data.lock);
++			else
++				mutex_unlock(&vpu_data.lock);
++
++			break;
++		}
+ 	default:
+ 		{
+ 			printk(KERN_ERR "No such IOCTL, cmd is %d\n", cmd);
+-- 
+1.7.7.4
+

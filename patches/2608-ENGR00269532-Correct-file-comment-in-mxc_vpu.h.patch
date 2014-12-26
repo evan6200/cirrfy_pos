@@ -1,0 +1,35 @@
+From 23149913a6275000a496d4c69c83f0c7330aee73 Mon Sep 17 00:00:00 2001
+From: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+Date: Wed, 3 Jul 2013 15:18:14 +0800
+Subject: [PATCH 2608/2666] ENGR00269532 Correct @file comment in mxc_vpu.h
+
+Correct @file comment in mxc_vpu.h
+
+Signed-off-by: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+---
+ arch/arm/plat-mxc/include/mach/mxc_vpu.h |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/plat-mxc/include/mach/mxc_vpu.h b/arch/arm/plat-mxc/include/mach/mxc_vpu.h
+index 7a6e24f..688e3aa 100755
+--- a/arch/arm/plat-mxc/include/mach/mxc_vpu.h
++++ b/arch/arm/plat-mxc/include/mach/mxc_vpu.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2004-2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright 2004-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  */
+ 
+ /*
+@@ -16,7 +16,7 @@
+  */
+ 
+ /*!
+- * @file arch-mxc/mxc_vpu.h
++ * @file plat-mxc/include/mach/mxc_vpu.h
+  *
+  * @brief VPU system initialization and file operation definition
+  *
+-- 
+1.7.7.4
+

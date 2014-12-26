@@ -1,0 +1,1 @@
+cmd_drivers/crypto/caam/caam.o := /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/crypto/caam/caam.o drivers/crypto/caam/ctrl.o drivers/crypto/caam/jr.o drivers/crypto/caam/error.o drivers/crypto/caam/key_gen.o 

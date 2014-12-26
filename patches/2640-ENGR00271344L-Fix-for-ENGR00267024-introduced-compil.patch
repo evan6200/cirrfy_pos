@@ -1,0 +1,43 @@
+From e8f56aca13e819545d536bef62efc19285c1d034 Mon Sep 17 00:00:00 2001
+From: Jay Monkman <jay.monkman@freescale.com>
+Date: Tue, 16 Jul 2013 18:46:17 -0500
+Subject: [PATCH 2640/2666] ENGR00271344L Fix for ENGR00267024 introduced
+ compilation warning
+
+Fixed code so condition causing the warning never occurs.
+
+Signed-off-by: Jay Monkman <jay.monkman@freescale.com>
+---
+ drivers/media/video/videobuf-dma-contig.c |    2 +-
+ drivers/mxc/vpu/mxc_vpu.c                 |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/video/videobuf-dma-contig.c b/drivers/media/video/videobuf-dma-contig.c
+index 2a5623c..92cf704 100644
+--- a/drivers/media/video/videobuf-dma-contig.c
++++ b/drivers/media/video/videobuf-dma-contig.c
+@@ -285,7 +285,7 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+ 	mem->size = PAGE_ALIGN(buf->bsize);
+ 	mem->vaddr = dma_alloc_coherent(q->dev, mem->size,
+ 					&mem->dma_handle,
+-					GFP_DMA | GFP_KERNEL | __GFP_NOFAIL);
++					GFP_DMA | GFP_KERNEL);
+ 	if (!mem->vaddr) {
+ 		dev_err(q->dev, "dma_alloc_coherent size %ld failed\n",
+ 			mem->size);
+diff --git a/drivers/mxc/vpu/mxc_vpu.c b/drivers/mxc/vpu/mxc_vpu.c
+index 8c36d6a..8a219db 100644
+--- a/drivers/mxc/vpu/mxc_vpu.c
++++ b/drivers/mxc/vpu/mxc_vpu.c
+@@ -126,7 +126,7 @@ static int vpu_alloc_dma_buffer(struct vpu_mem_desc *mem)
+ 	mem->cpu_addr = (unsigned long)
+ 	    dma_alloc_coherent(NULL, PAGE_ALIGN(mem->size),
+ 			       (dma_addr_t *) (&mem->phy_addr),
+-			       GFP_DMA | GFP_KERNEL | __GFP_NOFAIL);
++			       GFP_DMA | GFP_KERNEL);
+ 	pr_debug("[ALLOC] mem alloc cpu_addr = 0x%x\n", mem->cpu_addr);
+ 	if ((void *)(mem->cpu_addr) == NULL) {
+ 		printk(KERN_ERR "Physical memory allocation error!\n");
+-- 
+1.7.7.4
+

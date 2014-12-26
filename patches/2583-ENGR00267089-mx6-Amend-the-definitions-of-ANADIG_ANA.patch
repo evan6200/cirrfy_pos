@@ -1,0 +1,34 @@
+From 2ebe187a821960cc87e9f15785592868d8a9b7a8 Mon Sep 17 00:00:00 2001
+From: Peter Chan <B18700@freescale.com>
+Date: Mon, 17 Jun 2013 14:36:45 +0800
+Subject: [PATCH 2583/2666] ENGR00267089 mx6: Amend the definitions of
+ ANADIG_ANA_MISC2_REGx_STEP_TIME_MASK
+
+Correct the definitions of ANADIG_ANA_MISC2_REG0_STEP_TIME_MASK and
+ANADIG_ANA_MISC2_REG2_STEP_TIME_MASK to 0x03000000 and 0x30000000 respectively
+
+Signed-off-by: Peter Chan <B18700@freescale.com>
+---
+ arch/arm/mach-mx6/crm_regs.h |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/crm_regs.h b/arch/arm/mach-mx6/crm_regs.h
+index c4e923e..0ae8e41 100644
+--- a/arch/arm/mach-mx6/crm_regs.h
++++ b/arch/arm/mach-mx6/crm_regs.h
+@@ -178,9 +178,9 @@
+ #define ANADIG_ANA_MISC2_REG1_BO_EN			(1 << 13)
+ #define ANADIG_ANA_MISC2_CONTROL3_MASK		0xC0000000
+ #define ANADIG_ANA_MISC2_CONTROL3_OFFSET	30
+-#define ANADIG_ANA_MISC2_REG0_STEP_TIME_MASK		0x30000000
+-#define ANADIG_ANA_MISC2_REG1_STEP_TIME_MASK		0xC000000
+-#define ANADIG_ANA_MISC2_REG2_STEP_TIME_MASK		0x3000000
++#define ANADIG_ANA_MISC2_REG0_STEP_TIME_MASK		0x03000000
++#define ANADIG_ANA_MISC2_REG1_STEP_TIME_MASK		0x0C000000
++#define ANADIG_ANA_MISC2_REG2_STEP_TIME_MASK		0x30000000
+ 
+ #define MXC_CCM_BASE		MX6_IO_ADDRESS(CCM_BASE_ADDR)
+ /* CCM Register Offsets. */
+-- 
+1.7.7.4
+

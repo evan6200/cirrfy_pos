@@ -1,0 +1,62 @@
+From a1de15ca583a53c214a132dd82ef06177c0dba92 Mon Sep 17 00:00:00 2001
+From: Sandor Yu <R01008@freescale.com>
+Date: Tue, 2 Jul 2013 14:55:04 +0800
+Subject: [PATCH 2599/2666] ENGR00269245 MX6SL HDMI: print error message when
+ HDMI cable plugin
+
+When HDMI cable plugin, the frame buffer driver will print error
+message "can't do pan display when fb is blank", it is cause by
+sii902x driver call fb_set_var after fb power down.
+
+sii902x driver should not mangement fb blank state, it should only
+care its own power state.
+Remove fb_blank function and replace it
+with sii902x power management function.
+
+Signed-off-by: Sandor Yu <R01008@freescale.com>
+---
+ drivers/video/mxc/mxcfb_sii902x_elcdif.c |   16 ++++------------
+ 1 files changed, 4 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/video/mxc/mxcfb_sii902x_elcdif.c b/drivers/video/mxc/mxcfb_sii902x_elcdif.c
+index 13878e1..ecba5b8 100644
+--- a/drivers/video/mxc/mxcfb_sii902x_elcdif.c
++++ b/drivers/video/mxc/mxcfb_sii902x_elcdif.c
+@@ -238,11 +238,6 @@ static void det_worker(struct work_struct *work)
+ 			dev_dbg(&sii902x.pdev->dev, "EVENT=plugin\n");
+ 			sprintf(event_string, "EVENT=plugin");
+ 
+-			/* make sure fb is powerdown */
+-			console_lock();
+-			fb_blank(sii902x.fbi, FB_BLANK_POWERDOWN);
+-			console_unlock();
+-
+ 			if (sii902x_read_edid(sii902x.fbi) < 0)
+ 				dev_err(&sii902x.client->dev,
+ 					"Sii902x: read edid fail\n");
+@@ -286,18 +281,15 @@ static void det_worker(struct work_struct *work)
+ 					sii902x.fbi->flags &= ~FBINFO_MISC_USEREVENT;
+ 					console_unlock();
+ 				}
+-
+-				console_lock();
+-				fb_blank(sii902x.fbi, FB_BLANK_UNBLANK);
+-				console_unlock();
++				/* Power on sii902x */
++				sii902x_poweron();
+ 			}
+ 		} else {
+ 			sii902x.cable_plugin = 0;
+ 			dev_dbg(&sii902x.pdev->dev, "EVENT=plugout\n");
+ 			sprintf(event_string, "EVENT=plugout");
+-			console_lock();
+-			fb_blank(sii902x.fbi, FB_BLANK_POWERDOWN);
+-			console_unlock();
++			/* Power off sii902x */
++			sii902x_poweroff();
+ 		}
+ 		kobject_uevent_env(&sii902x.pdev->dev.kobj, KOBJ_CHANGE, envp);
+ 	}
+-- 
+1.7.7.4
+

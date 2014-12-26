@@ -1,0 +1,47 @@
+From 28edbc5d3b89dda8311871c27d34358c9da036f8 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Tue, 9 Jul 2013 16:09:58 +0800
+Subject: [PATCH 2623/2666] ENGR00265414-8 mxc: asrc: Improve channel setting
+ interface
+
+ASRC driver allows users to set channel number via PROC interface,
+but only passes the total number equal 10.
+This's not reasonable because ASRC can use total number lower than 10
+if user assure each of them is an even number.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit d76d08c93550cf2de9b1eff569ad6c0928ba122c)
+---
+ drivers/mxc/asrc/mxc_asrc.c |   14 +++++++++++---
+ 1 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index b428a61..ea65738 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -1768,10 +1768,18 @@ static int asrc_write_proc_attr(struct file *file, const char *buffer,
+ 		total = 10;
+ 	else
+ 		total = 5;
+-	if ((na + nb + nc) != total) {
+-		pr_info("Wrong ASRCNR settings\n");
+-		return -EFAULT;
++
++	if ((na + nb + nc) > total) {
++		pr_err("Don't surpass %d for total.\n", total);
++		return -EINVAL;
++	} else if (na % 2 != 0 || nb % 2 != 0 || nc % 2 != 0) {
++		pr_err("Please set an even number for each pair.\n");
++		return -EINVAL;
++	} else if (na < 0 || nb < 0 || nc < 0) {
++		pr_err("Please set an positive number for each pair.\n");
++		return -EINVAL;
+ 	}
++
+ 	reg = na | (nb << g_asrc->mxc_asrc_data->channel_bits) |
+ 		(nc << (g_asrc->mxc_asrc_data->channel_bits * 2));
+ 
+-- 
+1.7.7.4
+

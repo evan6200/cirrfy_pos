@@ -1,0 +1,27 @@
+From 927f546c7aba93a13c3565dd5dbd7a8a3eb0b83a Mon Sep 17 00:00:00 2001
+From: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+Date: Wed, 29 May 2013 18:18:15 +0800
+Subject: [PATCH 2610/2666] ENGR00264701-1 Add new ioctl to lock VPU device
+
+Add VPU_IOC_LOCK_DEV to lock VPU device
+
+Signed-off-by: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+---
+ arch/arm/plat-mxc/include/mach/mxc_vpu.h |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/plat-mxc/include/mach/mxc_vpu.h b/arch/arm/plat-mxc/include/mach/mxc_vpu.h
+index 688e3aa..7869d59 100755
+--- a/arch/arm/plat-mxc/include/mach/mxc_vpu.h
++++ b/arch/arm/plat-mxc/include/mach/mxc_vpu.h
+@@ -58,6 +58,7 @@ struct vpu_mem_desc {
+ #define VPU_IOC_QUERY_BITWORK_MEM  _IO(VPU_IOC_MAGIC, 13)
+ #define VPU_IOC_SET_BITWORK_MEM    _IO(VPU_IOC_MAGIC, 14)
+ #define VPU_IOC_PHYMEM_CHECK	_IO(VPU_IOC_MAGIC, 15)
++#define VPU_IOC_LOCK_DEV	_IO(VPU_IOC_MAGIC, 16)
+ 
+ #define BIT_CODE_RUN			0x000
+ #define BIT_CODE_DOWN			0x004
+-- 
+1.7.7.4
+

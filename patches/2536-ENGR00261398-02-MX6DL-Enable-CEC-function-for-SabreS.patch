@@ -1,0 +1,29 @@
+From b766f556648fbc508e24964b8c600127774276e4 Mon Sep 17 00:00:00 2001
+From: Sandor <R01008@freescale.com>
+Date: Mon, 6 May 2013 13:46:55 +0800
+Subject: [PATCH 2536/2666] ENGR00261398-02 MX6DL: Enable CEC function for
+ SabreSD board
+
+Add HDMI CEC IOMUX setting for MX6DL SabreSD board.
+
+Signed-off-by: Sandor <R01008@freescale.com>
+---
+ arch/arm/mach-mx6/board-mx6dl_sabresd.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/board-mx6dl_sabresd.h b/arch/arm/mach-mx6/board-mx6dl_sabresd.h
+index 0096c1f..4e2d322 100644
+--- a/arch/arm/mach-mx6/board-mx6dl_sabresd.h
++++ b/arch/arm/mach-mx6/board-mx6dl_sabresd.h
+@@ -171,7 +171,7 @@ static iomux_v3_cfg_t mx6dl_sabresd_pads[] = {
+ 	MX6DL_PAD_SD4_DAT7__USDHC4_DAT7_50MHZ,
+ 
+ 	/* HDMI_CEC_IN*/
+-	MX6DL_PAD_KEY_ROW2__GPIO_4_11,
++	MX6DL_PAD_KEY_ROW2__HDMI_TX_CEC_LINE,
+ 
+ 	/* CCM - Audio, Camera clock  */
+ 	MX6DL_PAD_GPIO_0__CCM_CLKO,
+-- 
+1.7.7.4
+

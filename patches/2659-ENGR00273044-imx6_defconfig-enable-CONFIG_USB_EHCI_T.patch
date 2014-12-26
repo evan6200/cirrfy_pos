@@ -1,0 +1,35 @@
+From d3ac8ad54cdba6f85a47602f4735156db4375fd7 Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Wed, 31 Jul 2013 11:44:35 +0800
+Subject: [PATCH 2659/2666] ENGR00273044 imx6_defconfig: enable
+ CONFIG_USB_EHCI_TT_NEWSCHED
+
+CONFIG_USB_EHCI_TT_NEWSCHED introduces a new schedule method
+for periodic transfer, it can cover more peridic transfers which
+introduced recently years.
+
+Meanwhile, both PC and our 3.5.7 (and coming 3.10) enable it,
+and have not found any issues, this commit also fixes a bug
+this CR reported.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/configs/imx6_defconfig |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/configs/imx6_defconfig b/arch/arm/configs/imx6_defconfig
+index da3d25d..b02b875 100644
+--- a/arch/arm/configs/imx6_defconfig
++++ b/arch/arm/configs/imx6_defconfig
+@@ -1963,7 +1963,7 @@ CONFIG_USB_EHCI_ARC_OTG=y
+ # CONFIG_USB_EHCI_ARC_HSIC is not set
+ # CONFIG_USB_STATIC_IRAM is not set
+ CONFIG_USB_EHCI_ROOT_HUB_TT=y
+-# CONFIG_USB_EHCI_TT_NEWSCHED is not set
++CONFIG_USB_EHCI_TT_NEWSCHED=y
+ # CONFIG_USB_EHCI_MXC is not set
+ # CONFIG_USB_OXU210HP_HCD is not set
+ # CONFIG_USB_ISP116X_HCD is not set
+-- 
+1.7.7.4
+

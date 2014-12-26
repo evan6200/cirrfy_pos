@@ -1,0 +1,50 @@
+From 9867adb552cd0feef163c0cd54a3179dfdeb38df Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 7 May 2013 07:59:09 +0800
+Subject: [PATCH 2541/2666] ENGR00261451-2 mx6-msl: usb: using correct
+ register
+
+- Replace portsc to otgsc
+- Add define for otgsc
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/mach-mx6/usb_h1.c               |    2 +-
+ arch/arm/plat-mxc/include/mach/arc_otg.h |    3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/usb_h1.c b/arch/arm/mach-mx6/usb_h1.c
+index 63a42c8..6de99d9 100644
+--- a/arch/arm/mach-mx6/usb_h1.c
++++ b/arch/arm/mach-mx6/usb_h1.c
+@@ -377,7 +377,7 @@ static void usbh1_wakeup_event_clear(void)
+ 	int wakeup_req = USB_H1_CTRL & UCTRL_OWIR;
+ 
+ 	if (wakeup_req != 0) {
+-		printk(KERN_INFO "Unknown wakeup.(H1 OTGSC 0x%x)\n", UH1_PORTSC1);
++		printk(KERN_INFO "Unknown wakeup.(H1 OTGSC 0x%x)\n", UH1_OTGSC);
+ 		/* Disable OWIE to clear OWIR, wait 3 clock
+ 		 * cycles of standly clock(32KHz)
+ 		 */
+diff --git a/arch/arm/plat-mxc/include/mach/arc_otg.h b/arch/arm/plat-mxc/include/mach/arc_otg.h
+index f2bb01c..fdd8450 100755
+--- a/arch/arm/plat-mxc/include/mach/arc_otg.h
++++ b/arch/arm/plat-mxc/include/mach/arc_otg.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2005-2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2005-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -121,6 +121,7 @@ extern void __iomem *imx_otg_base;
+ /*      configured_flag                    (0x180)	   configflag (supports HS) */
+ #define UH1_PORTSC1		USBH1_REG32(0x184)	/* port status and control */
+ /* end EHCI registers: */
++#define UH1_OTGSC		USBH1_REG32(0x1a4)	/* OTG status and control */
+ #define UH1_USBMODE		USBH1_REG32(0x1a8)	/* USB device mode */
+ 
+ /*
+-- 
+1.7.7.4
+

@@ -1,0 +1,35 @@
+From 6ac9e4f8a0725037110d00be122daf89d8df6c7b Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Tue, 21 May 2013 11:37:59 +0800
+Subject: [PATCH 2556/2666] ENGR00263304-1 arm: IPUv3:Make ipu_enable_irq be
+ able to return error
+
+The callers of ipu_enable_irq() may choose to enable a sync interrupt
+without calling ipu_request_irq() to assign an interrupt handler to
+that interrupt beforehand. This is wrong and may cause NULL interrupt
+handler being called in the IPU sync interrupt handler and finally
+makes the system hang. This patch changes the return type of the
+function ipu_enable_irq() from 'void' to 'int' so that the callers
+may be aware of the error.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ arch/arm/plat-mxc/include/mach/ipu-v3.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/plat-mxc/include/mach/ipu-v3.h b/arch/arm/plat-mxc/include/mach/ipu-v3.h
+index d5ee6af..e2265d4 100755
+--- a/arch/arm/plat-mxc/include/mach/ipu-v3.h
++++ b/arch/arm/plat-mxc/include/mach/ipu-v3.h
+@@ -641,7 +641,7 @@ int32_t ipu_disable_csi(struct ipu_soc *ipu, uint32_t csi);
+ int ipu_lowpwr_display_enable(void);
+ int ipu_lowpwr_display_disable(void);
+ 
+-void ipu_enable_irq(struct ipu_soc *ipu, uint32_t irq);
++int ipu_enable_irq(struct ipu_soc *ipu, uint32_t irq);
+ void ipu_disable_irq(struct ipu_soc *ipu, uint32_t irq);
+ void ipu_clear_irq(struct ipu_soc *ipu, uint32_t irq);
+ int ipu_request_irq(struct ipu_soc *ipu, uint32_t irq,
+-- 
+1.7.7.4
+

@@ -1,0 +1,49 @@
+From d3e5374cb5cdb478f524d76166712c753f69dd54 Mon Sep 17 00:00:00 2001
+From: Fugang Duan <B38611@freescale.com>
+Date: Thu, 4 Jul 2013 17:22:38 +0800
+Subject: [PATCH 2602/2666] ENGR00264875 enet: fix DMA map/unmap mismatch
+
+Enable "CONFIG_DMA_API_DEBUG" in kernel, and system generate
+warning when run up.
+
+WARNING:
+/home/b29397/work/projects/linux-2.6-imx/lib/dma-debug.c:865
+check_unmap+0x6f8/0x7d8()
+net eth0: DMA-API: device driver tries to free DMA memory it
+has not allocated [device address=0x00000000443d7040] [size=2048]
+[<80025f60>] (warn_slowpath_common+0x0/0x6c) from [<80026070>]
+(warn_slowpath_fmt+0x38/0x40) r9:00000000 r8:00000800 r7:807bfb0c
+r6:807a3d48 r5:00000000
+
+It is dma memory map/unmap mismatch issue caused by kernel upgrade.
+
+Signed-off-by: Fugang Duan  <B38611@freescale.com>
+---
+ drivers/net/fec.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/fec.c b/drivers/net/fec.c
+index fc65bdc..2132bad 100755
+--- a/drivers/net/fec.c
++++ b/drivers/net/fec.c
+@@ -635,7 +635,7 @@ static int fec_rx_poll(struct napi_struct *napi, int budget)
+ 		data = (__u8 *)__va(bdp->cbd_bufaddr);
+ 
+ 		if (bdp->cbd_bufaddr)
+-			dma_unmap_single(&ndev->dev, bdp->cbd_bufaddr,
++			dma_unmap_single(&fep->pdev->dev, bdp->cbd_bufaddr,
+ 				FEC_ENET_RX_FRSIZE, DMA_FROM_DEVICE);
+ 
+ 		if (id_entry->driver_data & FEC_QUIRK_SWAP_FRAME)
+@@ -663,7 +663,7 @@ static int fec_rx_poll(struct napi_struct *napi, int budget)
+ 			netif_receive_skb(skb);
+ 		}
+ 
+-		bdp->cbd_bufaddr = dma_map_single(&ndev->dev, data,
++		bdp->cbd_bufaddr = dma_map_single(&fep->pdev->dev, data,
+ 				FEC_ENET_RX_FRSIZE, DMA_FROM_DEVICE);
+ rx_processing_done:
+ 		/* Clear the status flags for this buffer */
+-- 
+1.7.7.4
+

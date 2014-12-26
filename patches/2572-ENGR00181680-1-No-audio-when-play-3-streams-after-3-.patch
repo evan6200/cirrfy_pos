@@ -1,0 +1,72 @@
+From d631a1645a058eefddee7cddb76fc6c7431ec74a Mon Sep 17 00:00:00 2001
+From: b02247 <b02247@freescale.com>
+Date: Wed, 9 May 2012 17:30:41 +0800
+Subject: [PATCH 2572/2666] ENGR00181680-1 No audio when play 3 streams after
+ 3~10 seconds sometimes
+
+sdma: bd is bufferable dma buffer, interrupt handler can not get correct
+      data after sdma script updated. Which will cause there is no interrupt
+      after failed period number times in the interrupt handler.
+This is a workaround.
+
+Signed-off-by: b02247 <b02247@freescale.com>
+---
+ arch/arm/include/asm/dma-mapping.h |   13 +++++++++++++
+ arch/arm/mm/dma-mapping.c          |   17 +++++++++++++++++
+ 2 files changed, 30 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+index 635c940..5eaa7a2 100644
+--- a/arch/arm/include/asm/dma-mapping.h
++++ b/arch/arm/include/asm/dma-mapping.h
+@@ -173,6 +173,19 @@ static inline void dma_free_noncoherent(struct device *dev, size_t size,
+ }
+ 
+ /**
++ * dma_alloc_noncached - allocate consistent memory for DMA
++ * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
++ * @size: required memory size
++ * @handle: bus-specific DMA address
++ *
++ * Allocate some uncached, unbuffered memory for a device for
++ * performing DMA.  This function allocates pages, and will
++ * return the CPU-viewed address, and sets @handle to be the
++ * device-viewed address.
++ */
++extern void *dma_alloc_noncached(struct device *, size_t, dma_addr_t *, gfp_t);
++
++/**
+  * dma_alloc_coherent - allocate consistent memory for DMA
+  * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
+  * @size: required memory size
+diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+index 0f0badd..feb83cb 100644
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -333,6 +333,23 @@ __dma_alloc(struct device *dev, size_t size, dma_addr_t *handle, gfp_t gfp,
+  * virtual and bus address for that space.
+  */
+ void *
++dma_alloc_noncached(struct device *dev, size_t size, dma_addr_t *handle, gfp_t gfp)
++{
++	void *memory;
++
++	if (dma_alloc_from_coherent(dev, size, handle, &memory))
++		return memory;
++
++	return __dma_alloc(dev, size, handle, gfp,
++			   pgprot_noncached(pgprot_kernel));
++}
++EXPORT_SYMBOL(dma_alloc_noncached);
++
++/*
++ * Allocate DMA-coherent memory space and return both the kernel remapped
++ * virtual and bus address for that space.
++ */
++void *
+ dma_alloc_coherent(struct device *dev, size_t size, dma_addr_t *handle, gfp_t gfp)
+ {
+ 	void *memory;
+-- 
+1.7.7.4
+

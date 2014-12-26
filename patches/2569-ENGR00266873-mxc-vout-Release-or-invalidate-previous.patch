@@ -1,0 +1,46 @@
+From 643c97731677fb54d25c45de513154c07b21bbe3 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Thu, 13 Jun 2013 11:49:56 +0800
+Subject: [PATCH 2569/2666] ENGR00266873 mxc vout:Release or invalidate
+ previous buffers correctly
+
+Users may call VIDIOC_S_CTRL ioctrl to do rotation, such as 90 degree
+rotation, when a video is streaming in IC bypass mode. The runtime
+rotation setting may make the vout driver lose the track for a previous
+video buffer and finally cause the streaming hang. This patch releases
+that video buffer in this case and invalidates previous video buffers
+when necessary.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ drivers/media/video/mxc/output/mxc_vout.c |    8 ++++++--
+ 1 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/video/mxc/output/mxc_vout.c b/drivers/media/video/mxc/output/mxc_vout.c
+index 17df16c..27a52e6 100644
+--- a/drivers/media/video/mxc/output/mxc_vout.c
++++ b/drivers/media/video/mxc/output/mxc_vout.c
+@@ -737,14 +737,18 @@ vdi_frame_rate_double:
+ 	if (vout->pre2_vb) {
+ 		vout->pre2_vb->state = VIDEOBUF_DONE;
+ 		wake_up_interruptible(&vout->pre2_vb->done);
++		vout->pre2_vb = NULL;
+ 	}
+ 
+ 	if (vout->linear_bypass_pp) {
+ 		vout->pre2_vb = vout->pre1_vb;
+ 		vout->pre1_vb = vb;
+ 	} else {
+-		vout->pre1_vb = NULL;
+-		vout->pre2_vb = NULL;
++		if (vout->pre1_vb) {
++			vout->pre1_vb->state = VIDEOBUF_DONE;
++			wake_up_interruptible(&vout->pre1_vb->done);
++			vout->pre1_vb = NULL;
++		}
+ 		vb->state = VIDEOBUF_DONE;
+ 		wake_up_interruptible(&vb->done);
+ 	}
+-- 
+1.7.7.4
+

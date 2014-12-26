@@ -1,0 +1,50 @@
+From ac0b85afd48d3d214f36293c7a228f217a3aa9b0 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Fri, 10 May 2013 11:34:37 +0800
+Subject: [PATCH 2617/2666] ENGR00265414-2 mxc: asrc: Fix wrong comments for
+ the I/O P/D offset
+
+The comments for the input/output prescaler and divider were swapped,
+so reverse them.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit bb6347bc5acb1d59e001063968c18d1056807cf9)
+---
+ drivers/mxc/asrc/mxc_asrc.c |   20 ++++++++++----------
+ 1 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index badc990..1db81a1 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -53,16 +53,16 @@ DEFINE_SPINLOCK(pair_lock);
+ DEFINE_SPINLOCK(input_int_lock);
+ DEFINE_SPINLOCK(output_int_lock);
+ 
+-#define AICPA		0	/* Input Clock Divider A Offset */
+-#define AICDA		3	/* Input Clock Prescaler A Offset */
+-#define AICPB           6	/* Input Clock Divider B Offset */
+-#define AICDB           9	/* Input Clock Prescaler B Offset */
+-#define AOCPA           12	/* Output Clock Divider A Offset */
+-#define AOCDA           15	/* Output Clock Prescaler A Offset */
+-#define AOCPB           18	/* Output Clock Divider B Offset */
+-#define AOCDB           21	/* Output Clock Prescaler B Offset */
+-#define AICPC           0	/* Input Clock Divider C Offset */
+-#define AICDC           3	/* Input Clock Prescaler C Offset */
++#define AICPA		0	/* Input Clock Prescaler A Offset */
++#define AICDA		3	/* Input Clock Divider A Offset */
++#define AICPB           6	/* Input Clock Prescaler B Offset */
++#define AICDB           9	/* Input Clock Divider B Offset */
++#define AOCPA           12	/* Output Clock Prescaler A Offset */
++#define AOCDA           15	/* Output Clock Divider A Offset */
++#define AOCPB           18	/* Output Clock Prescaler B Offset */
++#define AOCDB           21	/* Output Clock Divider B Offset */
++#define AICPC           0	/* Input Clock Prescaler C Offset */
++#define AICDC           3	/* Input Clock Divider C Offset */
+ #define AOCPC           6	/* Output Clock Prescaler C Offset */
+ #define AOCDC           9	/* Output Clock Divider C Offset */
+ 
+-- 
+1.7.7.4
+

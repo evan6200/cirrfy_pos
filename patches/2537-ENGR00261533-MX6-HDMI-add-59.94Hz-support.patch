@@ -1,0 +1,33 @@
+From 5dffbb367c4b7c2aa81410c285cc06dd37e1dd7a Mon Sep 17 00:00:00 2001
+From: Sandor <R01008@freescale.com>
+Date: Tue, 7 May 2013 15:20:24 +0800
+Subject: [PATCH 2537/2666] ENGR00261533 MX6 HDMI add 59.94Hz support
+
+In HDMI driver, such as 59.94/60 video mode use the same
+parameter, but the 59.94 is filter by HDMI driver.
+Change the video mode check, add 59.94 support.
+In support modes list, the 59.94 show as 59.
+
+Signed-off-by: Sandor <R01008@freescale.com>
+---
+ drivers/video/mxc/mxc_edid.c |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/video/mxc/mxc_edid.c b/drivers/video/mxc/mxc_edid.c
+index a3e374b..721ff88 100644
+--- a/drivers/video/mxc/mxc_edid.c
++++ b/drivers/video/mxc/mxc_edid.c
+@@ -207,7 +207,9 @@ int mxc_edid_fb_mode_is_equal(bool use_aspect,
+ 		mode1->upper_margin == mode2->upper_margin &&
+ 		mode1->lower_margin == mode2->lower_margin &&
+ 		mode1->sync         == mode2->sync &&
+-		mode1->refresh         == mode2->refresh &&
++		/* refresh check, 59.94Hz and 60Hz have the same parameter
++		 * in struct of mxc_cea_mode */
++		abs(mode1->refresh - mode2->refresh) <= 1 &&
+ 		(mode1->vmode & mask) == (mode2->vmode & mask));
+ }
+ 
+-- 
+1.7.7.4
+

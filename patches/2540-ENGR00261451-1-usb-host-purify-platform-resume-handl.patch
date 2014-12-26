@@ -1,0 +1,63 @@
+From 0668c1c6b1895ae38db6f0f7cadfdb37ef90ef0b Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 7 May 2013 07:49:07 +0800
+Subject: [PATCH 2540/2666] ENGR00261451-1 usb: host: purify platform resume
+ handler
+
+- If the device is on the port during the system suspend,
+and the USB as system wakeup source is not enabled. We
+don't need to put the PHY into low power mode again after
+platform resume, since usb bus layer will handle it. If
+auto suspend is supported, the bus layer will put the PHY
+into low power mode.
+- Passed below two conditions for use cases, delete the useless
+handling code.
+	1. Tested plug usb devices (high/full/low speed) during the system
+	suspend when usb wakeup is not enabled.
+	2. Tested unplug and replug usb devices (high/full/low speed) during
+	the system suspended when usb wakeup is not enabled.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ drivers/usb/host/ehci-arc.c |   23 ++++++-----------------
+ 1 files changed, 6 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/usb/host/ehci-arc.c b/drivers/usb/host/ehci-arc.c
+index 59a2f4b..8dd8c6e 100755
+--- a/drivers/usb/host/ehci-arc.c
++++ b/drivers/usb/host/ehci-arc.c
+@@ -797,25 +797,14 @@ static int ehci_fsl_drv_resume(struct platform_device *pdev)
+ 			fsl_usb_clk_gate(hcd->self.controller->platform_data, true);
+ 			fsl_usb_lowpower_mode(pdata, false);
+ 
+-			usb_host_set_wakeup(hcd->self.controller, true);
+-
+-#ifndef NO_FIX_DISCONNECT_ISSUE
+-			/*Unplug&plug device during suspend without remote wakeup enabled
+-			For Low and full speed device, we should power on and power off
+-			the USB port to make sure USB internal state machine work well.
+-			*/
+ 			tmp = ehci_readl(ehci, &ehci->regs->port_status[0]);
+-			if ((tmp & PORT_CONNECT) && !(tmp & PORT_SUSPEND) &&
+-				((tmp & (0x3<<26)) != (0x2<<26))) {
+-					printk(KERN_DEBUG "%s will do power off and power on port.\n", pdata->name);
+-					ehci_writel(ehci, tmp & ~(PORT_RWC_BITS | PORT_POWER),
+-						&ehci->regs->port_status[0]);
+-					ehci_writel(ehci, tmp | PORT_POWER,
+-						&ehci->regs->port_status[0]);
++			if ((tmp & PORT_CONNECT) && !hcd->self.is_b_host) {
++				set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
++			} else if (!(tmp & PORT_CONNECT)) {
++				usb_host_set_wakeup(hcd->self.controller, true);
++				fsl_usb_lowpower_mode(pdata, true);
++				fsl_usb_clk_gate(hcd->self.controller->platform_data, false);
+ 			}
+-#endif
+-			fsl_usb_lowpower_mode(pdata, true);
+-			fsl_usb_clk_gate(hcd->self.controller->platform_data, false);
+ 		}
+ 		enable_irq(hcd->irq);
+ 		return 0;
+-- 
+1.7.7.4
+

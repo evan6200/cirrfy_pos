@@ -1,0 +1,44 @@
+From 17aaed1ef4f7dee39cd6df75e0bf6f8f2bc1c8c1 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Thu, 18 Jul 2013 20:05:07 +0800
+Subject: [PATCH 2647/2666] ENGR00271718 ASoC: Fix check for symmetric rate
+ enforcement
+
+This patch is copied from commit 25b7679136fd85b1e5197e36a0ca126163e89590
+Just unable to cherry-pick due to different file names.
+
+The ASoC core tries to not enforce symmetric rates when
+two streams open simultaneously. It does so by checking
+rtd->rate being zero. This works exactly once after booting
+because it is not set to zero again when the streams close.
+Fix this by setting rtd->rate when no active stream is left.
+
+[This leads to lots of warnings about not enforcing the symmetry in some
+situations as there's a race in the userspace API where we know we've
+got two applications but don't know what rates they want to set.
+-- broonie ]
+
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+---
+ sound/soc/soc-core.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index e62ad5f..b3ab124 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -748,6 +748,9 @@ static int soc_codec_close(struct snd_pcm_substream *substream)
+ 	codec_dai->active--;
+ 	codec->active--;
+ 
++	if (!cpu_dai->active && !codec_dai->active)
++		rtd->rate = 0;
++
+ 	/* Muting the DAC suppresses artifacts caused during digital
+ 	 * shutdown, for example from stopping clocks.
+ 	 */
+-- 
+1.7.7.4
+

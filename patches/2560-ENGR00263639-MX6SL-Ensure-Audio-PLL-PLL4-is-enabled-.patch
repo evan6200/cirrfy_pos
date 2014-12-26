@@ -1,0 +1,40 @@
+From 1e4a59e4c462f2222d311773067670e6fcaa1df7 Mon Sep 17 00:00:00 2001
+From: Ranjani Vaidyanathan <ra5478@freescale.com>
+Date: Tue, 21 May 2013 14:40:13 -0500
+Subject: [PATCH 2560/2666] ENGR00263639  MX6SL-Ensure Audio PLL (PLL4) is
+ enabled correctly
+
+The following commit:
+6f394da8b374dc4a063209deedeb5d8a62ae4c74
+introduced a bug that does not enable audio PLL when its
+frequency is something other than 24MHz.
+This patch ensures that Audio PLL will be enabled for
+all frequencies.
+
+Signed-off-by: Ranjani Vaidyanathan <ra5478@freescale.com>
+---
+ arch/arm/mach-mx6/clock_mx6sl.c |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/clock_mx6sl.c b/arch/arm/mach-mx6/clock_mx6sl.c
+index fc42925..d8f3387 100755
+--- a/arch/arm/mach-mx6/clock_mx6sl.c
++++ b/arch/arm/mach-mx6/clock_mx6sl.c
+@@ -451,10 +451,12 @@ static int _clk_pll_enable(struct clk *clk)
+ 	}
+ 	/* Enable the PLL output now*/
+ 	reg = __raw_readl(pllbase);
++
++	/* If audio PLL is set to 24MHz, leave it in bypass mode. */
+ 	if (clk != &pll4_audio_main_clk || !audio_pll_bypass)
+ 		reg &= ~ANADIG_PLL_BYPASS;
+-	else
+-		reg |= ANADIG_PLL_ENABLE;
++
++	reg |= ANADIG_PLL_ENABLE;
+ 
+ 	__raw_writel(reg, pllbase);
+ 
+-- 
+1.7.7.4
+

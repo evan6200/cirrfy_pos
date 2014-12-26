@@ -1,0 +1,72 @@
+From 00f4dad1eaf0d7109c91f8ccf91077aca6f69cc4 Mon Sep 17 00:00:00 2001
+From: Anson Huang <b20788@freescale.com>
+Date: Tue, 18 Jun 2013 13:57:33 +0800
+Subject: [PATCH 2576/2666] ENGR00267442 mx6: clk: some clock settings are
+ incorrect
+
+1. The ipg_per clock rate setting should be done after
+its parent initilization done, otherwise it will get wrong
+parent rate and lead to incorrect rate setting;
+
+2. The parent info of emi_clk has been changed in latest RM,
+need to update it according to RM, the parent info is as below:
+
+2b'00: 396M PFD;
+2b'01: PLL3;
+2b'10: AXI;
+2b'11: 352M PFD.
+
+Signed-off-by: Anson Huang <b20788@freescale.com>
+---
+ arch/arm/mach-mx6/clock.c |   21 +++++++++++----------
+ 1 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/clock.c b/arch/arm/mach-mx6/clock.c
+index cd53b48..9f6e49e 100644
+--- a/arch/arm/mach-mx6/clock.c
++++ b/arch/arm/mach-mx6/clock.c
+@@ -3921,8 +3921,8 @@ static int _clk_emi_set_parent(struct clk *clk, struct clk *parent)
+ 	int mux;
+ 	u32 reg = __raw_readl(MXC_CCM_CSCMR1) & ~MXC_CCM_CSCMR1_ACLK_EMI_MASK;
+ 
+-	mux = _get_mux6(parent, &axi_clk, &pll3_usb_otg_main_clk,
+-			&pll2_pfd_400M, &pll2_pfd_352M, NULL, NULL);
++	mux = _get_mux6(parent, &pll2_pfd_400M, &pll3_usb_otg_main_clk,
++			&axi_clk, &pll2_pfd_352M, NULL, NULL);
+ 	reg |= (mux << MXC_CCM_CSCMR1_ACLK_EMI_OFFSET);
+ 	__raw_writel(reg, MXC_CCM_CSCMR1);
+ 
+@@ -5436,14 +5436,6 @@ int __init mx6_clocks_init(unsigned long ckil, unsigned long osc,
+ 		clk_debug_register(imx6q_ecspi5.clk);
+ 	}
+ 
+-	/* Lower the ipg_perclk frequency to 22MHz.
+-	  * I2C needs a minimum of 12.8MHz as its source
+-	  * to acheive 400KHz speed. IPG_PERCLK sources
+-	  * I2C. 22MHz when divided by the I2C divider gives the
+-	  * freq closest to 400KHz.
+-	  */
+-	clk_set_rate(&ipg_perclk, 22000000);
+-
+ 	/* Timer needs to be initialized first as the
+ 	  * the WAIT routines use GPT counter as
+ 	  * a delay.
+@@ -5461,6 +5453,15 @@ int __init mx6_clocks_init(unsigned long ckil, unsigned long osc,
+ 
+ 	clk_tree_init();
+ 
++	/*
++	 * Lower the ipg_perclk frequency to 22MHz.
++	 * I2C needs a minimum of 12.8MHz as its source
++	 * to acheive 400KHz speed. IPG_PERCLK sources
++	 * I2C. 22MHz when divided by the I2C divider gives the
++	 * freq closest to 400KHz.
++	 */
++	clk_set_rate(&ipg_perclk, 22000000);
++
+ #ifdef CONFIG_MX6_VPU_352M
+ 	if (cpu_is_mx6q()) {
+ 		clk_set_rate(&pll2_pfd_400M, 352000000);
+-- 
+1.7.7.4
+

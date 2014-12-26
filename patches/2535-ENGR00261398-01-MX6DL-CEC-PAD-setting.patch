@@ -1,0 +1,48 @@
+From db51c752d6b63235ea6cd9ff8eb8570155e574c3 Mon Sep 17 00:00:00 2001
+From: Sandor <R01008@freescale.com>
+Date: Mon, 6 May 2013 13:45:13 +0800
+Subject: [PATCH 2535/2666] ENGR00261398-01 MX6DL CEC PAD setting
+
+Add HDMI CEC PAD setting for MX6DL.
+
+Signed-off-by: Sandor <R01008@freescale.com>
+---
+ arch/arm/plat-mxc/include/mach/iomux-mx6dl.h |    8 ++++++--
+ 1 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/plat-mxc/include/mach/iomux-mx6dl.h b/arch/arm/plat-mxc/include/mach/iomux-mx6dl.h
+index 513cc8d..05db990 100644
+--- a/arch/arm/plat-mxc/include/mach/iomux-mx6dl.h
++++ b/arch/arm/plat-mxc/include/mach/iomux-mx6dl.h
+@@ -84,6 +84,10 @@
+ 		PAD_CTL_DSE_40ohm | PAD_CTL_PUS_100K_DOWN |		\
+ 		PAD_CTL_HYS | PAD_CTL_SPEED_MED)
+ 
++#define MX6DL_HDMICEC_PAD_CTRL	(PAD_CTL_HYS | PAD_CTL_PUS_22K_UP | \
++		PAD_CTL_PUE | PAD_CTL_PKE | PAD_CTL_ODE | PAD_CTL_SPEED_MED | \
++		PAD_CTL_DSE_40ohm | PAD_CTL_SRE_SLOW)
++
+ #define MX6DL_GPMI_PAD_CTRL0 (PAD_CTL_PKE | PAD_CTL_PUE | PAD_CTL_PUS_100K_UP)
+ #define MX6DL_GPMI_PAD_CTRL1 (PAD_CTL_DSE_40ohm | PAD_CTL_SPEED_MED | PAD_CTL_SRE_FAST)
+ #define MX6DL_GPMI_PAD_CTRL2 (MX6DL_GPMI_PAD_CTRL0 | MX6DL_GPMI_PAD_CTRL1)
+@@ -1428,7 +1432,7 @@
+ #define MX6DL_PAD_EIM_A25__GPIO_5_2                                            \
+ 		IOMUX_PAD(0x0504, 0x0134, 5, 0x0000, 0, NO_PAD_CTRL)
+ #define MX6DL_PAD_EIM_A25__HDMI_TX_CEC_LINE                                    \
+-		IOMUX_PAD(0x0504, 0x0134, 6, 0x085C, 0, NO_PAD_CTRL)
++		IOMUX_PAD(0x0504, 0x0134, 6, 0x085C, 0, MX6DL_HDMICEC_PAD_CTRL)
+ #define MX6DL_PAD_EIM_A25__PL301_SIM_MX6DL_PER1_HBURST_0                       \
+ 		IOMUX_PAD(0x0504, 0x0134, 7, 0x0000, 0, NO_PAD_CTRL)
+ #define MX6DL_PAD_EIM_A25__EPDC_SDDO_15                                        \
+@@ -2768,7 +2772,7 @@
+ #define MX6DL_PAD_KEY_ROW2__GPIO_4_11                                          \
+ 		IOMUX_PAD(0x0648, 0x0260, 5, 0x0000, 0, NO_PAD_CTRL)
+ #define MX6DL_PAD_KEY_ROW2__HDMI_TX_CEC_LINE                                   \
+-		IOMUX_PAD(0x0648, 0x0260, 6, 0x085C, 1, NO_PAD_CTRL)
++		IOMUX_PAD(0x0648, 0x0260, 6, 0x085C, 1, MX6DL_HDMICEC_PAD_CTRL)
+ #define MX6DL_PAD_KEY_ROW2__PL301_SIM_MX6DL_PER1_HADDR_4                       \
+ 		IOMUX_PAD(0x0648, 0x0260, 7, 0x0000, 0, NO_PAD_CTRL)
+ 
+-- 
+1.7.7.4
+

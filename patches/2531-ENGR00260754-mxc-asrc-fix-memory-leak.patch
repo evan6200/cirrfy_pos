@@ -1,0 +1,30 @@
+From 73c759092a5fc07fff18120bb8103b2e3b3949cf Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Sun, 28 Apr 2013 17:42:48 +0800
+Subject: [PATCH 2531/2666] ENGR00260754 mxc: asrc: fix memory leak
+
+ASRC allocated memory for output buffer but didn't correctly free it.
+This patch removed the input-buffer's incorrect double-free code,
+and freed the output-buffer instead.
+
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+---
+ drivers/mxc/asrc/mxc_asrc.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index ecfd236..5767706 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -1035,7 +1035,7 @@ static void mxc_free_dma_buf(struct asrc_pair_params *params)
+ 	}
+ 
+ 	if (params->output_dma_total.dma_vaddr != NULL) {
+-		kfree(params->input_dma_total.dma_vaddr);
++		kfree(params->output_dma_total.dma_vaddr);
+ 		params->output_dma_total.dma_vaddr = NULL;
+ 	}
+ 
+-- 
+1.7.7.4
+

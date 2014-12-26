@@ -1,0 +1,37 @@
+From 346c1239ae1553d30d23ab0672ebb0c993a0765a Mon Sep 17 00:00:00 2001
+From: Anson Huang <b20788@freescale.com>
+Date: Mon, 15 Apr 2013 08:48:20 +0800
+Subject: [PATCH 2516/2666] ENGR00258651 thermal: update equation for i.MX6sl
+
+New thermal equation is working for all i.MX6 series
+SOCs, so update it for i.MX6SL as well.
+
+Signed-off-by: Anson Huang <b20788@freescale.com>
+---
+ drivers/mxc/thermal/thermal.c |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mxc/thermal/thermal.c b/drivers/mxc/thermal/thermal.c
+index 4931ce1..2a29109 100644
+--- a/drivers/mxc/thermal/thermal.c
++++ b/drivers/mxc/thermal/thermal.c
+@@ -43,7 +43,6 @@
+ #include <linux/cpufreq.h>
+ #include <linux/clk.h>
+ #include "anatop_driver.h"
+-#include <mach/hardware.h>
+ 
+ /* register define of anatop */
+ #define HW_ANADIG_ANA_MISC0	(0x00000150)
+@@ -883,7 +882,7 @@ static int anatop_thermal_counting_ratio(unsigned int fuse_data)
+ 	raw_hot = (fuse_data & 0xfff00) >> 8;
+ 	hot_temp = fuse_data & 0xff;
+ 
+-	if (!calibration_valid && !cpu_is_mx6sl())
++	if (!calibration_valid)
+ 		/*
+ 		 * The universal equation for thermal sensor
+ 		 * is slope = 0.4297157 - (0.0015976 * 25C fuse),
+-- 
+1.7.7.4
+

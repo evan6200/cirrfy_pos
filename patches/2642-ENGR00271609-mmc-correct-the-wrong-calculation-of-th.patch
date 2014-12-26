@@ -1,0 +1,30 @@
+From 70b09b335f645c31bea82a669d8cf722f1cd63b5 Mon Sep 17 00:00:00 2001
+From: Richard Zhu <r65037@freescale.com>
+Date: Thu, 18 Jul 2013 12:39:11 +0800
+Subject: [PATCH 2642/2666] ENGR00271609 mmc: correct the wrong calculation of
+ the boot size
+
+The original calculation of the boot size is wrong.
+Fix it by the right calculation.
+
+Signed-off-by: Richard Zhu <r65037@freescale.com>
+---
+ drivers/mmc/core/mmc.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index 5c8fa76..2bd67d5 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -840,7 +840,7 @@ static ssize_t mmc_boot_info_show(struct device *dev,
+ 			"Supports high speed timing during boot" :
+ 			"Does not support high speed timing during boot",
+ 
+-		card->ext_csd.boot_size * 128,
++		card->ext_csd.boot_size >> 10,
+ 
+ 		card->ext_csd.boot_config,
+ 		!!(card->ext_csd.boot_config & 0x40),
+-- 
+1.7.7.4
+

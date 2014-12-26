@@ -1,0 +1,88 @@
+From 139964d1850de59befd8710d1682d494d7d2fa1a Mon Sep 17 00:00:00 2001
+From: Huang Shijie <b32955@freescale.com>
+Date: Thu, 18 Jul 2013 10:48:47 +0800
+Subject: [PATCH 2641/2666] ENGR00271577 sdma: fix the compiling warning
+
+In the imx6sl, we meet the compiling warning shows below:
+--------------------------------------------------------------------
+drivers/dma/imx-sdma.c: In function Pleasesdma_iram_free:
+drivers/dma/imx-sdma.c:366: warning: passing argument 2 of
+		Pleasegen_pool_free makes integer from pointer without a cast
+include/linux/genalloc.h:58: note: expected Pleaselong unsigned integer
+		but argument is of type Pleaselong unsigned int *Please
+drivers/dma/imx-sdma.c: In function Pleasesdma_load_script:
+drivers/dma/imx-sdma.c:452: warning: passing argument 2 of
+		Pleasesdma_iram_malloc makes pointer from integer without a cast
+drivers/dma/imx-sdma.c:352: note: expected Pleaselong unsigned
+		int *Please but argument is of type Pleaselong unsigned integer
+drivers/dma/imx-sdma.c:475: warning: passing argument 1 of
+		Pleasesdma_iram_free makes pointer from integer without a cast
+drivers/dma/imx-sdma.c:361: note: expected Pleaselong unsigned
+		int *Please but argument is of type Pleasedma_addr_t
+drivers/dma/imx-sdma.c: In function Pleasesdma_request_channel:
+drivers/dma/imx-sdma.c:942: warning: passing argument 2 of
+		Pleasesdma_iram_malloc makes pointer from integer without a cast
+drivers/dma/imx-sdma.c:352: note: expected Pleaselong unsigned int
+		*Please but argument is of type Pleaselong unsigned integer
+drivers/dma/imx-sdma.c: In function Pleasesdma_free_chan_resources:
+drivers/dma/imx-sdma.c:1109: warning: passing argument 1 of
+		Pleasesdma_iram_free makes pointer from integer without a cast
+drivers/dma/imx-sdma.c:361: note: expected Pleaselong unsigned int
+		*Please but argument is of type Pleasedma_addr_t
+drivers/dma/imx-sdma.c: In function Pleasesdma_init:
+drivers/dma/imx-sdma.c:1505: warning: passing argument 2 of
+		Pleasesdma_iram_malloc from incompatible pointer type
+drivers/dma/imx-sdma.c:352: note: expected Pleaselong unsigned int
+		*Please but argument is of type Pleasedma_addr_t *Please
+--------------------------------------------------------------------
+
+this patch fixes it.
+
+Signed-off-by: Huang Shijie <b32955@freescale.com>
+---
+ drivers/dma/imx-sdma.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 9048f46..bee75e8 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -358,7 +358,7 @@ void __iomem *sdma_iram_malloc(size_t size, unsigned long *buf)
+ 	return sdma_iram_phys_to_virt(*buf);
+ }
+ 
+-void sdma_iram_free(unsigned long *buf, u32 size)
++void sdma_iram_free(unsigned long buf, size_t size)
+ {
+ 	if (!sdma_iram_pool)
+ 		return;
+@@ -449,7 +449,7 @@ static int sdma_load_script(struct sdma_engine *sdma, void *buf, int size,
+ 	int ret;
+ 
+ #ifdef CONFIG_SDMA_IRAM
+-	buf_virt = sdma_iram_malloc(size, (unsigned long)&buf_phys);
++	buf_virt = sdma_iram_malloc(size, (unsigned long *)&buf_phys);
+ #else
+ 	buf_virt = dma_alloc_coherent(NULL,
+ 			size,
+@@ -939,7 +939,7 @@ static int sdma_request_channel(struct sdma_channel *sdmac)
+ 
+ #ifdef CONFIG_SDMA_IRAM
+ 	sdmac->bd = sdma_iram_malloc(sizeof(sdmac->bd),
+-					(unsigned long)&sdmac->bd_phys);
++					(unsigned long *)&sdmac->bd_phys);
+ #else
+ 	sdmac->bd = dma_alloc_noncached(NULL, PAGE_SIZE, &sdmac->bd_phys, GFP_KERNEL);
+ #endif
+@@ -1502,7 +1502,7 @@ static int __init sdma_init(struct sdma_engine *sdma)
+ 	sdma->channel_control = sdma_iram_malloc(MAX_DMA_CHANNELS *
+ 			sizeof(struct sdma_channel_control)
+ 			+ sizeof(struct sdma_context_data),
+-			&ccb_phys);
++			(unsigned long *)&ccb_phys);
+ #else
+ 	sdma->channel_control = dma_alloc_coherent(NULL,
+ 			MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control) +
+-- 
+1.7.7.4
+

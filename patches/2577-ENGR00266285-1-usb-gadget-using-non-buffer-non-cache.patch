@@ -1,0 +1,34 @@
+From 9b52d426d5ff603167c65be9f589d8daf884ce62 Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Sat, 8 Jun 2013 15:55:25 +0800
+Subject: [PATCH 2577/2666] ENGR00266285-1 usb: gadget: using non-buffer &
+ non-cache memory for dma buffer
+
+It is the same issue with ENGR00217721, and it is also needed
+for normal usb case.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ drivers/usb/gadget/arcotg_udc.c |    5 +----
+ 1 files changed, 1 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/gadget/arcotg_udc.c b/drivers/usb/gadget/arcotg_udc.c
+index 7f554de..087350a 100755
+--- a/drivers/usb/gadget/arcotg_udc.c
++++ b/drivers/usb/gadget/arcotg_udc.c
+@@ -959,11 +959,8 @@ static struct ep_td_struct *fsl_build_dtd(struct fsl_req *req, unsigned *length,
+ 			(unsigned)EP_MAX_LENGTH_TRANSFER);
+ 	if (NEED_IRAM(req->ep))
+ 		*length = min(*length, g_iram_size);
+-#ifdef CONFIG_FSL_UTP
++
+ 	dtd = dma_pool_alloc_nonbufferable(udc_controller->td_pool, GFP_ATOMIC, dma);
+-#else
+-	dtd = dma_pool_alloc(udc_controller->td_pool, GFP_ATOMIC, dma);
+-#endif
+ 	if (dtd == NULL)
+ 		return dtd;
+ 
+-- 
+1.7.7.4
+

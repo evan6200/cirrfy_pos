@@ -1,0 +1,114 @@
+From 6ea66e8d56f8b2f741852b4863f308924080df79 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Mon, 13 May 2013 17:39:28 +0800
+Subject: [PATCH 2619/2666] ENGR00265414-4 mxc: asrc: Reconstruct req_pair()
+
+The old req_pair() constrained that only Pair B could afford 6 channels,
+while actually not. So rewrite it to be more flexible.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit adbc9dbba6ee46c05c0878a8e3bab118981d62c7)
+---
+ drivers/mxc/asrc/mxc_asrc.c |   59 ++++++++++++++++++++++++++----------------
+ include/linux/mxc_asrc.h    |    2 +
+ 2 files changed, 38 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index dc8d6fd..9a4e175 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -321,34 +321,42 @@ int asrc_req_pair(int chn_num, enum asrc_pair_index *index)
+ 	int err = 0;
+ 	unsigned long lock_flags;
+ 	struct asrc_pair *pair;
++	int imax = 0, busy = 0, i;
++
+ 	spin_lock_irqsave(&data_lock, lock_flags);
+ 
+-	if (chn_num > 2) {
+-		pair = &g_asrc->asrc_pair[ASRC_PAIR_B];
+-		if (pair->active || (chn_num > pair->chn_max))
+-			err = -EBUSY;
+-		else {
+-			*index = ASRC_PAIR_B;
+-			pair->chn_num = chn_num;
+-			pair->active = 1;
++	for (i = ASRC_PAIR_A; i < ASRC_PAIR_MAX_NUM; i++) {
++		pair = &g_asrc->asrc_pair[i];
++		if (chn_num > pair->chn_max) {
++			imax++;
++			continue;
++		} else if (pair->active) {
++			busy++;
++			continue;
+ 		}
++		/* Save the current qualified pair */
++		*index = i;
++
++		/* Check if this pair is a perfect one */
++		if (chn_num == pair->chn_max)
++			break;
++	}
++
++	if (imax >= ASRC_PAIR_MAX_NUM) {
++		pr_err("No pair could afford requested channel number.\n");
++		err = -EINVAL;
++	} else if (busy >= ASRC_PAIR_MAX_NUM) {
++		pr_err("All pairs are busy now.\n");
++		err = -EBUSY;
++	} else if (busy + imax >= ASRC_PAIR_MAX_NUM) {
++		pr_err("All affordable pairs are busy now.\n");
++		err = -EBUSY;
+ 	} else {
+-		pair = &g_asrc->asrc_pair[ASRC_PAIR_A];
+-		if (pair->active || (pair->chn_max == 0)) {
+-			pair = &g_asrc->asrc_pair[ASRC_PAIR_C];
+-			if (pair->active || (pair->chn_max == 0))
+-				err = -EBUSY;
+-			else {
+-				*index = ASRC_PAIR_C;
+-				pair->chn_num = 2;
+-				pair->active = 1;
+-			}
+-		} else {
+-			*index = ASRC_PAIR_A;
+-			pair->chn_num = 2;
+-			pair->active = 1;
+-		}
++		pair = &g_asrc->asrc_pair[*index];
++		pair->chn_num = chn_num;
++		pair->active = 1;
+ 	}
++
+ 	spin_unlock_irqrestore(&data_lock, lock_flags);
+ 
+ 	if (!err) {
+@@ -1857,6 +1865,11 @@ static int asrc_write_proc_attr(struct file *file, const char *buffer,
+ 	reg = na | (nb << g_asrc->mxc_asrc_data->channel_bits) |
+ 		(nc << (g_asrc->mxc_asrc_data->channel_bits * 2));
+ 
++	/* Update chn_max */
++	g_asrc->asrc_pair[ASRC_PAIR_A].chn_max = na;
++	g_asrc->asrc_pair[ASRC_PAIR_B].chn_max = nb;
++	g_asrc->asrc_pair[ASRC_PAIR_C].chn_max = nc;
++
+ 	clk_enable(g_asrc->mxc_asrc_data->asrc_core_clk);
+ 	__raw_writel(reg, g_asrc->vaddr + ASRC_ASRCNCR_REG);
+ 	clk_disable(g_asrc->mxc_asrc_data->asrc_core_clk);
+diff --git a/include/linux/mxc_asrc.h b/include/linux/mxc_asrc.h
+index 99f39a4..8de07b9 100644
+--- a/include/linux/mxc_asrc.h
++++ b/include/linux/mxc_asrc.h
+@@ -40,6 +40,8 @@ enum asrc_pair_index {
+ 	ASRC_PAIR_C
+ };
+ 
++#define ASRC_PAIR_MAX_NUM	(ASRC_PAIR_C + 1)
++
+ enum asrc_inclk {
+ 	INCLK_NONE = 0x03,
+ 	INCLK_ESAI_RX = 0x00,
+-- 
+1.7.7.4
+

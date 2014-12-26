@@ -1,0 +1,206 @@
+From 255262d486af7c2baec0e15d2098c6c0d91d67b6 Mon Sep 17 00:00:00 2001
+From: Ranjani Vaidyanathan <ra5478@freescale.com>
+Date: Mon, 13 May 2013 14:27:46 -0500
+Subject: [PATCH 2549/2666] ENGR00262435 MX6x-Drain L1/L2 buffers before DDR
+ enters self-refresh.
+
+The DDR freq change code and the low power WFI code in
+MX6SL runs from non-cacheable but bufferable IRAM space.
+Its possible for an eviction to occur from the L1
+and/or L2 sync buffers after the DDR has been put into
+self-refresh. This will cause the system to hang. To
+avoid this ensure that the L1/L2 sync buffers are drained
+properly.
+
+Following is the info from ARM on L2 store buffers:
+**********************************************************
+You can use L2 sync operation to drain L2store buffer manually,
+and the store buffer would be drained in such conditions:
+
+* store buffer slot is immediately drained if targeting
+  device memory area
+* store buffer slots are drained as soon as they are full
+* store buffer is drained at each strongly  ordered read
+  occurrence in slave ports
+* store buffer is drained at each strongly ordered write
+  occurrence in slave ports
+* as soon as all three slots of the store buffer contain data,
+  the least recently accessed slot starts draining
+* if a hazard is detected in a store buffer slot , that slot
+  is drained to resolve the hazard
+* store buffer slots are drained when a lock ed transaction is
+  received by one slave port
+* store buffer slots are drained when a transaction targeting
+  the configuration registers is received by one slave port
+* store buffer slots are automatically drained after 256 cycles
+  of presence in the store buffer.
+
+You can refer to 2.5.3 Store buffer operation of PL310 trm(r3p3, DDI0246H)
+for the detail.
+
+You have to apply the explicit cache sync operation, which should be
+followed by DSB, before entering the low power mode. And the bit0 of
+the cache sync register(base offset 0x730) should be polling to guarantee
+that the PL310 has finished sync operation.
+
+PL310 owns three 256 bit entry store buffer & eviction buffer, and
+four 256 bit LFB & LRB, and Cache sync would complete when all buffers,
+LRB, LFB, STB, and EB, are empty.
+
+The actual overhead should be close to your L3 access latency.
+*************************************************************************
+~
+~
+
+Signed-off-by: Ranjani Vaidyanathan <ra5478@freescale.com>
+---
+ arch/arm/mach-mx6/mx6_ddr_freq.S |   45 +++++++++++++++++++------------------
+ arch/arm/mach-mx6/mx6sl_ddr.S    |   17 +++++++++++++-
+ arch/arm/mach-mx6/mx6sl_wfi.S    |   18 ++++++++++++++-
+ 3 files changed, 56 insertions(+), 24 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/mx6_ddr_freq.S b/arch/arm/mach-mx6/mx6_ddr_freq.S
+index 8d649f3..de20f0c 100644
+--- a/arch/arm/mach-mx6/mx6_ddr_freq.S
++++ b/arch/arm/mach-mx6/mx6_ddr_freq.S
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2011-2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -401,20 +401,6 @@ ddr_freq_change:
+ 
+ 	adr   r10, ddr_freq_change               @Address in this function.
+ 
+-
+-	mcr   p15, 0, r10, c8, c7, 1      @//@ Make sure freq code address
+-	                                       @//  @ is not already in TLB.
+-	mcr   p15, 0, r6, c8, c7, 1      @//@ Make sure CCM address
+-	                                         @//@ is not already in TLB.
+-	mcr   p15, 0, r5, c8, c7, 1      @//@ make sure MMDC address
+-	                                         @//@ is not already in TLB.
+-	mcr   p15, 0, r7, c8, c7, 1      @//@ make sure IOMUX address
+-	                                         @//@ is not already in TLB.
+-
+-	mrc   p15, 0, r0, c10, c0, 0    @//@ Read the TLB lockdown register
+-	orr    r0, r0, #1                    @//@ Set the Preserve bit.
+-	mcr   p15, 0, r0, c10, c0, 0    @//@ Write to the lockdown register
+-
+ 	ldr    r2, [r6]                        @ TLB will miss,
+ 	                                         @CCM address will be loaded
+ 	ldr    r2, [r5]                        @ TLB will miss,
+@@ -423,18 +409,33 @@ ddr_freq_change:
+ 	                                         @IOMUX will be loaded
+ 
+ 	ldr    r2, [r8]                        @ Get the DDR settings.
+-
+ 	ldr    r2, [r10]                        @ TLB will miss
+-
+ 	ldr    r2, [r11]				@Get the IOMUX settings
+ 
+-	mrc  p15, 0, r0, c10, c0, 0      @//@ Read the lockdown register
+-	                                             @//@ (victim will be incremented)
+-	bic   r0, r0, #1                     @//@ Clear the preserve bit
+-	mcr   p15, 0, r0, c10, c0, 0     @//@ Write to the lockdown register
++	/* Make sure all the L1 & L2 buffers are drained, as
++	  * we don't want any writes to the DDR when it is
++	  * in self-refresh.
++	  */
++	/* Make sure the L1 buffers are drained. */
++	dsb
+ 
+-	/* Disable automatic power saving. */
++#ifdef CONFIG_CACHE_L2X0
++	/* Make sure the L2 buffers are drained.
++	  * Sync operation on L2 drains the buffers.
++	  */
++	ldr      r0, =L2_BASE_ADDR
++	add     r0, r0, #PERIPBASE_VIRT
++	mov    r1, #0x0
++	str      r1, [r0, #0x730]
++#endif
+ 
++     /* The second dsb might be needed to keep cache sync (device write)
++       * ordering with the memory accesses before it.
++       */
++	dsb
++	isb
++
++	/* Disable automatic power saving. */
+ 	ldr    r0, [r5, #0x404]
+ 	orr    r0, r0, #0x01
+ 	str    r0, [r5, #0x404]
+diff --git a/arch/arm/mach-mx6/mx6sl_ddr.S b/arch/arm/mach-mx6/mx6sl_ddr.S
+index 3059f3a..1567f72 100644
+--- a/arch/arm/mach-mx6/mx6sl_ddr.S
++++ b/arch/arm/mach-mx6/mx6sl_ddr.S
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2012-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -326,6 +326,21 @@ mx6sl_ddr_freq_change:
+     ldr     r6, [r3]
+     ldr     r6, [r2]
+ 
++     /* Drain all the L1 buffers. */
++     dsb
++
++#ifdef CONFIG_CACHE_L2X0
++    /* Need to make sure the buffers in L2 are drained.
++      * Performing a sync operation does this. */
++     ldr     r7, =L2_BASE_ADDR
++     add   r7, r7, #PERIPBASE_VIRT
++     mov  r6, #0x0
++     str    r6, [r7, #0x730]
++#endif
++
++     /* The second dsb might be needed to keep cache sync (device write)
++       * ordering with the memory accesses before it.
++       */
+      dsb
+      isb
+ 
+diff --git a/arch/arm/mach-mx6/mx6sl_wfi.S b/arch/arm/mach-mx6/mx6sl_wfi.S
+index 4ec97e4..7ee4670 100644
+--- a/arch/arm/mach-mx6/mx6sl_wfi.S
++++ b/arch/arm/mach-mx6/mx6sl_wfi.S
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2012-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -192,8 +192,24 @@ mx6sl_lpm_wfi:
+     ldr     r6, [r2]
+     ldr     r6, [r1]
+ 
++     /* Drain all the L1 buffers. */
+      dsb
+ 
++#ifdef CONFIG_CACHE_L2X0
++    /* Need to make sure the buffers in L2 are drained.
++      * Performing a sync operation does this. */
++     ldr     r7, =L2_BASE_ADDR
++     add   r7, r7, #PERIPBASE_VIRT
++     mov  r6, #0x0
++     str    r6, [r7, #0x730]
++#endif
++
++     /* The second dsb might be needed to keep cache sync (device write)
++       * ordering with the memory accesses before it.
++       */
++     dsb
++     isb
++
+      /* Disable Automatic power savings. */
+      ldr    r6, [r8, #0x404]
+      orr    r6, r6, #0x01
+-- 
+1.7.7.4
+

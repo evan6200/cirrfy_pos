@@ -1,0 +1,47 @@
+From b32f76dfe7eab3f1e9765508ca01b94e1a78213a Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 7 May 2013 15:01:13 +0800
+Subject: [PATCH 2544/2666] ENGR00261451-5 usb: gadget: delete
+ usb_debounce_id_vbus
+
+Since we move the debounce time into get the PHY out
+of low power mode function(f1ac6159, ENGR00261451-3:
+mx6-msl: usb: add debounce time for otgsc value),
+usb_debounce_id_vbus is useless now.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ drivers/usb/gadget/arcotg_udc.c |    3 ---
+ 1 files changed, 0 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/gadget/arcotg_udc.c b/drivers/usb/gadget/arcotg_udc.c
+index 23b905a..7f554de 100755
+--- a/drivers/usb/gadget/arcotg_udc.c
++++ b/drivers/usb/gadget/arcotg_udc.c
+@@ -70,7 +70,6 @@
+ #endif
+ #define	DMA_ADDR_INVALID	(~(dma_addr_t)0)
+ DEFINE_MUTEX(udc_resume_mutex);
+-extern void usb_debounce_id_vbus(void);
+ static const char driver_name[] = "fsl-usb2-udc";
+ static const char driver_desc[] = DRIVER_DESC;
+ 
+@@ -3452,7 +3451,6 @@ static int fsl_udc_resume(struct platform_device *pdev)
+ 		u32 temp;
+ 		if (udc_controller->stopped)
+ 			dr_clk_gate(true);
+-		usb_debounce_id_vbus();
+ 		if (fsl_readl(&dr_regs->otgsc) & OTGSC_STS_USB_ID) {
+ 			temp = fsl_readl(&dr_regs->otgsc);
+ 			/* if b_session_irq_en is cleared by otg */
+@@ -3499,7 +3497,6 @@ static int fsl_udc_resume(struct platform_device *pdev)
+ 			dr_clk_gate(true);
+ 		dr_wake_up_enable(udc_controller, false);
+ 		dr_phy_low_power_mode(udc_controller, false);
+-		usb_debounce_id_vbus();
+ 		/* if in host mode, we need to do nothing */
+ 		if ((fsl_readl(&dr_regs->otgsc) & OTGSC_STS_USB_ID) == 0) {
+ 			dr_phy_low_power_mode(udc_controller, true);
+-- 
+1.7.7.4
+

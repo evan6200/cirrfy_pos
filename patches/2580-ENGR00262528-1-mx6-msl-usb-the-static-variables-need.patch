@@ -1,0 +1,55 @@
+From b207bb1e5f42305ba438f67815f919838f489519 Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 18 Jun 2013 08:24:35 +0800
+Subject: [PATCH 2580/2666] ENGR00262528-1 mx6-msl: usb: the static variables
+ needs to be initialized
+
+The static variables needs to be initialized at init function,
+or the value may be incorrect during the module load/unload process.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/mach-mx6/usb_dr.c |    6 ++++--
+ 1 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/usb_dr.c b/arch/arm/mach-mx6/usb_dr.c
+index 8a80a60..8698b5a 100644
+--- a/arch/arm/mach-mx6/usb_dr.c
++++ b/arch/arm/mach-mx6/usb_dr.c
+@@ -37,6 +37,8 @@ static void _dr_discharge_line(bool enable);
+ extern bool usb_icbug_swfix_need(void);
+ static void enter_phy_lowpower_suspend(struct fsl_usb2_platform_data *pdata, \
+ 								bool enable);
++static u32 wakeup_irq_enable_src; /* only useful at otg mode */
++static u32 low_power_enable_src; /* only useful at otg mode */
+ 
+ /* The usb_phy1_clk do not have enable/disable function at clock.c
+  * and PLL output for usb1's phy should be always enabled.
+@@ -162,6 +164,8 @@ static int usbotg_init_ext(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 	if (!otg_used) {
++		wakeup_irq_enable_src = 0;
++		low_power_enable_src = 0;
+ 		usb_phy_enable(pdev->dev.platform_data);
+ 		enter_phy_lowpower_suspend(pdev->dev.platform_data, false);
+ 		/*after the phy reset,can not read the readingvalue for id/vbus at
+@@ -225,7 +229,6 @@ static void _dr_discharge_line(bool enable)
+ /* Below two macros are used at otg mode to indicate usb mode*/
+ #define ENABLED_BY_HOST   (0x1 << 0)
+ #define ENABLED_BY_DEVICE (0x1 << 1)
+-static u32 low_power_enable_src; /* only useful at otg mode */
+ static void enter_phy_lowpower_suspend(struct fsl_usb2_platform_data *pdata, bool enable)
+ {
+ 	void __iomem *phy_reg = MX6_IO_ADDRESS(USB_PHY0_BASE_ADDR);
+@@ -322,7 +325,6 @@ static void otg_wake_up_enable(struct fsl_usb2_platform_data *pdata, bool enable
+ 	}
+ }
+ 
+-static u32 wakeup_irq_enable_src; /* only useful at otg mode */
+ static void __wakeup_irq_enable(struct fsl_usb2_platform_data *pdata, bool on, int source)
+  {
+ 	/* otg host and device share the OWIE bit, only when host and device
+-- 
+1.7.7.4
+

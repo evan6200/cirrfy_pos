@@ -1,0 +1,47 @@
+From afdb218cc4d29bf29268af6d5ced451cc96322e7 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Tue, 4 Jun 2013 14:09:50 +0800
+Subject: [PATCH 2620/2666] ENGR00265414-5 mxc: asrc: Remove duplicated code
+
+There's already a same section of code above the removed one.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit b69af65683f17bfa701fdbb2dd3a93f53dc3503b)
+---
+ drivers/mxc/asrc/mxc_asrc.c |   19 -------------------
+ 1 files changed, 0 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index 9a4e175..31574ed 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -608,25 +608,6 @@ int asrc_config_pair(struct asrc_config *config)
+ 		}
+ 	}
+ 
+-	if ((config->inclk == INCLK_NONE) &&
+-			(config->outclk == OUTCLK_ESAI_TX)) {
+-		reg = __raw_readl(g_asrc->vaddr + ASRC_ASRCTR_REG);
+-		reg &= ~(1 << (20 + config->pair));
+-		reg |= (0x03 << (13 + (config->pair << 1)));
+-		__raw_writel(reg, g_asrc->vaddr + ASRC_ASRCTR_REG);
+-		err = asrc_set_clock_ratio(config->pair,
+-					   config->input_sample_rate,
+-					   config->output_sample_rate);
+-		if (err < 0)
+-			return err;
+-		err = asrc_set_process_configuration(config->pair,
+-						     config->input_sample_rate,
+-						     config->
+-						     output_sample_rate);
+-		if (err < 0)
+-			return err;
+-	}
+-
+ 	/* Config input and output wordwidth */
+ 	reg = __raw_readl(
+ 		g_asrc->vaddr + ASRC_ASRMCR1A_REG + (config->pair << 2));
+-- 
+1.7.7.4
+

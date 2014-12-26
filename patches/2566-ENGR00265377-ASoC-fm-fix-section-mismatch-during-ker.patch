@@ -1,0 +1,37 @@
+From 2e6a2ef002e475ac5a7859c92d15498b7c322b02 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Tue, 4 Jun 2013 10:46:28 +0800
+Subject: [PATCH 2566/2666] ENGR00265377 ASoC: fm: fix section mismatch during
+ kernel compiling
+
+Use __devinit instead of __int to fix section mismatch issue.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+---
+ sound/soc/imx/imx-si4763.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/imx/imx-si4763.c b/sound/soc/imx/imx-si4763.c
+index 1dd50e7..7b2458e 100644
+--- a/sound/soc/imx/imx-si4763.c
++++ b/sound/soc/imx/imx-si4763.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2008-2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2008-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  */
+ 
+ /*
+@@ -131,7 +131,7 @@ static struct snd_soc_card snd_soc_card_imx_3stack = {
+ 	.num_links = 1,
+ };
+ 
+-static int __init imx_3stack_si4763_probe(struct platform_device *pdev)
++static int __devinit imx_3stack_si4763_probe(struct platform_device *pdev)
+ {
+ 	struct mxc_audio_platform_data *plat = pdev->dev.platform_data;
+ 
+-- 
+1.7.7.4
+

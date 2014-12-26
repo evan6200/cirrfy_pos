@@ -1,0 +1,1 @@
+cmd_drivers/media/common/tuners/tda18271.o := /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/media/common/tuners/tda18271.o drivers/media/common/tuners/tda18271-maps.o drivers/media/common/tuners/tda18271-common.o drivers/media/common/tuners/tda18271-fe.o 

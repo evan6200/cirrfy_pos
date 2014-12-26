@@ -1,0 +1,34 @@
+From df63b400675b8d90ef98dfba43b8e3b01123358a Mon Sep 17 00:00:00 2001
+From: "guoyin.chen" <guoyin.chen@freescale.com>
+Date: Fri, 31 May 2013 13:01:25 +0800
+Subject: [PATCH 2564/2666] ENGR00265061 System hang when running the game
+ lsh.emu.apk
+
+The game will creat a lot of hr timer, and make cpu tick broadcast
+bit not been clear all time. It will cause user space thread not
+been scheduled.
+
+Signed-off-by: guoyin.chen <guoyin.chen@freescale.com>
+---
+ kernel/time/tick-broadcast.c |    4 +---
+ 1 files changed, 1 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/time/tick-broadcast.c b/kernel/time/tick-broadcast.c
+index bc36115..56f7043 100644
+--- a/kernel/time/tick-broadcast.c
++++ b/kernel/time/tick-broadcast.c
+@@ -560,10 +560,8 @@ void tick_broadcast_oneshot_control(unsigned long reason)
+ 			 * nohz fixups.
+ 			 */
+ 			now = ktime_get();
+-			if (dev->next_event.tv64 <= now.tv64) {
++			if (dev->next_event.tv64 <= now.tv64)
+ 				set_bit(cpu, tick_force_broadcast_mask);
+-				goto out;
+-			}
+ 			/*
+ 			 * We got woken by something else. Reprogram
+ 			 * the cpu local timer device.
+-- 
+1.7.7.4
+

@@ -1,0 +1,98 @@
+From 8e618cc8d34be0c51f01393df838f707c4a5e8f8 Mon Sep 17 00:00:00 2001
+From: Loren HUANG <b02279@freescale.com>
+Date: Wed, 15 May 2013 18:57:56 +0800
+Subject: [PATCH 2551/2666] ENGR00262748 Clean up regulator code for 3.5.7
+
+Remove gpu_regulator since 3.5.7 doesn't need it.
+
+Cherry-pick from 3.5.7 branch.
+
+Signed-off-by: Loren HUANG <b02279@freescale.com>
+Acked-by: Lily Zhang
+---
+ .../hal/os/linux/kernel/gc_hal_kernel_device.c     |    8 ++------
+ .../hal/os/linux/kernel/gc_hal_kernel_device.h     |    3 ++-
+ .../gpu-viv/hal/os/linux/kernel/gc_hal_kernel_os.c |   16 ++++++++--------
+ 3 files changed, 12 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.c b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.c
+index cf089b2..4c5f416 100644
+--- a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.c
++++ b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.c
+@@ -365,9 +365,7 @@ gckGALDEVICE_Construct(
+     device->pmdev = pdev;
+ #endif
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0)
+-    device->gpu_regulator =(struct regulator*)0xffffffff ;
+-#else
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0)
+     /*get gpu regulator*/
+     device->gpu_regulator = regulator_get(pdev, "cpu_vddgpu");
+     if (IS_ERR(device->gpu_regulator)) {
+@@ -1096,9 +1094,7 @@ gckGALDEVICE_Destroy(
+             pm_runtime_disable(Device->pmdev);
+ #endif
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,5,0)
+-        /*NULL*/
+-#else
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0)
+         if (Device->gpu_regulator) {
+            regulator_put(Device->gpu_regulator);
+            Device->gpu_regulator = NULL;
+diff --git a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.h b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.h
+index 460f022..3a4e9b8 100644
+--- a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.h
++++ b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_device.h
+@@ -91,9 +91,10 @@ typedef struct _gckGALDEVICE
+     struct clk         *clk_2d_axi;
+     struct clk         *clk_vg_axi;
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0)
+     /*Power management.*/
+     struct regulator      *gpu_regulator;
+-
++#endif
+ 	/*Run time pm*/
+ 	struct device		*pmdev;
+ }
+diff --git a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_os.c b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_os.c
+index ac51d7c..7697c1b 100644
+--- a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_os.c
++++ b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_os.c
+@@ -6819,11 +6819,11 @@ gckOS_SetGPUPower(
+     }
+ 	if((Power == gcvTRUE) && (oldPowerState == gcvFALSE))
+ 	{
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0)		
+-	    if(!IS_ERR(Os->device->gpu_regulator))
+-            	regulator_enable(Os->device->gpu_regulator);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0)
++        if(!IS_ERR(Os->device->gpu_regulator))
++            regulator_enable(Os->device->gpu_regulator);
+ #else
+-	    imx_gpc_power_up_pu(true);
++        imx_gpc_power_up_pu(true);
+ #endif
+ 
+ #ifdef CONFIG_PM
+@@ -6936,11 +6936,11 @@ gckOS_SetGPUPower(
+ 		pm_runtime_put_sync(Os->device->pmdev);
+ #endif
+ 
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0)		
+-		if(!IS_ERR(Os->device->gpu_regulator))
+-			regulator_disable(Os->device->gpu_regulator);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,5,0)
++        if(!IS_ERR(Os->device->gpu_regulator))
++            regulator_disable(Os->device->gpu_regulator);
+ #else
+-    		imx_gpc_power_up_pu(false);
++        imx_gpc_power_up_pu(false);
+ #endif
+ 	}
+     /* TODO: Put your code here. */
+-- 
+1.7.7.4
+

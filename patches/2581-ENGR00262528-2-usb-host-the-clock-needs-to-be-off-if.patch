@@ -1,0 +1,29 @@
+From af07a0003fff4203499cacbd13bf32e93c4e6c9b Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 18 Jun 2013 08:30:51 +0800
+Subject: [PATCH 2581/2666] ENGR00262528-2 usb: host: the clock needs to be
+ off if probe fails
+
+The clock needs to be off if probe fails.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ drivers/usb/host/ehci-arc.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/usb/host/ehci-arc.c b/drivers/usb/host/ehci-arc.c
+index 4f78f8f..dde47dd 100755
+--- a/drivers/usb/host/ehci-arc.c
++++ b/drivers/usb/host/ehci-arc.c
+@@ -316,6 +316,8 @@ err2:
+ err1:
+ 	dev_err(&pdev->dev, "init %s fail, %d\n", dev_name(&pdev->dev), retval);
+ 	fsl_usb_lowpower_mode(pdata, true);
++	if (pdata->usb_clock_for_pm)
++		pdata->usb_clock_for_pm(false);
+ 	if (pdata->exit && pdata->pdev)
+ 		pdata->exit(pdata->pdev);
+ 	return retval;
+-- 
+1.7.7.4
+

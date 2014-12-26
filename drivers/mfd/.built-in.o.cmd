@@ -1,0 +1,1 @@
+cmd_drivers/mfd/built-in.o :=  /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/mfd/built-in.o drivers/mfd/wm8994-core.o drivers/mfd/wm8994-irq.o drivers/mfd/pfuze-core.o drivers/mfd/mfd-core.o drivers/mfd/mxc-hdmi-core.o drivers/mfd/max17135-core.o 

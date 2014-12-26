@@ -1,0 +1,31 @@
+From ab87ade3dbfa38b6abc003a9409cda10f58ccb94 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Mon, 24 Jun 2013 16:38:32 +0800
+Subject: [PATCH 2585/2666] ENGR00268385 v4l2 fg overlay:disable fb ywrap when
+ enable overlay
+
+This patch disables framebuffer ywrap flag when we enable overlay,
+because the display double buffers are not ywrapped. This may avoid
+wrong preview pictures on platforms which use NV12 pixel format for
+overlay framebuffer.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ .../media/video/mxc/capture/ipu_fg_overlay_sdc.c   |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/media/video/mxc/capture/ipu_fg_overlay_sdc.c b/drivers/media/video/mxc/capture/ipu_fg_overlay_sdc.c
+index 6d8d439..856078a 100644
+--- a/drivers/media/video/mxc/capture/ipu_fg_overlay_sdc.c
++++ b/drivers/media/video/mxc/capture/ipu_fg_overlay_sdc.c
+@@ -396,6 +396,7 @@ static int foreground_start(void *private)
+ 	fbvar.yres = cam->win.w.height;
+ 	fbvar.yres_virtual = cam->win.w.height * 2;
+ 	fbvar.yoffset = 0;
++	fbvar.vmode &= ~FB_VMODE_YWRAP;
+ 	fbvar.accel_flags = FB_ACCEL_DOUBLE_FLAG;
+ 	fbvar.activate |= FB_ACTIVATE_FORCE;
+ 	fb_set_var(fbi, &fbvar);
+-- 
+1.7.7.4
+

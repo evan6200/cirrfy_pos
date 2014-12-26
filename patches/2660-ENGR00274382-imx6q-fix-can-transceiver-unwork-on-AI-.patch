@@ -1,0 +1,40 @@
+From 4e0ce32b6c319c35d3d739e2ef87b55643841a64 Mon Sep 17 00:00:00 2001
+From: Dong Aisheng <b29396@freescale.com>
+Date: Wed, 7 Aug 2013 20:20:27 +0800
+Subject: [PATCH 2660/2666] ENGR00274382 imx6q: fix can transceiver unwork on
+ AI RevE baseboard
+
+The transceiver TJA1041A on sabreauto RevE baseboard will
+fail to transit to Normal state if EN/STBY is high by default
+after board power up. So we set the EN/STBY initial state to low
+first then to high to guarantee the state transition successfully.
+
+Signed-off-by: Dong Aisheng <b29396@freescale.com>
+Acked-by: Jason Liu <r64343@freescale.com>
+---
+ arch/arm/mach-mx6/board-mx6q_sabreauto.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/board-mx6q_sabreauto.c b/arch/arm/mach-mx6/board-mx6q_sabreauto.c
+index e1df872..7c1fada 100644
+--- a/arch/arm/mach-mx6/board-mx6q_sabreauto.c
++++ b/arch/arm/mach-mx6/board-mx6q_sabreauto.c
+@@ -1116,6 +1116,15 @@ static int flexcan1_en;
+ static void mx6q_flexcan_switch(void)
+ {
+   if (flexcan0_en || flexcan1_en) {
++	/*
++	 * The transceiver TJA1041A on sabreauto RevE baseboard will
++	 * fail to transit to Normal state if EN/STBY is high by default
++	 * after board power up. So we set the EN/STBY initial state to low
++	 * first then to high to guarantee the state transition successfully.
++	 */
++	gpio_set_value_cansleep(SABREAUTO_CAN_EN, 0);
++	gpio_set_value_cansleep(SABREAUTO_CAN_STBY, 0);
++
+ 	gpio_set_value_cansleep(SABREAUTO_CAN_EN, 1);
+ 	gpio_set_value_cansleep(SABREAUTO_CAN_STBY, 1);
+ 	/* Enable STEER pin if CAN1 interface is required.
+-- 
+1.7.7.4
+

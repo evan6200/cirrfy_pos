@@ -1,0 +1,29 @@
+From 8033dc0036e19c82f2f8e8369208b391bcea0a0a Mon Sep 17 00:00:00 2001
+From: Jay Monkman <jay.monkman@freescale.com>
+Date: Fri, 28 Jun 2013 17:04:16 -0500
+Subject: [PATCH 2596/2666] ENGR00269055 Fix build break
+
+    Minor correction that broke build - 2 lines were swapped.
+
+    Signed-off-by: Jay Monkman <jay.monkman@freescale.com>
+---
+ arch/arm/mach-mx6/board-mx6q_sabresd.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/board-mx6q_sabresd.c b/arch/arm/mach-mx6/board-mx6q_sabresd.c
+index b3f7bdd..608c355 100644
+--- a/arch/arm/mach-mx6/board-mx6q_sabresd.c
++++ b/arch/arm/mach-mx6/board-mx6q_sabresd.c
+@@ -1990,8 +1990,8 @@ static struct sys_timer mx6_sabresd_timer = {
+ 
+ static void __init mx6q_sabresd_reserve(void)
+ {
+-#if defined(CONFIG_MXC_GPU_VIV) || defined(CONFIG_MXC_GPU_VIV_MODULE)
+ 	phys_addr_t phys;
++#if defined(CONFIG_MXC_GPU_VIV) || defined(CONFIG_MXC_GPU_VIV_MODULE)
+ 
+ 	if (imx6q_gpu_pdata.reserved_mem_size) {
+ 		phys = memblock_alloc_base(imx6q_gpu_pdata.reserved_mem_size,
+-- 
+1.7.7.4
+

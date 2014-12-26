@@ -1,0 +1,52 @@
+From 35b5874013dbc528c21c830043532e36c7bf84ca Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Sat, 8 Jun 2013 15:58:29 +0800
+Subject: [PATCH 2578/2666] ENGR00266285-2 mm: dmapool: export for normal case
+
+It is the same issue with ENGR00217721, and it is also needed
+for normal usb case.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ mm/dmapool.c |    4 ----
+ 1 files changed, 0 insertions(+), 4 deletions(-)
+
+diff --git a/mm/dmapool.c b/mm/dmapool.c
+index 98798f41..0d19926 100644
+--- a/mm/dmapool.c
++++ b/mm/dmapool.c
+@@ -212,7 +212,6 @@ static void pool_initialise_page(struct dma_pool *pool, struct dma_page *page)
+ 	} while (offset < pool->allocation);
+ }
+ 
+-#ifdef CONFIG_FSL_UTP
+ static struct dma_page *pool_alloc_page_nonbufferable(struct dma_pool *pool, gfp_t mem_flags)
+ {
+ 	struct dma_page *page;
+@@ -236,7 +235,6 @@ static struct dma_page *pool_alloc_page_nonbufferable(struct dma_pool *pool, gfp
+ 	}
+ 	return page;
+ }
+-#endif
+ 
+ static struct dma_page *pool_alloc_page(struct dma_pool *pool, gfp_t mem_flags)
+ {
+@@ -379,7 +377,6 @@ void *dma_pool_alloc(struct dma_pool *pool, gfp_t mem_flags,
+ }
+ EXPORT_SYMBOL(dma_pool_alloc);
+ 
+-#ifdef CONFIG_FSL_UTP
+ /**
+  * dma_pool_alloc_nonbufferable - get a block of consistent memory
+  * @pool: dma pool that will produce the block
+@@ -439,7 +436,6 @@ void *dma_pool_alloc_nonbufferable(struct dma_pool *pool, gfp_t mem_flags,
+ 	return retval;
+ }
+ EXPORT_SYMBOL(dma_pool_alloc_nonbufferable);
+-#endif
+ 
+ static struct dma_page *pool_find_page(struct dma_pool *pool, dma_addr_t dma)
+ {
+-- 
+1.7.7.4
+

@@ -1,0 +1,33 @@
+From 63d87dc68806668e00d3689fe26fd0a3deb9e1be Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Fri, 10 May 2013 11:29:53 +0800
+Subject: [PATCH 2616/2666] ENGR00265414-1 mxc: asrc: Fix incorrect offset for
+ output clock P/D of Pair C
+
+The offset of output clock prescaler and divider were swapped, so reverse them.
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit 4cda1ac12a8fdef84082212fb8fc5590c6c22fe7)
+---
+ drivers/mxc/asrc/mxc_asrc.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index 5767706..badc990 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -63,8 +63,8 @@ DEFINE_SPINLOCK(output_int_lock);
+ #define AOCDB           21	/* Output Clock Prescaler B Offset */
+ #define AICPC           0	/* Input Clock Divider C Offset */
+ #define AICDC           3	/* Input Clock Prescaler C Offset */
+-#define AOCDC           6	/* Output Clock Prescaler C Offset */
+-#define AOCPC           9	/* Output Clock Divider C Offset */
++#define AOCPC           6	/* Output Clock Prescaler C Offset */
++#define AOCDC           9	/* Output Clock Divider C Offset */
+ 
+ char *asrc_pair_id[] = {
+ 	[0] = "ASRC RX PAIR A",
+-- 
+1.7.7.4
+

@@ -1,0 +1,55 @@
+From 8fcf7ec64f6884d70d83a8d5319cc9dc4450701b Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 9 Apr 2013 16:18:51 +0800
+Subject: [PATCH 2502/2666] ENGR00257130-6 mx6-msl: usb: Add 500us delay for
+ phy stable time
+
+The PHY needs 500us time to be stable when its clock
+from off to on. If there is wakeup enable before the
+PHY is stable, there will be an unexpected wakeup.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/mach-mx6/usb_dr.c |    7 +++++++
+ arch/arm/mach-mx6/usb_h1.c |    7 +++++++
+ 2 files changed, 14 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/usb_dr.c b/arch/arm/mach-mx6/usb_dr.c
+index 44fdb52..3a51f96 100644
+--- a/arch/arm/mach-mx6/usb_dr.c
++++ b/arch/arm/mach-mx6/usb_dr.c
+@@ -251,6 +251,13 @@ static void enter_phy_lowpower_suspend(struct fsl_usb2_platform_data *pdata, boo
+ 			| BM_USBPHY_PWD_RXPWDDIFF
+ 			| BM_USBPHY_PWD_RXPWDRX);
+ 		__raw_writel(tmp, phy_reg + HW_USBPHY_PWD_CLR);
++		/*
++		 * The PHY works at 32Khz clock when it is at low power mode,
++		 * it needs 10 clocks from 32Khz to normal work state, so
++		 * 500us is the safe value for PHY enters stable status
++		 * according to IC engineer.
++		 */
++		udelay(500);
+ 
+ 	}
+ 	pr_debug("DR: %s ends, enable is %d\n", __func__, enable);
+diff --git a/arch/arm/mach-mx6/usb_h1.c b/arch/arm/mach-mx6/usb_h1.c
+index 6350e17..c665f64 100644
+--- a/arch/arm/mach-mx6/usb_h1.c
++++ b/arch/arm/mach-mx6/usb_h1.c
+@@ -336,6 +336,13 @@ static void _phy_lowpower_suspend(struct fsl_usb2_platform_data *pdata, bool ena
+ 			| BM_USBPHY_PWD_RXPWDDIFF
+ 			| BM_USBPHY_PWD_RXPWDRX);
+ 		__raw_writel(tmp, phy_reg + HW_USBPHY_PWD_CLR);
++		/*
++		 * The PHY works at 32Khz clock when it is at low power mode,
++		 * it needs 10 clocks from 32Khz to normal work state, so
++		 * 500us is the safe value for PHY enters stable status
++		 * according to IC engineer.
++		 */
++		udelay(500);
+ 
+ 	}
+ }
+-- 
+1.7.7.4
+

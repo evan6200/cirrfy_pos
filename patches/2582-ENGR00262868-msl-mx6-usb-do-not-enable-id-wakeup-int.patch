@@ -1,0 +1,36 @@
+From ffd474085dc1b715e83ec840ef364a69b6a9870e Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Tue, 18 Jun 2013 13:25:00 +0800
+Subject: [PATCH 2582/2666] ENGR00262868 msl-mx6: usb: do not enable id wakeup
+ interrupt for non-otg
+
+ID wakeup interrupt is only needed at OTG config.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/mach-mx6/usb_dr.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/usb_dr.c b/arch/arm/mach-mx6/usb_dr.c
+index 8698b5a..e6496bc 100644
+--- a/arch/arm/mach-mx6/usb_dr.c
++++ b/arch/arm/mach-mx6/usb_dr.c
+@@ -519,6 +519,7 @@ static void _host_wakeup_enable(struct fsl_usb2_platform_data *pdata, bool enabl
+ {
+ 	void __iomem *phy_reg = MX6_IO_ADDRESS(USB_PHY0_BASE_ADDR);
+ 	__wakeup_irq_enable(pdata, enable, ENABLED_BY_HOST);
++#ifdef CONFIG_USB_OTG
+ 	if (enable) {
+ 		pr_debug("host wakeup enable\n");
+ 		USB_OTG_CTRL |= UCTRL_WKUP_ID_EN;
+@@ -532,6 +533,7 @@ static void _host_wakeup_enable(struct fsl_usb2_platform_data *pdata, bool enabl
+ 		udelay(100);
+ 	}
+ 	pr_debug("the otgsc is 0x%x, usbsts is 0x%x, portsc is 0x%x, otgctrl: 0x%x\n", UOG_OTGSC, UOG_USBSTS, UOG_PORTSC1, USB_OTG_CTRL);
++#endif
+ }
+ 
+ static enum usb_wakeup_event _is_host_wakeup(struct fsl_usb2_platform_data *pdata)
+-- 
+1.7.7.4
+

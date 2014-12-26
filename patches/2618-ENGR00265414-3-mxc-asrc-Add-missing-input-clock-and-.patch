@@ -1,0 +1,75 @@
+From 88bd5dc3b7f51a293417e68d827c0a213ba2a9e0 Mon Sep 17 00:00:00 2001
+From: Nicolin Chen <b42378@freescale.com>
+Date: Mon, 13 May 2013 17:22:07 +0800
+Subject: [PATCH 2618/2666] ENGR00265414-3 mxc: asrc: Add missing input clock
+ and output clock
+
+Added missing clock and revised the clock map for v2
+
+Acked-by: Wang Shengjiu <b02247@freescale.com>
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+(cherry picked from commit c7e1b9af10cb579efaf7c4644170f6f8bee401e2)
+---
+ drivers/mxc/asrc/mxc_asrc.c |    7 +++++--
+ include/linux/mxc_asrc.h    |    6 ++++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mxc/asrc/mxc_asrc.c b/drivers/mxc/asrc/mxc_asrc.c
+index 1db81a1..dc8d6fd 100644
+--- a/drivers/mxc/asrc/mxc_asrc.c
++++ b/drivers/mxc/asrc/mxc_asrc.c
+@@ -144,12 +144,15 @@ static unsigned char output_clk_map_v1[] = {
+ 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
+ };
+ 
++/* V2 uses the same map for input and output */
+ static unsigned char input_clk_map_v2[] = {
+-	0, 1, 2, 3, 4, 5, 0xf, 0xf, 0xf, 8, 9, 0xa, 0xb, 0xc, 0xf, 0xd,
++/*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf*/
++	0x0, 0x1, 0x2, 0x7, 0x4, 0x5, 0x6, 0x3, 0x8, 0x9, 0xa, 0xb, 0xc, 0xf, 0xe, 0xd,
+ };
+ 
+ static unsigned char output_clk_map_v2[] = {
+-	8, 9, 0xa, 0, 0xc, 0x5, 0xf, 0xf, 0, 1, 2, 0xf, 0xf, 4, 0xf, 0xd,
++/*	0x0  0x1  0x2  0x3  0x4  0x5  0x6  0x7  0x8  0x9  0xa  0xb  0xc  0xd  0xe  0xf*/
++	0x8, 0x9, 0xa, 0x7, 0xc, 0x5, 0x6, 0xb, 0x0, 0x1, 0x2, 0x3, 0x4, 0xf, 0xe, 0xd,
+ };
+ 
+ static unsigned char *input_clk_map, *output_clk_map;
+diff --git a/include/linux/mxc_asrc.h b/include/linux/mxc_asrc.h
+index 7594ee6..99f39a4 100644
+--- a/include/linux/mxc_asrc.h
++++ b/include/linux/mxc_asrc.h
+@@ -45,11 +45,14 @@ enum asrc_inclk {
+ 	INCLK_ESAI_RX = 0x00,
+ 	INCLK_SSI1_RX = 0x01,
+ 	INCLK_SSI2_RX = 0x02,
++	INCLK_SSI3_RX = 0x07,
+ 	INCLK_SPDIF_RX = 0x04,
+ 	INCLK_MLB_CLK = 0x05,
++	INCLK_PAD = 0x06,
+ 	INCLK_ESAI_TX = 0x08,
+ 	INCLK_SSI1_TX = 0x09,
+ 	INCLK_SSI2_TX = 0x0a,
++	INCLK_SSI3_TX = 0x0b,
+ 	INCLK_SPDIF_TX = 0x0c,
+ 	INCLK_ASRCK1_CLK = 0x0f,
+ };
+@@ -59,11 +62,14 @@ enum asrc_outclk {
+ 	OUTCLK_ESAI_TX = 0x00,
+ 	OUTCLK_SSI1_TX = 0x01,
+ 	OUTCLK_SSI2_TX = 0x02,
++	OUTCLK_SSI3_TX = 0x07,
+ 	OUTCLK_SPDIF_TX = 0x04,
+ 	OUTCLK_MLB_CLK = 0x05,
++	OUTCLK_PAD = 0x06,
+ 	OUTCLK_ESAI_RX = 0x08,
+ 	OUTCLK_SSI1_RX = 0x09,
+ 	OUTCLK_SSI2_RX = 0x0a,
++	OUTCLK_SSI3_RX = 0x0b,
+ 	OUTCLK_SPDIF_RX = 0x0c,
+ 	OUTCLK_ASRCK1_CLK = 0x0f,
+ };
+-- 
+1.7.7.4
+

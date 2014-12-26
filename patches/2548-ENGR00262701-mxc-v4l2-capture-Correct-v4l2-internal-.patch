@@ -1,0 +1,33 @@
+From 367f3cf6d3f13f74a01da848aa112b8e0e77b3b7 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Wed, 15 May 2013 14:43:10 +0800
+Subject: [PATCH 2548/2666] ENGR00262701 mxc v4l2 capture:Correct v4l2
+ internal master device name
+
+There could be two v4l2 internal master devices with the same name in
+the system if the name is in 'mxc_v4l2_cap<csi>' fashion, since there
+are two IPUs embedded in i.MX6Q and each IPU has two CSI ports. This
+patch changes the name to be in 'mxc_v4l2_cap<pdev->id>' fashion to
+fix the naming issue.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+ drivers/media/video/mxc/capture/mxc_v4l2_capture.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/media/video/mxc/capture/mxc_v4l2_capture.c b/drivers/media/video/mxc/capture/mxc_v4l2_capture.c
+index 3e81f1c..9130388 100644
+--- a/drivers/media/video/mxc/capture/mxc_v4l2_capture.c
++++ b/drivers/media/video/mxc/capture/mxc_v4l2_capture.c
+@@ -2648,7 +2648,7 @@ static void init_camera_struct(cam_data *cam, struct platform_device *pdev)
+ 
+ 	cam->self = kmalloc(sizeof(struct v4l2_int_device), GFP_KERNEL);
+ 	cam->self->module = THIS_MODULE;
+-	sprintf(cam->self->name, "mxc_v4l2_cap%d", cam->csi);
++	sprintf(cam->self->name, "mxc_v4l2_cap%d", pdev->id);
+ 	cam->self->type = v4l2_int_type_master;
+ 	cam->self->u.master = &mxc_v4l2_master;
+ }
+-- 
+1.7.7.4
+

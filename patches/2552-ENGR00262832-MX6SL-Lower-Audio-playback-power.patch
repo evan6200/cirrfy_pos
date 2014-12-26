@@ -1,0 +1,616 @@
+From 6f394da8b374dc4a063209deedeb5d8a62ae4c74 Mon Sep 17 00:00:00 2001
+From: Ranjani Vaidyanathan <ra5478@freescale.com>
+Date: Tue, 23 Apr 2013 23:39:38 -0500
+Subject: [PATCH 2552/2666] ENGR00262832 MX6SL-Lower Audio playback power.
+
+Move MMDC to be sourced from PLL2_200M in audio mode.
+Set the DDR freq to be 100MHz in audio mode.
+Add code to drop DDR to 25MHz when ARM is in WFI while
+playing audio. This will be the case when SDMA is transferring
+data from the audio buffer in IRAM. Also float the DDR IO
+pins in this state.
+
+Set Audio PLL to bypass mode.
+Source both WM8962 and SSI2 from audio PLL (PLL4).
+
+Set AHB to 8MHz in Audio playback mode when ARM is going to enter WFI.
+
+Signed-off-by: Ranjani Vaidyanathan <ra5478@freescale.com>
+---
+ arch/arm/configs/imx6s_defconfig     |    1 +
+ arch/arm/mach-mx6/board-mx6sl_arm2.c |    4 +-
+ arch/arm/mach-mx6/board-mx6sl_evk.c  |   12 ++++-
+ arch/arm/mach-mx6/bus_freq.c         |   13 ++++--
+ arch/arm/mach-mx6/clock_mx6sl.c      |   82 ++++++++++++++++++++--------------
+ arch/arm/mach-mx6/mx6sl_ddr.S        |   53 ++++++++++++++++------
+ arch/arm/mach-mx6/mx6sl_wfi.S        |   71 ++++++++++++++++++++++++++++-
+ arch/arm/mach-mx6/system.c           |   10 +++--
+ 8 files changed, 183 insertions(+), 63 deletions(-)
+
+diff --git a/arch/arm/configs/imx6s_defconfig b/arch/arm/configs/imx6s_defconfig
+index 7620cab..17440ce 100644
+--- a/arch/arm/configs/imx6s_defconfig
++++ b/arch/arm/configs/imx6s_defconfig
+@@ -1818,6 +1818,7 @@ CONFIG_SND_SOC=y
+ CONFIG_SND_SOC_AC97_BUS=y
+ CONFIG_SND_IMX_SOC=y
+ CONFIG_SND_MXC_SOC_MX2=y
++CONFIG_SND_MXC_SOC_IRAM=y
+ CONFIG_SND_MXC_SOC_SPDIF_DAI=y
+ CONFIG_SND_SOC_IMX_SGTL5000=y
+ CONFIG_SND_SOC_IMX_WM8958=y
+diff --git a/arch/arm/mach-mx6/board-mx6sl_arm2.c b/arch/arm/mach-mx6/board-mx6sl_arm2.c
+index 66868c6..b6f3382 100755
+--- a/arch/arm/mach-mx6/board-mx6sl_arm2.c
++++ b/arch/arm/mach-mx6/board-mx6sl_arm2.c
+@@ -484,8 +484,8 @@ static int mxc_wm8962_init(void)
+ 
+ 	clk_set_parent(extern_audio_root, pll4);
+ 
+-	rate = clk_round_rate(extern_audio_root, 26000000);
+-	clk_set_rate(extern_audio_root, rate);
++	rate = 24000000;
++	clk_set_rate(extern_audio_root, 24000000);
+ 
+ 	wm8962_data.sysclk = rate;
+ 
+diff --git a/arch/arm/mach-mx6/board-mx6sl_evk.c b/arch/arm/mach-mx6/board-mx6sl_evk.c
+index a2dfd41..3ae48c6 100644
+--- a/arch/arm/mach-mx6/board-mx6sl_evk.c
++++ b/arch/arm/mach-mx6/board-mx6sl_evk.c
+@@ -539,8 +539,16 @@ static int mxc_wm8962_init(void)
+ 		return PTR_ERR(extern_audio_root);
+ 	}
+ 
+-	rate = clk_round_rate(extern_audio_root, 24000000);
+-	clk_set_rate(extern_audio_root, rate);
++	pll4 = clk_get(NULL, "pll4");
++	if (IS_ERR(pll4)) {
++		pr_err("can't get pll4 clock.\n");
++		return PTR_ERR(pll4);
++	}
++
++	clk_set_parent(extern_audio_root, pll4);
++
++	rate = 24000000;
++	clk_set_rate(extern_audio_root, 24000000);
+ 
+ 	wm8962_data.sysclk = rate;
+ 	/* set AUDMUX pads to 1.8v */
+diff --git a/arch/arm/mach-mx6/bus_freq.c b/arch/arm/mach-mx6/bus_freq.c
+index 1f429f9..ba26367 100644
+--- a/arch/arm/mach-mx6/bus_freq.c
++++ b/arch/arm/mach-mx6/bus_freq.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2011-2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+@@ -47,7 +47,7 @@
+ #include <linux/suspend.h>
+ 
+ #define LPAPM_CLK		24000000
+-#define DDR_AUDIO_CLK	50000000
++#define DDR_AUDIO_CLK	100000000
+ #define DDR_MED_CLK		400000000
+ #define DDR3_NORMAL_CLK		528000000
+ #define GPC_PGC_GPU_PGCR_OFFSET	0x260
+@@ -78,7 +78,8 @@ unsigned int ddr_normal_rate;
+ int low_freq_bus_used(void);
+ void set_ddr_freq(int ddr_freq);
+ void *mx6sl_wfi_iram_base;
+-void (*mx6sl_wfi_iram)(int arm_podf, unsigned long wfi_iram_addr) = NULL;
++void (*mx6sl_wfi_iram)(int arm_podf, unsigned long wfi_iram_addr,\
++		int audio_mode) = NULL;
+ extern void mx6sl_wait (int arm_podf, unsigned long wfi_iram_addr);
+ 
+ void *mx6sl_ddr_freq_base;
+@@ -169,6 +170,10 @@ void reduce_bus_freq(void)
+ 			/* PLL2 is on in this mode, as DDR is at 50MHz. */
+ 			/* Now change DDR freq while running from IRAM. */
+ 
++			/* Set AHB to 24MHz. */
++			clk_set_rate(ahb_clk,
++				clk_round_rate(ahb_clk, LPAPM_CLK / 3));
++
+ 			spin_lock_irqsave(&freq_lock, flags);
+ 			mx6sl_ddr_freq_change_iram(DDR_AUDIO_CLK,
+ 							low_bus_freq_mode);
+@@ -269,7 +274,7 @@ int set_low_bus_freq(void)
+ 	if (!bus_freq_scaling_initialized || !bus_freq_scaling_is_active)
+ 		return 0;
+ 
+-	/* Check to see if we need to got from
++	/* Check to see if we need to get from
+ 	  * low bus freq mode to audio bus freq mode.
+ 	  * If so, the change needs to be done immediately.
+ 	  */
+diff --git a/arch/arm/mach-mx6/clock_mx6sl.c b/arch/arm/mach-mx6/clock_mx6sl.c
+index c6b08cb..65ea38f 100755
+--- a/arch/arm/mach-mx6/clock_mx6sl.c
++++ b/arch/arm/mach-mx6/clock_mx6sl.c
+@@ -73,6 +73,7 @@ static struct cpu_op *cpu_op_tbl;
+ static int cpu_op_nr;
+ static bool pll1_enabled;
+ static bool arm_needs_pll2_400;
++static bool audio_pll_bypass;
+ 
+ DEFINE_SPINLOCK(mx6sl_clk_lock);
+ #define SPIN_DELAY	1200000 /* in nanoseconds */
+@@ -429,7 +430,8 @@ static int _clk_pll_enable(struct clk *clk)
+ 	pllbase = _get_pll_base(clk);
+ 
+ 	reg = __raw_readl(pllbase);
+-	reg &= ~ANADIG_PLL_POWER_DOWN;
++	if (clk != &pll4_audio_main_clk || !audio_pll_bypass)
++		reg &= ~ANADIG_PLL_POWER_DOWN;
+ 
+ 	/* The 480MHz PLLs have the opposite definition for power bit. */
+ 	if (clk == &pll3_usb_otg_main_clk || clk == &pll7_usb_host_main_clk)
+@@ -442,14 +444,18 @@ static int _clk_pll_enable(struct clk *clk)
+ 		__raw_writel(BM_ANADIG_ANA_MISC2_CONTROL0, apll_base + HW_ANADIG_ANA_MISC2_CLR);
+ 
+ 	/* Wait for PLL to lock */
+-	if (!WAIT((__raw_readl(pllbase) & ANADIG_PLL_LOCK),
+-				SPIN_DELAY))
+-		panic("pll enable failed\n");
+-
++	if (clk != &pll4_audio_main_clk || !audio_pll_bypass) {
++		if (!WAIT((__raw_readl(pllbase) & ANADIG_PLL_LOCK),
++					SPIN_DELAY))
++			panic("pll enable failed\n");
++	}
+ 	/* Enable the PLL output now*/
+ 	reg = __raw_readl(pllbase);
+-	reg &= ~ANADIG_PLL_BYPASS;
+-	reg |= ANADIG_PLL_ENABLE;
++	if (clk != &pll4_audio_main_clk || !audio_pll_bypass)
++		reg &= ~ANADIG_PLL_BYPASS;
++	else
++		reg |= ANADIG_PLL_ENABLE;
++
+ 	__raw_writel(reg, pllbase);
+ 
+ 	return 0;
+@@ -874,6 +880,9 @@ static unsigned long _clk_audio_video_get_rate(struct clk *clk)
+ 
+ 	pllbase = _get_pll_base(clk);
+ 
++	if (__raw_readl(pllbase) & ANADIG_PLL_BYPASS)
++		return 24000000;
++
+ 	test_div_sel = (__raw_readl(pllbase)
+ 		& ANADIG_PLL_AV_TEST_DIV_SEL_MASK)
+ 		>> ANADIG_PLL_AV_TEST_DIV_SEL_OFFSET;
+@@ -917,6 +926,16 @@ static int _clk_audio_video_set_rate(struct clk *clk, unsigned long rate)
+ 	u32 test_div_sel = 2;
+ 	u32 control3 = 0;
+ 
++	pllbase = _get_pll_base(clk);
++
++	if (clk == &pll4_audio_main_clk && audio_pll_bypass) {
++		reg = __raw_readl(pllbase)
++				& ~ANADIG_PLL_SYS_DIV_SELECT_MASK
++				& ~ANADIG_PLL_AV_TEST_DIV_SEL_MASK;
++		__raw_writel(reg, pllbase);
++		return 0;
++	}
++
+ 	if (clk == &pll4_audio_main_clk)
+ 		min_clk_rate = AUDIO_VIDEO_MIN_CLK_FREQ / 4;
+ 	else
+@@ -925,8 +944,6 @@ static int _clk_audio_video_set_rate(struct clk *clk, unsigned long rate)
+ 	if ((rate < min_clk_rate) || (rate > AUDIO_VIDEO_MAX_CLK_FREQ))
+ 		return -EINVAL;
+ 
+-	pllbase = _get_pll_base(clk);
+-
+ 	pre_div_rate = rate;
+ 	while (pre_div_rate < AUDIO_VIDEO_MIN_CLK_FREQ) {
+ 		pre_div_rate *= 2;
+@@ -986,6 +1003,9 @@ static unsigned long _clk_audio_video_round_rate(struct clk *clk,
+ 	u32 control3 = 0;
+ 	unsigned long final_rate;
+ 
++	if (clk == &pll4_audio_main_clk && audio_pll_bypass)
++		return 24000000;
++
+ 	if (clk == &pll4_audio_main_clk)
+ 		min_clk_rate = AUDIO_VIDEO_MIN_CLK_FREQ / 4;
+ 	else
+@@ -2376,14 +2396,23 @@ static int _clk_extern_audio_set_rate(struct clk *clk, unsigned long rate)
+ 	u32 reg, div, pre, post;
+ 	u32 parent_rate = clk_get_rate(clk->parent);
+ 
+-	div = parent_rate / rate;
+-	if (div == 0)
+-		div++;
+-	if (((parent_rate / div) != rate) || div > 64)
+-		return -EINVAL;
++	if (rate == 24000000 && clk->parent == &pll4_audio_main_clk) {
++		/* If the requested rate is 24MHz,
++		  * set the PLL4 to bypass mode.
++		  */
++		audio_pll_bypass = 1;
++		pre = post = 1;
++	} else {
++		div = parent_rate / rate;
++		if (div == 0)
++			div++;
++		if (((parent_rate / div) != rate) || div > 64)
++			return -EINVAL;
+ 
+-	__calc_pre_post_dividers(1 << 3, div, &pre, &post);
++		audio_pll_bypass = 0;
+ 
++		__calc_pre_post_dividers(1 << 3, div, &pre, &post);
++	}
+ 	reg = __raw_readl(MXC_CCM_CS1CDR);
+ 	reg &= ~(MXC_CCM_CS1CDR_ESAI_CLK_PRED_MASK|
+ 		 MXC_CCM_CS1CDR_ESAI_CLK_PODF_MASK);
+@@ -2442,15 +2471,10 @@ static struct clk ssi1_clk[] = {
+ 	 .flags  = AHB_AUDIO_SET_POINT | CPU_FREQ_TRIG_UPDATE,
+ #ifndef CONFIG_SND_MXC_SOC_IRAM
+ 	 .secondary = &mmdc_ch1_axi_clk[0],
+-	},
+ #else
+-	 .secondary = &ssi1_clk[1],
+-	},
+-	{
+-	 .parent = &mmdc_ch1_axi_clk[0],
+ 	 .secondary = &ocram_clk,
+-	},
+ #endif
++	},
+ };
+ 
+ static unsigned long _clk_ssi2_get_rate(struct clk *clk)
+@@ -2523,15 +2547,10 @@ static struct clk ssi2_clk[] = {
+ 	 .flags  = AHB_AUDIO_SET_POINT | CPU_FREQ_TRIG_UPDATE,
+ #ifndef CONFIG_SND_MXC_SOC_IRAM
+ 	 .secondary = &mmdc_ch1_axi_clk[0],
+-	},
+ #else
+-	 .secondary = &ssi2_clk[1],
+-	},
+-	{
+-	 .parent = &mmdc_ch1_axi_clk[0],
+ 	 .secondary = &ocram_clk,
+-	},
+ #endif
++	},
+ };
+ 
+ static unsigned long _clk_ssi3_get_rate(struct clk *clk)
+@@ -2603,15 +2622,10 @@ static struct clk ssi3_clk[] = {
+ 	 .flags  = AHB_AUDIO_SET_POINT | CPU_FREQ_TRIG_UPDATE,
+ #ifndef CONFIG_SND_MXC_SOC_IRAM
+ 	 .secondary = &mmdc_ch1_axi_clk[0],
+-	},
+ #else
+-	 .secondary = &ssi3_clk[1],
+-	},
+-	{
+-	 .parent = &mmdc_ch1_axi_clk[0],
+ 	 .secondary = &ocram_clk,
+-	},
+ #endif
++	},
+ };
+ 
+ static unsigned long _clk_epdc_lcdif_pix_round_rate(struct clk *clk,
+@@ -4118,6 +4132,8 @@ int __init mx6sl_clocks_init(unsigned long ckil, unsigned long osc,
+ 	/* lcdif pix - PLL5 as parent */
+ 	clk_set_parent(&lcdif_pix_clk, &pll5_video_main_clk);
+ 
++	clk_set_parent(&ssi2_clk[0], &pll4_audio_main_clk);
++
+ 	lp_high_freq = 0;
+ 	lp_med_freq = 0;
+ 
+diff --git a/arch/arm/mach-mx6/mx6sl_ddr.S b/arch/arm/mach-mx6/mx6sl_ddr.S
+index 1567f72..9e83985 100644
+--- a/arch/arm/mach-mx6/mx6sl_ddr.S
++++ b/arch/arm/mach-mx6/mx6sl_ddr.S
+@@ -116,13 +116,6 @@ mmdc_podf0:
+ 
+ 	  .macro	ddr_switch_400MHz
+ 
+-     /* Check if we are switching between
+-       * 400Mhz <-> 50MHz. If so, we only need to
+-       * update MMDC divider.
+-       */
+-      cmp    r1, #0
+-      beq     change_divider_only
+-
+     /* Set MMDC divider first, in case PLL3 is at 480MHz. */
+       ldr     r6, [r3, #0x10]
+       and    r6, r6, #0x10000
+@@ -141,6 +134,13 @@ mmdc_podf:
+ 
+ pll3_in_bypass:
+ 
++     /* Check if we are switching between
++       * 400Mhz <-> 100MHz.If so, we should
++       * try to source MMDC from PLL2_200M.
++       */
++      cmp    r1, #0
++      beq     not_low_bus_freq
++
+      /* Ensure that MMDC is sourced from PLL2 mux first. */
+      ldr     r6, [r2, #0x14]
+      bic     r6, r6, #0x4000000
+@@ -151,6 +151,7 @@ periph2_clk_switch4:
+      cmp     r6, #0
+      bne     periph2_clk_switch4
+ 
++not_low_bus_freq:
+      /* Now ensure periph2_clk2_sel mux is set to PLL3 */
+      ldr     r6, [r2, #0x18]
+      bic     r6, r6, #0x100000
+@@ -166,6 +167,12 @@ periph2_clk_switch5:
+      cmp     r6, #0
+      bne     periph2_clk_switch5
+ 
++     /* Check if PLL2 is already unlocked.
++       * If so do nothing with PLL2.
++       */
++     cmp    r1, #0
++     beq	pll2_already_on
++
+      /* Now power up PLL2 and unbypass it. */
+      ldr    r6, [r3, #0x30]
+      bic    r6, r6, #0x1000
+@@ -192,27 +199,43 @@ wait_for_pll_lock:
+      bic    r6, r6, #0x800000
+      str     r6, [r3, #0x100]
+ 
++pll2_already_on:
+     /* Now switch MMDC clk back to pll2_mux option. */
+     /* Ensure pre_periph2_clk2 is set to pll2_pfd_400M */
++    /* If switching to audio DDR freq, set the
++     * pre_periph2_clk2 to PLL2_PFD_200M
++     */
++    ldr     r6, =400000000
++    cmp   r6, r0
++    bne    use_pll2_pfd_200M
++
+      ldr     r6, [r2, #0x18]
+      bic     r6, r6, #0x600000
+      orr     r6, r6, #0x200000
+      str     r6, [r2, #0x18]
++     ldr     r6, =400000000
++     b       cont2
+ 
+-     ldr     r6, [r2, #0x14]
+-     bic     r6, r6, #0x4000000
+-     str     r6, [r2, #0x14]
++use_pll2_pfd_200M:
++     ldr     r6, [r2, #0x18]
++     orr     r6, r6, #0x600000
++     str     r6, [r2, #0x18]
++     ldr     r6, =200000000
++
++cont2:
++     ldr     r4, [r2, #0x14]
++     bic     r4, r4, #0x4000000
++     str     r4, [r2, #0x14]
+ 
+ periph2_clk_switch6:
+-     ldr     r6, [r2, #0x48]
+-     cmp     r6, #0
++     ldr     r4, [r2, #0x48]
++     cmp     r4, #0
+      bne     periph2_clk_switch6
+ 
+ change_divider_only:
+     /* Calculate the MMDC divider
+      * based on the requested freq.
+      */
+-    ldr    r6, =400000000
+     ldr    r4, =0
+ Loop2:
+     sub    r6, r6, r0
+@@ -306,7 +329,7 @@ force_measure1:
+  */
+ ENTRY(mx6sl_ddr_iram)
+ 
+-    push {r4, r5, r6, r7, r8, r9, r10 }
++    push {r4-r10}
+ 
+ mx6sl_ddr_freq_change:
+     ldr     r3, =ANATOP_BASE_ADDR
+@@ -436,7 +459,7 @@ skip_power_down:
+      bic     r6, r6, #0x100
+      str     r6, [r8, #0x410]
+ 
+-    pop {r4,r5, r6, r7, r8, r9, r10}
++    pop {r4-r10}
+ 
+     /* Restore registers */
+     mov     pc, lr
+diff --git a/arch/arm/mach-mx6/mx6sl_wfi.S b/arch/arm/mach-mx6/mx6sl_wfi.S
+index 7ee4670..bd5a00c 100644
+--- a/arch/arm/mach-mx6/mx6sl_wfi.S
++++ b/arch/arm/mach-mx6/mx6sl_wfi.S
+@@ -158,9 +158,11 @@ fifo_reset2_wait:
+  */
+ ENTRY(mx6sl_wait)
+ 
+-    push {r4, r5, r6, r7, r8, r9, r10}
++    push {r4-r11}
+ 
+ mx6sl_lpm_wfi:
++    mov    r11, r2
++
+     /* Get the IRAM data storage address. */
+     mov    r10, r1
+     mov	r9, r1 		/* get suspend_iram_base */
+@@ -231,6 +233,9 @@ poll_dvfs_set_1:
+      orr     r6, r6, #0x100
+      str     r6, [r8, #0x410]
+ 
++     cmp      r11, #1
++     beq      audio_mode
++
+      /* Now set DDR rate to 1MHz. */
+      /* DDR is from bypassed PLL2 on periph2_clk2 path.
+        * Set the periph2_clk2_podf to divide by 8.
+@@ -244,6 +249,15 @@ poll_dvfs_set_1:
+      bic    r6, r6, #0x38
+      orr    r6, r6, #0x10
+      str     r6, [r2, #0x14]
++     b       mmdc_podf
++
++audio_mode:
++     /* MMDC is from PLL2_200M.
++       * Set the mmdc_podf to div by 8.
++       */
++     ldr    r6, [r2, #0x14]
++     orr    r6, r6, #0x38
++     str     r6, [r2, #0x14]
+ 
+     /* Loop till podf is accepted. */
+ mmdc_podf:
+@@ -254,6 +268,9 @@ mmdc_podf:
+       /* Set the DDR IO in LPM state. */
+      sl_ddr_io_set_lpm
+ 
++     cmp      r11, #1
++     beq      do_audio_arm_clk
++
+      /* Check if none of the PLLs are
+       * locked, except PLL1 which will get
+       * bypassed below.
+@@ -394,6 +411,30 @@ podf_loop:
+      orr     r6, r6, #0x1
+      str     r6, [r3, #0x150]
+ 
++     b      do_wfi
++
++do_audio_arm_clk:
++    /* ARM is from PLL2_PFD2_400M here.
++      * Switch ARM to bypassed PLL1.
++      */
++     ldr    r6, [r2, #0xC]
++     bic   r6, r6, #0x4
++     str   r6, [r2, #0xC]
++
++     /* Set the ARM_PODF to divide by 2
++      * as IPG is at 4MHz, we cannot run
++      * ARM_CLK above 9.6MHz when
++      * system enters WAIT mode.
++      */
++    ldr    r6, =0x2
++    str    r6, [r2, #0x10]
++
++    /* Loop till podf is accepted. */
++podf_loop_audio:
++     ldr     r6, [r2, #0x48]
++     cmp   r6, #0x0
++     bne   podf_loop_audio
++
+ do_wfi:
+      /* Now do WFI. */
+      wfi
+@@ -407,6 +448,9 @@ podf_loop1:
+      cmp   r6, #0x0
+      bne   podf_loop1
+ 
++     cmp    r11, #1
++     beq    audio_arm_clk_restore
++
+       /* Check if powered down
+         * analog components.
+         */
+@@ -489,12 +533,24 @@ ahb_podf1:
+      cmp   r6, #0x0
+      bne   podf_loop1
+ 
+-    mov	r9, r10 		/* get suspend_iram_base */
++     b     wfi_restore
++
++audio_arm_clk_restore:
++     /* Move ARM back to PLL2_PFD2_400M */
++     ldr    r6, [r2, #0xC]
++     orr   r6, r6, #0x4
++     str   r6, [r2, #0xC]
++
++wfi_restore:
++     mov	r9, r10 		/* get suspend_iram_base */
+      add	r9, r9, #IRAM_WAIT_SIZE	/* 4K */
+ 
+     /* Restore the DDR IO before exiting self-refresh. */
+      sl_ddr_io_restore
+ 
++     cmp     r11, #1
++     beq     mmdc_audio_restore
++
+     /* Set MMDC back to 24MHz. */
+     /* Set periph2_clk2_podf to divide by 1. */
+      /* Now set MMDC PODF to divide by 1. */
+@@ -502,6 +558,15 @@ ahb_podf1:
+      bic   r6, r6, #0x3f
+      str    r6, [r2, #0x14]
+ 
++     b     mmdc_podf1
++
++mmdc_audio_restore:
++     /* Set MMDC back to 100MHz. */
++     ldr    r6, [r2, #0x14]
++     bic   r6, r6, #0x38
++     orr   r6, r6, #0x8
++     str    r6, [r2, $0x14]
++
+ mmdc_podf1:
+      ldr     r6, [r2, #0x48]
+      cmp   r6, #0x0
+@@ -565,7 +630,7 @@ poll_dvfs_clear_1:
+      str     r6, [r8, #0x410]
+ 
+ 
+-    pop {r4,r5, r6, r7, r8, r9, r10}
++    pop {r4-r11}
+ 
+     /* Restore registers */
+     mov     pc, lr
+diff --git a/arch/arm/mach-mx6/system.c b/arch/arm/mach-mx6/system.c
+index 11038d6..f1c2e29 100644
+--- a/arch/arm/mach-mx6/system.c
++++ b/arch/arm/mach-mx6/system.c
+@@ -61,7 +61,8 @@ bool enet_is_active;
+ void arch_idle_with_workaround(int cpu);
+ 
+ extern void *mx6sl_wfi_iram_base;
+-extern void (*mx6sl_wfi_iram)(int arm_podf, unsigned long wfi_iram_addr);
++extern void (*mx6sl_wfi_iram)(int arm_podf, unsigned long wfi_iram_addr, \
++			int audio_mode);
+ extern void mx6_wait(void *num_cpu_idle_lock, void *num_cpu_idle, \
+ 				int wait_arm_podf, int cur_arm_podf);
+ extern bool enable_wait_mode;
+@@ -276,8 +277,8 @@ void arch_idle_single_core(void)
+ 			if ((mmdc_ch0_axi != NULL))
+ 				ddr_usecount = clk_get_usecount(mmdc_ch0_axi);
+ 
+-			if (cpu_is_mx6sl() && low_bus_freq_mode
+-				&& ddr_usecount == 1) {
++			if (cpu_is_mx6sl() && (ddr_usecount == 1)  &&
++				(low_bus_freq_mode || audio_bus_freq_mode)) {
+ 				/* In this mode PLL2 i already in bypass,
+ 				  * ARM is sourced from PLL1. The code in IRAM
+ 				  * will set ARM to be sourced from STEP_CLK
+@@ -290,7 +291,8 @@ void arch_idle_single_core(void)
+ 				  * we can lower DDR freq.
+ 				  */
+ 				mx6sl_wfi_iram(org_arm_podf,
+-					(unsigned long)mx6sl_wfi_iram_base);
++					(unsigned long)mx6sl_wfi_iram_base,
++					audio_bus_freq_mode);
+ 			} else {
+ 				/* Need to set ARM to run at 24MHz since IPG
+ 				  * is at 12MHz. This is valid for audio mode on
+-- 
+1.7.7.4
+

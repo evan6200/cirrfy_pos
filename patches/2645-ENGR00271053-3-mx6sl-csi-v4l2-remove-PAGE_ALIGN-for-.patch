@@ -1,0 +1,50 @@
+From ce403f493a26ea86bb78ab0ac1e1bff14b4beab0 Mon Sep 17 00:00:00 2001
+From: Robby Cai <R63905@freescale.com>
+Date: Mon, 15 Jul 2013 18:54:49 +0800
+Subject: [PATCH 2645/2666] ENGR00271053-3 mx6sl: csi/v4l2: remove PAGE_ALIGN
+ for image size calculation
+
+The driver should inform the upper-lever application the exact size of
+the image. PAGE_ALIGN macro should be removed.
+
+Signed-off-by: Robby Cai <R63905@freescale.com>
+---
+ drivers/media/video/mxc/capture/csi_v4l2_capture.c |    8 +++-----
+ 1 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/video/mxc/capture/csi_v4l2_capture.c b/drivers/media/video/mxc/capture/csi_v4l2_capture.c
+index 6574ca7..045a388 100644
+--- a/drivers/media/video/mxc/capture/csi_v4l2_capture.c
++++ b/drivers/media/video/mxc/capture/csi_v4l2_capture.c
+@@ -458,8 +458,7 @@ static int csi_allocate_frame_buf(cam_data *cam, int count)
+ 		cam->frame[i].buffer.index = i;
+ 		cam->frame[i].buffer.flags = V4L2_BUF_FLAG_MAPPED;
+ 		cam->frame[i].buffer.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+-		cam->frame[i].buffer.length = PAGE_ALIGN(cam->v2f.fmt.
+-							 pix.sizeimage);
++		cam->frame[i].buffer.length = cam->v2f.fmt.pix.sizeimage;
+ 		cam->frame[i].buffer.memory = V4L2_MEMORY_MMAP;
+ 		cam->frame[i].buffer.m.offset = cam->frame[i].paddress;
+ 		cam->frame[i].index = i;
+@@ -526,7 +525,7 @@ static int csi_v4l2_prepare_bufs(cam_data *cam, struct v4l2_buffer *buf)
+ 	pr_debug("In MVC:csi_v4l2_prepare_bufs\n");
+ 
+ 	if (buf->index < 0 || buf->index >= FRAME_NUM || buf->length <
+-			PAGE_ALIGN(cam->v2f.fmt.pix.sizeimage)) {
++			cam->v2f.fmt.pix.sizeimage) {
+ 		pr_err("ERROR: v4l2 capture: csi_v4l2_prepare_bufs buffers "
+ 			"not allocated,index=%d, length=%d\n", buf->index,
+ 			buf->length);
+@@ -589,8 +588,7 @@ static int csi_streamon(cam_data *cam)
+ 		return -ENOBUFS;
+ 	}
+ 	cam->dummy_frame.buffer.type = V4L2_BUF_TYPE_PRIVATE;
+-	cam->dummy_frame.buffer.length =
+-	    PAGE_ALIGN(cam->v2f.fmt.pix.sizeimage);
++	cam->dummy_frame.buffer.length = cam->v2f.fmt.pix.sizeimage;
+ 	cam->dummy_frame.buffer.m.offset = cam->dummy_frame.paddress;
+ 
+ 	spin_lock_irqsave(&cam->queue_int_lock, flags);
+-- 
+1.7.7.4
+

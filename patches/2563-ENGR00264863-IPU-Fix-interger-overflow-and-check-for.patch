@@ -1,0 +1,47 @@
+From d9703615928db877ad6c23a807d0f80977891a32 Mon Sep 17 00:00:00 2001
+From: Wayne Zou <b36644@freescale.com>
+Date: Thu, 30 May 2013 14:59:26 +0800
+Subject: [PATCH 2563/2666] ENGR00264863 IPU: Fix interger overflow and check
+ for invalid zero parameter
+
+Fix interger overflow and check for invalid zero divider parameter
+
+Signed-off-by: Wayne Zou <b36644@freescale.com>
+---
+ drivers/mxc/ipu3/ipu_disp.c |    8 ++++++--
+ 1 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mxc/ipu3/ipu_disp.c b/drivers/mxc/ipu3/ipu_disp.c
+index 35b7819..87fa001 100644
+--- a/drivers/mxc/ipu3/ipu_disp.c
++++ b/drivers/mxc/ipu3/ipu_disp.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2005-2012 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright 2005-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  */
+ 
+ /*
+@@ -61,7 +61,7 @@ static unsigned long _ipu_pixel_clk_get_rate(struct clk *clk)
+ {
+ 	struct ipu_soc *ipu = pixelclk2ipu(clk);
+ 	u32 div;
+-	u64 final_rate = clk_get_rate(clk->parent) * 16;
++	u64 final_rate = (unsigned long long)clk_get_rate(clk->parent) * 16;
+ 
+ 	_ipu_get(ipu);
+ 	div = ipu_di_read(ipu, clk->id, DI_BS_CLKGEN0);
+@@ -1297,6 +1297,10 @@ int32_t ipu_init_sync_panel(struct ipu_soc *ipu, int disp, uint32_t pixel_clk,
+ 	msleep(5);
+ 	/* Get integer portion of divider */
+ 	div = clk_get_rate(clk_get_parent(&ipu->pixel_clk[disp])) / rounded_pixel_clk;
++	if (!div) {
++		dev_err(ipu->dev, "invalid pixel clk div = 0\n");
++		return -EINVAL;
++	}
+ 
+ 	mutex_lock(&ipu->mutex_lock);
+ 
+-- 
+1.7.7.4
+

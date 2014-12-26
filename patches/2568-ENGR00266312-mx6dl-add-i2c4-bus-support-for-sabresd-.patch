@@ -1,0 +1,165 @@
+From 593e5bd013eeaeda7405c587f851a9d12e9f8a75 Mon Sep 17 00:00:00 2001
+From: Fugang Duan <B38611@freescale.com>
+Date: Sun, 9 Jun 2013 14:43:52 +0800
+Subject: [PATCH 2568/2666] ENGR00266312 mx6dl: add i2c4 bus support for
+ sabresd/auto, arm2 platforms
+
+imx6dq have 3 i2c controllers and 5 ecspi,imx6dl have 4 i2c4
+controllers and 4 ecspi. imx6dl i2c4 clock source is routed
+from pll3 through to ecspi_root gate.
+
+Add i2c4 bus support for sabresd/auto, and arm2 platforms.
+
+Signed-off-by: Fugang Duan  <B38611@freescale.com>
+---
+ arch/arm/mach-mx6/board-mx6q_arm2.c          |   12 +++++-------
+ arch/arm/mach-mx6/board-mx6q_sabreauto.c     |    7 +++++--
+ arch/arm/mach-mx6/board-mx6q_sabresd.c       |    2 ++
+ arch/arm/mach-mx6/clock.c                    |   19 ++++++++++++++++++-
+ arch/arm/plat-mxc/devices/platform-imx-i2c.c |    3 +++
+ 5 files changed, 33 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/board-mx6q_arm2.c b/arch/arm/mach-mx6/board-mx6q_arm2.c
+index 97b601de..0fcf995 100644
+--- a/arch/arm/mach-mx6/board-mx6q_arm2.c
++++ b/arch/arm/mach-mx6/board-mx6q_arm2.c
+@@ -882,11 +882,7 @@ static struct i2c_board_info mxc_i2c0_board_info[] __initdata = {
+ 	},
+ };
+ 
+-static struct imxi2c_platform_data mx6_arm2_i2c0_data = {
+-	.bitrate = 100000,
+-};
+-
+-static struct imxi2c_platform_data mx6_arm2_i2c1_data = {
++static struct imxi2c_platform_data mx6_arm2_i2c_data = {
+ 	.bitrate = 100000,
+ };
+ 
+@@ -2160,8 +2156,8 @@ static void __init mx6_arm2_init(void)
+ 
+ 	imx6q_add_imx_caam();
+ 
+-	imx6q_add_imx_i2c(0, &mx6_arm2_i2c0_data);
+-	imx6q_add_imx_i2c(1, &mx6_arm2_i2c1_data);
++	imx6q_add_imx_i2c(0, &mx6_arm2_i2c_data);
++	imx6q_add_imx_i2c(1, &mx6_arm2_i2c_data);
+ 	i2c_register_board_info(0, mxc_i2c0_board_info,
+ 			ARRAY_SIZE(mxc_i2c0_board_info));
+ 	i2c_register_board_info(1, mxc_i2c1_board_info,
+@@ -2173,6 +2169,8 @@ static void __init mx6_arm2_init(void)
+ 		i2c_register_board_info(2, mxc_i2c2_board_info,
+ 				ARRAY_SIZE(mxc_i2c2_board_info));
+ 	}
++	if (cpu_is_mx6dl())
++		imx6q_add_imx_i2c(3, &mx6_arm2_i2c_data);
+ 
+ 	/* SPI */
+ 	imx6q_add_ecspi(0, &mx6_arm2_spi_data);
+diff --git a/arch/arm/mach-mx6/board-mx6q_sabreauto.c b/arch/arm/mach-mx6/board-mx6q_sabreauto.c
+index fb590f5..5e0ed0d 100644
+--- a/arch/arm/mach-mx6/board-mx6q_sabreauto.c
++++ b/arch/arm/mach-mx6/board-mx6q_sabreauto.c
+@@ -747,7 +747,7 @@ static struct imxi2c_platform_data mx6q_sabreauto_i2c2_data = {
+ 	.bitrate	= 400000,
+ };
+ 
+-static struct imxi2c_platform_data mx6q_sabreauto_i2c1_data = {
++static struct imxi2c_platform_data mx6q_sabreauto_i2c_data = {
+ 	.bitrate	= 100000,
+ };
+ 
+@@ -1650,12 +1650,15 @@ static void __init mx6_board_init(void)
+ 
+ 	imx6q_add_imx_caam();
+ 
+-	imx6q_add_imx_i2c(1, &mx6q_sabreauto_i2c1_data);
++	imx6q_add_imx_i2c(1, &mx6q_sabreauto_i2c_data);
+ 	i2c_register_board_info(1, mxc_i2c1_board_info,
+ 			ARRAY_SIZE(mxc_i2c1_board_info));
+ 	imx6q_add_imx_i2c(2, &mx6q_sabreauto_i2c2_data);
+ 	i2c_register_board_info(2, mxc_i2c2_board_info,
+ 			ARRAY_SIZE(mxc_i2c2_board_info));
++	if (cpu_is_mx6dl())
++		imx6q_add_imx_i2c(3, &mx6q_sabreauto_i2c_data);
++
+ 
+ 	ret = gpio_request(SABREAUTO_PMIC_INT, "pFUZE-int");
+ 	if (ret) {
+diff --git a/arch/arm/mach-mx6/board-mx6q_sabresd.c b/arch/arm/mach-mx6/board-mx6q_sabresd.c
+index b5472df..2270087 100644
+--- a/arch/arm/mach-mx6/board-mx6q_sabresd.c
++++ b/arch/arm/mach-mx6/board-mx6q_sabresd.c
+@@ -1773,6 +1773,8 @@ static void __init mx6_sabresd_board_init(void)
+ 	imx6q_add_imx_i2c(0, &mx6q_sabresd_i2c_data);
+ 	imx6q_add_imx_i2c(1, &mx6q_sabresd_i2c_data);
+ 	imx6q_add_imx_i2c(2, &mx6q_sabresd_i2c_data);
++	if (cpu_is_mx6dl())
++		imx6q_add_imx_i2c(3, &mx6q_sabresd_i2c_data);
+ 	i2c_register_board_info(0, mxc_i2c0_board_info,
+ 			ARRAY_SIZE(mxc_i2c0_board_info));
+ 	i2c_register_board_info(1, mxc_i2c1_board_info,
+diff --git a/arch/arm/mach-mx6/clock.c b/arch/arm/mach-mx6/clock.c
+index cf5abab..cd53b48 100644
+--- a/arch/arm/mach-mx6/clock.c
++++ b/arch/arm/mach-mx6/clock.c
+@@ -5324,7 +5324,6 @@ static struct clk_lookup lookups[] = {
+ 	_REGISTER_CLOCK("imx6q-ecspi.1", NULL, ecspi_clk[1]),
+ 	_REGISTER_CLOCK("imx6q-ecspi.2", NULL, ecspi_clk[2]),
+ 	_REGISTER_CLOCK("imx6q-ecspi.3", NULL, ecspi_clk[3]),
+-	_REGISTER_CLOCK("imx6q-ecspi.4", NULL, ecspi_clk[4]),
+ 	_REGISTER_CLOCK(NULL, "emi_slow_clk", emi_slow_clk),
+ 	_REGISTER_CLOCK(NULL, "emi_clk", emi_clk),
+ 	_REGISTER_CLOCK(NULL, "enfc_clk", enfc_clk),
+@@ -5382,6 +5381,11 @@ static struct clk_lookup lookups[] = {
+ 	_REGISTER_CLOCK(NULL, "apb_pclk", dummy_clk),
+ };
+ 
++static struct
++clk_lookup imx6dl_i2c4 = _REGISTER_CLOCK("imx-i2c.3", NULL, ecspi_clk[4]);
++static struct
++clk_lookup imx6q_ecspi5 = _REGISTER_CLOCK("imx6q-ecspi.4", NULL, ecspi_clk[4]);
++
+ static void clk_tree_init(void)
+ 
+ {
+@@ -5419,6 +5423,19 @@ int __init mx6_clocks_init(unsigned long ckil, unsigned long osc,
+ 		clk_debug_register(lookups[i].clk);
+ 	}
+ 
++	/*
++	 * imx6q have 5 ecspi and 3 i2c
++	 * imx6dl have 4 ecspi and 4 i2c
++	 * imx6dl i2c4 use the imx6q ecspi5 clock source
++	 */
++	if (cpu_is_mx6dl()) {
++		clkdev_add(&imx6dl_i2c4);
++		clk_debug_register(imx6dl_i2c4.clk);
++	} else {
++		clkdev_add(&imx6q_ecspi5);
++		clk_debug_register(imx6q_ecspi5.clk);
++	}
++
+ 	/* Lower the ipg_perclk frequency to 22MHz.
+ 	  * I2C needs a minimum of 12.8MHz as its source
+ 	  * to acheive 400KHz speed. IPG_PERCLK sources
+diff --git a/arch/arm/plat-mxc/devices/platform-imx-i2c.c b/arch/arm/plat-mxc/devices/platform-imx-i2c.c
+index d11f52d..f2780ad 100755
+--- a/arch/arm/plat-mxc/devices/platform-imx-i2c.c
++++ b/arch/arm/plat-mxc/devices/platform-imx-i2c.c
+@@ -102,9 +102,12 @@ const struct imx_imx_i2c_data imx53_imx_i2c_data[] __initconst = {
+ const struct imx_imx_i2c_data imx6q_imx_i2c_data[] __initconst = {
+ #define imx6q_imx_i2c_data_entry(_id, _hwid)				\
+ 	imx_imx_i2c_data_entry(MX6Q, _id, _hwid, SZ_4K)
++#define imx6dl_imx_i2c_data_entry(_id, _hwid)				\
++	imx_imx_i2c_data_entry(MX6DL, _id, _hwid, SZ_4K)
+ 	imx6q_imx_i2c_data_entry(0, 1),
+ 	imx6q_imx_i2c_data_entry(1, 2),
+ 	imx6q_imx_i2c_data_entry(2, 3),
++	imx6dl_imx_i2c_data_entry(3, 4),
+ };
+ #endif /* ifdef CONFIG_SOC_IMX6Q */
+ 
+-- 
+1.7.7.4
+

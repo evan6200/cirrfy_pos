@@ -1,0 +1,68 @@
+From 6076183548f77107f56fbbb810d8e28bccb781a4 Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Thu, 2 May 2013 09:28:10 +0800
+Subject: [PATCH 2534/2666] ENGR00261037-2: usb: fix the bug that mark
+ lowpower flag wrongly
+
+At default, we mark lowpower as true. After PHY initialization
+finishes, it should mark lowpower as false.
+
+Besides, at error patch, we need to mark lowpower as true.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ drivers/usb/gadget/arcotg_udc.c |    3 ++-
+ drivers/usb/host/ehci-arc.c     |    3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/gadget/arcotg_udc.c b/drivers/usb/gadget/arcotg_udc.c
+index 7429d4b..23b905a 100755
+--- a/drivers/usb/gadget/arcotg_udc.c
++++ b/drivers/usb/gadget/arcotg_udc.c
+@@ -3075,10 +3075,10 @@ static int __devinit fsl_udc_probe(struct platform_device *pdev)
+ 	 * do platform specific init: check the clock, grab/config pins, etc.
+ 	 */
+ 	if (pdata->init && pdata->init(pdev)) {
+-		pdata->lowpower = false;
+ 		ret = -ENODEV;
+ 		goto err2a;
+ 	}
++	pdata->lowpower = false;
+ 
+ 	spin_lock_init(&pdata->lock);
+ 
+@@ -3234,6 +3234,7 @@ err4:
+ err3:
+ 	free_irq(udc_controller->irq, udc_controller);
+ err2:
++	dr_phy_low_power_mode(udc_controller, true);
+ 	if (pdata->exit)
+ 		pdata->exit(pdata->pdev);
+ err2a:
+diff --git a/drivers/usb/host/ehci-arc.c b/drivers/usb/host/ehci-arc.c
+index eaf4c04..59a2f4b 100755
+--- a/drivers/usb/host/ehci-arc.c
++++ b/drivers/usb/host/ehci-arc.c
+@@ -246,10 +246,10 @@ int usb_hcd_fsl_probe(const struct hc_driver *driver,
+ 	 * do platform specific init: check the clock, grab/config pins, etc.
+ 	 */
+ 	if (pdata->init && pdata->init(pdev)) {
+-		pdata->lowpower = false;
+ 		retval = -ENODEV;
+ 		goto err4;
+ 	}
++	pdata->lowpower = false;
+ 
+ 	spin_lock_init(&pdata->lock);
+ 
+@@ -315,6 +315,7 @@ err2:
+ 	usb_put_hcd(hcd);
+ err1:
+ 	dev_err(&pdev->dev, "init %s fail, %d\n", dev_name(&pdev->dev), retval);
++	fsl_usb_lowpower_mode(pdata, true);
+ 	if (pdata->exit && pdata->pdev)
+ 		pdata->exit(pdata->pdev);
+ 	return retval;
+-- 
+1.7.7.4
+

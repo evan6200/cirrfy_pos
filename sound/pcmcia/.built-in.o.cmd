@@ -1,0 +1,1 @@
+cmd_sound/pcmcia/built-in.o :=  /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o sound/pcmcia/built-in.o sound/pcmcia/vx/built-in.o sound/pcmcia/pdaudiocf/built-in.o 

@@ -1,0 +1,48 @@
+From 63696ec9965982a68f5cea38a4555a7093f00d80 Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Thu, 2 May 2013 09:04:18 +0800
+Subject: [PATCH 2533/2666] ENGR00261037-1: usb: usb host works abnormal after
+ unload gadget module
+
+If there is usb device on the OTG port when controller works
+at host mode, and at this time, we unload gadget module, the
+usbcmd.rs will be cleared, it is unexpected behavior.
+
+When the controller works at one mode(eg, host mode), the register
+should not be written by other mode driver (eg, devcie driver).
+The OTG driver does not consider this situation, and current i.mx
+FSL OTG driver does not support fully OTG function, so we remove
+the caller at fsl_otg_set_peripheral which will touch controller
+register.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ drivers/usb/otg/fsl_otg.c |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/otg/fsl_otg.c b/drivers/usb/otg/fsl_otg.c
+index 9fd3c87..00bd2e6 100755
+--- a/drivers/usb/otg/fsl_otg.c
++++ b/drivers/usb/otg/fsl_otg.c
+@@ -690,9 +690,16 @@ static int fsl_otg_set_peripheral(struct otg_transceiver *otg_p,
+ 		return -ENODEV;
+ 
+ 	if (!gadget) {
+-		if (!otg_dev->otg.default_a)
++		/*
++		 * At i.mx platform, we still not implement fully
++		 * OTG.
++		 */
++		/*
++		if (!otg_dev->otg.default_a) {
+ 			otg_p->gadget->ops->vbus_draw(otg_p->gadget, 0);
+-		usb_gadget_vbus_disconnect(otg_dev->otg.gadget);
++			usb_gadget_vbus_disconnect(otg_dev->otg.gadget);
++		}
++		*/
+ 		otg_dev->otg.gadget = 0;
+ 		otg_dev->fsm.b_bus_req = 0;
+ 		pdata->port_enables = 0;
+-- 
+1.7.7.4
+

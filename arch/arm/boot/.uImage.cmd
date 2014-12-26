@@ -1,0 +1,1 @@
+cmd_arch/arm/boot/uImage := /bin/bash /opt/freescale_sdk/L3.0.35_4.1.0_130816_source/ltib/rpm/BUILD/linux-3.0.35/scripts/mkuboot.sh -A arm -O linux -T kernel -C none -a 0x10008000 -e 0x10008000 -n 'Linux-3.0.35-2666-gbdde708-g060f119' -d arch/arm/boot/zImage arch/arm/boot/uImage

@@ -1,0 +1,71 @@
+From 91187edd727cbfc54b19726e5bcd2ed378df758d Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Mon, 22 Jul 2013 12:05:24 +0800
+Subject: [PATCH 2655/2666] ENGR00272022 msl-mx6: usb: wait PHY clock stable
+ explicitly
+
+At mx6, if usb wakeup is not enabled, the PHY's power
+will be off during the system suspend, so the dp/dm
+will be unknown after the system resumes, it may wake up
+controller at some boards since dp/dm's status satisfies
+wake up condition. If the controller is waken up, the
+PHCD will be cleared automatically.
+
+According to IC requirement, after PHCD is cleared, we
+need to wait 1ms before clear PHY's clock gate to wait
+PHY's clock stable. At above condition, the PHCD is cleared
+automatically, it may less than 1ms before we clear
+PHY's clock gate, then, software operation to clear PHY's
+clock gate will be useless. At this case, the PHY will works
+abnormal, and cause the controller hang when we write some registers
+(eg, portsc).
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ arch/arm/mach-mx6/usb_dr.c |    8 +++++---
+ arch/arm/mach-mx6/usb_h1.c |    8 +++++---
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/usb_dr.c b/arch/arm/mach-mx6/usb_dr.c
+index e6496bc..c02158b4 100644
+--- a/arch/arm/mach-mx6/usb_dr.c
++++ b/arch/arm/mach-mx6/usb_dr.c
+@@ -248,10 +248,12 @@ static void enter_phy_lowpower_suspend(struct fsl_usb2_platform_data *pdata, boo
+ 		usbotg_internal_phy_clock_gate(false);
+ 
+ 	} else {
+-		if (UOG_PORTSC1 & PORTSC_PHCD) {
++		if (UOG_PORTSC1 & PORTSC_PHCD)
+ 			UOG_PORTSC1 &= ~PORTSC_PHCD;
+-			mdelay(1);
+-		}
++
++		/* Wait PHY clock stable */
++		mdelay(1);
++
+ 		usbotg_internal_phy_clock_gate(true);
+ 		tmp = (BM_USBPHY_PWD_TXPWDFS
+ 			| BM_USBPHY_PWD_TXPWDIBIAS
+diff --git a/arch/arm/mach-mx6/usb_h1.c b/arch/arm/mach-mx6/usb_h1.c
+index 6de99d9..a95bcde 100644
+--- a/arch/arm/mach-mx6/usb_h1.c
++++ b/arch/arm/mach-mx6/usb_h1.c
+@@ -332,10 +332,12 @@ static void _phy_lowpower_suspend(struct fsl_usb2_platform_data *pdata, bool ena
+ 
+ 		usbh1_internal_phy_clock_gate(false);
+ 	} else {
+-		if (UH1_PORTSC1 & PORTSC_PHCD) {
++		if (UH1_PORTSC1 & PORTSC_PHCD)
+ 			UH1_PORTSC1 &= ~PORTSC_PHCD;
+-			mdelay(1);
+-		}
++
++		/* Wait PHY clock stable */
++		mdelay(1);
++
+ 		usbh1_internal_phy_clock_gate(true);
+ 		tmp = (BM_USBPHY_PWD_TXPWDFS
+ 			| BM_USBPHY_PWD_TXPWDIBIAS
+-- 
+1.7.7.4
+

@@ -1,0 +1,65 @@
+From a8d2f14f4c9b7299f6b326345a7c89658a5de150 Mon Sep 17 00:00:00 2001
+From: Liu Ying <Ying.Liu@freescale.com>
+Date: Wed, 10 Jul 2013 11:27:28 +0800
+Subject: [PATCH 2614/2666] ENGR00255920-2 mxc vout:wait for 2 vsyncs when
+ streamoff
+
+Some expiring video buffers may have been rendered to
+display triple buffers for display. The relevant triple
+buffers are set to be ready and depend on the display
+hardware engine to switch them to be active on screen in
+turn automatically. So, we need to wait for at least 2
+vsyncs to make sure all of the expiring video buffers be
+shown on display already.
+
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+(cherry picked from commit f7479db43eb2fa9bdb03c1ce99239a3136345105)
+---
+ drivers/media/video/mxc/output/mxc_vout.c |   24 ++++++++++++++++++++++++
+ 1 files changed, 24 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/media/video/mxc/output/mxc_vout.c b/drivers/media/video/mxc/output/mxc_vout.c
+index 622042c..187145d 100644
+--- a/drivers/media/video/mxc/output/mxc_vout.c
++++ b/drivers/media/video/mxc/output/mxc_vout.c
+@@ -1841,6 +1841,22 @@ err:
+ 	return ret;
+ }
+ 
++static inline void wait_for_vsync(struct mxc_vout_output *vout)
++{
++	struct fb_info *fbi = vout->fbi;
++	mm_segment_t old_fs;
++
++	if (fbi->fbops->fb_ioctl) {
++		old_fs = get_fs();
++		set_fs(KERNEL_DS);
++		fbi->fbops->fb_ioctl(fbi, MXCFB_WAIT_FOR_VSYNC,
++				(unsigned long)NULL);
++		set_fs(old_fs);
++	}
++
++	return;
++}
++
+ static void release_disp_output(struct mxc_vout_output *vout)
+ {
+ 	struct fb_info *fbi = vout->fbi;
+@@ -1926,6 +1942,14 @@ static int mxc_vidioc_streamoff(struct file *file, void *fh,
+ 
+ 		hrtimer_cancel(&vout->timer);
+ 
++		/*
++		 * Wait for 2 vsyncs to make sure
++		 * frames are drained on triple
++		 * buffer.
++		 */
++		wait_for_vsync(vout);
++		wait_for_vsync(vout);
++
+ 		release_disp_output(vout);
+ 
+ 		ret = videobuf_streamoff(&vout->vbq);
+-- 
+1.7.7.4
+

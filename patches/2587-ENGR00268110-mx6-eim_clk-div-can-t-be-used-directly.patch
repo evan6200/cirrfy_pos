@@ -1,0 +1,51 @@
+From 1eff5b4c44263ea28f6ac65f9065abd619ab0d5f Mon Sep 17 00:00:00 2001
+From: Anson Huang <b20788@freescale.com>
+Date: Fri, 21 Jun 2013 08:41:27 +0800
+Subject: [PATCH 2587/2666] ENGR00268110 mx6: eim_clk div can't be used
+ directly
+
+1. eim_clk's divider is bit[22:20], when read from this register,
+the value of bit22 and bit21 are the opposite value of actual
+value, so we need to handle it in clk get rate function of eim_clk.
+
+2. For VPU running at 352M case on i.MX6Q, we need to set eim
+clk to 176M, as its parent's freq is 352M. Otherwise, it is set
+to 198M.
+
+Signed-off-by: Anson Huang <b20788@freescale.com>
+---
+ arch/arm/mach-mx6/clock.c |   11 +++++++----
+ 1 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/mach-mx6/clock.c b/arch/arm/mach-mx6/clock.c
+index 9f6e49e..4480d77 100644
+--- a/arch/arm/mach-mx6/clock.c
++++ b/arch/arm/mach-mx6/clock.c
+@@ -3934,8 +3934,8 @@ static unsigned long _clk_emi_get_rate(struct clk *clk)
+ 	u32 reg, div;
+ 
+ 	reg = __raw_readl(MXC_CCM_CSCMR1);
+-	div = ((reg & MXC_CCM_CSCMR1_ACLK_EMI_PODF_MASK) >>
+-			MXC_CCM_CSCMR1_ACLK_EMI_PODF_OFFSET) + 1;
++	div = (((reg & MXC_CCM_CSCMR1_ACLK_EMI_PODF_MASK) >>
++			MXC_CCM_CSCMR1_ACLK_EMI_PODF_OFFSET)^0x6) + 1;
+ 
+ 	return clk_get_rate(clk->parent) / div;
+ }
+@@ -5504,8 +5504,11 @@ int __init mx6_clocks_init(unsigned long ckil, unsigned long osc,
+ 	clk_set_parent(&ipu2_di_clk[1], &pll5_video_main_clk);
+ 
+ 	clk_set_parent(&emi_clk, &pll2_pfd_400M);
+-	clk_set_rate(&emi_clk, 200000000);
+-
++#ifdef CONFIG_MX6_VPU_352M
++	clk_set_rate(&emi_clk, 176000000);
++#else
++	clk_set_rate(&emi_clk, 198000000);
++#endif
+ 	/*
+ 	* on mx6dl, 2d core clock sources from 3d shader core clock,
+ 	* but 3d shader clock multiplexer of mx6dl is different from
+-- 
+1.7.7.4
+

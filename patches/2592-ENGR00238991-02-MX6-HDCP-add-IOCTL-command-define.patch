@@ -1,0 +1,38 @@
+From 64f1fb5245bc83cb3143cfbc8efbdfe03bf246f9 Mon Sep 17 00:00:00 2001
+From: Sandor <R01008@freescale.com>
+Date: Sat, 27 Apr 2013 10:33:34 +0800
+Subject: [PATCH 2592/2666] ENGR00238991-02 MX6 HDCP add IOCTL command define
+
+Add HDCP IOCTL command define
+
+Signed-off-by: Sandor <R01008@freescale.com>
+---
+ arch/arm/plat-mxc/include/mach/mxc_hdmi.h |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/plat-mxc/include/mach/mxc_hdmi.h b/arch/arm/plat-mxc/include/mach/mxc_hdmi.h
+index 60946ca..94f7638 100644
+--- a/arch/arm/plat-mxc/include/mach/mxc_hdmi.h
++++ b/arch/arm/plat-mxc/include/mach/mxc_hdmi.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2011-2012 Freescale Semiconductor, Inc.
++ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc.
+  */
+ 
+ /*
+@@ -1085,4 +1085,11 @@ enum {
+ 
+ };
+ 
++/* IOCTL commands */
++#define HDMI_IOC_MAGIC  'H'
++
++#define HDMI_IOC_GET_RESOURCE	_IO(HDMI_IOC_MAGIC, 0)
++#define HDMI_IOC_GET_CPU_TYPE	_IO(HDMI_IOC_MAGIC, 1)
++
++
+ #endif /* __MXC_HDMI_H__ */
+-- 
+1.7.7.4
+

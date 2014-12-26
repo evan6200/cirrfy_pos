@@ -1,0 +1,66 @@
+From b734dcca3795481911bbcfd590f0ffca150edf1d Mon Sep 17 00:00:00 2001
+From: Peter Chen <peter.chen@freescale.com>
+Date: Wed, 17 Jul 2013 16:05:17 +0800
+Subject: [PATCH 2648/2666] ENGR00271566 usb: otg: comment otg_statemachine
+ which we do not need
+
+We have not implemented fully OTG support, so we can't call
+otg_statemachine since the state machine may incorrect at current
+dual-role switch design.
+At existed code, it will call otg_statemachine, in fact, it doesn't
+need. Besides, it causes one kernel dump at Sabreauto board due
+to it calls gpio API at spin lock, but at Sabreauto board the
+USB power GPIO is expanded by MAX7310 which calls i2c read/write
+and will schedule itself.
+
+Signed-off-by: Peter Chen <peter.chen@freescale.com>
+---
+ drivers/usb/otg/fsl_otg.c |    3 ---
+ drivers/usb/otg/otg_fsm.c |    4 +++-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/otg/fsl_otg.c b/drivers/usb/otg/fsl_otg.c
+index 7205f37..abf11b8 100755
+--- a/drivers/usb/otg/fsl_otg.c
++++ b/drivers/usb/otg/fsl_otg.c
+@@ -666,8 +666,6 @@ static int fsl_otg_set_host(struct otg_transceiver *otg_p, struct usb_bus *host)
+ 
+ 	otg_dev->host_working = 0;
+ 
+-	otg_statemachine(&otg_dev->fsm);
+-
+ 	return 0;
+ }
+ 
+@@ -699,7 +697,6 @@ static int fsl_otg_set_peripheral(struct otg_transceiver *otg_p,
+ 		otg_dev->otg.gadget = 0;
+ 		otg_dev->fsm.b_bus_req = 0;
+ 		pdata->port_enables = 0;
+-		otg_statemachine(&otg_dev->fsm);
+ 		return 0;
+ 	}
+ 	pdata->port_enables = 1;
+diff --git a/drivers/usb/otg/otg_fsm.c b/drivers/usb/otg/otg_fsm.c
+index 9e16afe..85b7148 100755
+--- a/drivers/usb/otg/otg_fsm.c
++++ b/drivers/usb/otg/otg_fsm.c
+@@ -1,6 +1,6 @@
+ /* OTG Finite State Machine from OTG spec
+  *
+- * Copyright (C) 2006-2011 Freescale Semiconductor, Inc.
++ * Copyright (C) 2006-2013 Freescale Semiconductor, Inc.
+  *
+  * Author: 	Li Yang <LeoLi@freescale.com>
+  * 		Jerry Huang <Chang-Ming.Huang@freescale.com>
+@@ -254,6 +254,8 @@ int otg_statemachine(struct otg_fsm *fsm)
+ 	enum usb_otg_state state;
+ 	unsigned long flags;
+ 
++	return 0;
++
+ 	spin_lock_irqsave(&fsm->lock, flags);
+ 
+ 	state = fsm->transceiver->state;
+-- 
+1.7.7.4
+

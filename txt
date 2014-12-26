@@ -1,0 +1,663 @@
+./.config.old:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./config_3D_WI_AUD_NTFS.20140813:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./config.2014.07.15:CONFIG_MACH_MX6Q_CIRRFYPOS=y
+./.config.20140212:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./include/generated/mach-types.h:#define MACH_TYPE_MX6Q_CIRRFY          5000
+./include/generated/mach-types.h:#ifdef CONFIG_MACH_MX6Q_CIRRFYPOS
+./include/generated/mach-types.h:#  define machine_arch_type	MACH_TYPE_MX6Q_CIRRFY
+./include/generated/mach-types.h:# define machine_is_mx6q_cirrfypos()	(machine_arch_type == MACH_TYPE_MX6Q_CIRRFY)
+./arch/tools/mach-types:mx6d_cirrfypos		MACH_MX6D_CIRRFYPOS     MX6D_CIRRFY		5000
+./arch/arm/configs/imx6_cirrfy_defconfig:CONFIG_MACH_MX6Q_CIRRFYPOS=y
+./arch/arm/tools/mach-types:mx6q_cirrfypos          MACH_MX6Q_CIRRFYPOS     MX6Q_CIRRFY             5000
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_USR_DEF_GRN_LED	IMX_GPIO_NR(1, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_USR_DEF_RED_LED	IMX_GPIO_NR(1, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_VOLUME_UP	IMX_GPIO_NR(1, 4)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_VOLUME_DN	IMX_GPIO_NR(1, 5)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_MICROPHONE_DET	IMX_GPIO_NR(1, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CSI0_PWN	IMX_GPIO_NR(1, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CSI0_RST	IMX_GPIO_NR(1, 17)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_ACCL_INT	IMX_GPIO_NR(1, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_MIPICSI_PWN	IMX_GPIO_NR(1, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_MIPICSI_RST	IMX_GPIO_NR(1, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_RGMII_RST	IMX_GPIO_NR(1, 25)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_RGMII_INT	IMX_GPIO_NR(1, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_UOK_B	IMX_GPIO_NR(1, 27)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_USBH1_PWR_EN	IMX_GPIO_NR(1, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DISP0_PWR_EN	IMX_GPIO_NR(1, 30)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_SD3_CD		IMX_GPIO_NR(2, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_SD3_WP		IMX_GPIO_NR(2, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_SD2_CD		IMX_GPIO_NR(2, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_SD2_WP		IMX_GPIO_NR(2, 3)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_DOK_B	IMX_GPIO_NR(2, 24)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_GPS_RESET	IMX_GPIO_NR(2, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_SENSOR_EN	IMX_GPIO_NR(2, 31)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_GPS_EN	IMX_GPIO_NR(3, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DISP0_RST_B	IMX_GPIO_NR(3, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_ALS_INT		IMX_GPIO_NR(3, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_CHG_2_B	IMX_GPIO_NR(3, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_FLT_2_B	IMX_GPIO_NR(3, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_BAR0_INT	IMX_GPIO_NR(3, 15)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_eCOMPASS_INT	IMX_GPIO_NR(3, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_GPS_PPS		IMX_GPIO_NR(3, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_PCIE_PWR_EN	IMX_GPIO_NR(3, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_USB_OTG_PWR	IMX_GPIO_NR(3, 22)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_USB_H1_PWR	IMX_GPIO_NR(1, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_CHG_1_B	IMX_GPIO_NR(3, 23)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_TS_INT		IMX_GPIO_NR(3, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DISP0_RD	IMX_GPIO_NR(3, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_POWER_OFF	IMX_GPIO_NR(3, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CAN1_STBY	IMX_GPIO_NR(4, 5)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_ECSPI1_CS0  IMX_GPIO_NR(4, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CODEC_PWR_EN	IMX_GPIO_NR(4, 10)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_HDMI_CEC_IN	IMX_GPIO_NR(4, 11)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_PCIE_DIS_B	IMX_GPIO_NR(4, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DI0_D0_CS	IMX_GPIO_NR(5, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_FLT_1_B	IMX_GPIO_NR(5, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_PCIE_WAKE_B	IMX_GPIO_NR(5, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CAP_TCH_INT1	IMX_GPIO_NR(6, 7)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CAP_TCH_INT0	IMX_GPIO_NR(6, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DISP_RST_B	IMX_GPIO_NR(6, 11)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DISP_PWR_EN	IMX_GPIO_NR(6, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CABC_EN0	IMX_GPIO_NR(6, 15)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CABC_EN1	IMX_GPIO_NR(6, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_AUX_3V15_EN	IMX_GPIO_NR(6, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DISP0_WR_REVB	IMX_GPIO_NR(6, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_AUX_5V_EN	IMX_GPIO_NR(6, 10)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_DI1_D0_CS	IMX_GPIO_NR(6, 31)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_HEADPHONE_DET	IMX_GPIO_NR(7, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_PCIE_RST_B_REVB	IMX_GPIO_NR(7, 12)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_PMIC_INT_B	IMX_GPIO_NR(7, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_PFUZE_INT	IMX_GPIO_NR(7, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_0	IMX_GPIO_NR(2, 22)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_1	IMX_GPIO_NR(3, 10)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_2	IMX_GPIO_NR(3, 12)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_3	IMX_GPIO_NR(3, 11)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_4	IMX_GPIO_NR(2, 27)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_5	IMX_GPIO_NR(2, 30)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_6	IMX_GPIO_NR(2, 23)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_7	IMX_GPIO_NR(2, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_8	IMX_GPIO_NR(2, 24)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_9	IMX_GPIO_NR(3, 15)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_10	IMX_GPIO_NR(3, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_11	IMX_GPIO_NR(3, 23)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_12	IMX_GPIO_NR(3, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_13	IMX_GPIO_NR(3, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_14	IMX_GPIO_NR(3, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDDO_15	IMX_GPIO_NR(5, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_GDCLK	IMX_GPIO_NR(2, 17)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_GDSP	IMX_GPIO_NR(2, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_GDOE	IMX_GPIO_NR(6, 6)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_GDRL	IMX_GPIO_NR(5, 4)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDCLK	IMX_GPIO_NR(3, 31)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDOEZ	IMX_GPIO_NR(3, 30)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDOED	IMX_GPIO_NR(3, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDOE	IMX_GPIO_NR(3, 27)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDLE	IMX_GPIO_NR(3, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDCLKN	IMX_GPIO_NR(3, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDSHR	IMX_GPIO_NR(2, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PWRCOM	IMX_GPIO_NR(2, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PWRSTAT	IMX_GPIO_NR(2, 21)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PWRCTRL0	IMX_GPIO_NR(2, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PWRCTRL1	IMX_GPIO_NR(2, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PWRCTRL2	IMX_GPIO_NR(2, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PWRCTRL3	IMX_GPIO_NR(3, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_BDR0	IMX_GPIO_NR(3, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_BDR1	IMX_GPIO_NR(3, 3)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDCE0	IMX_GPIO_NR(3, 4)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDCE1	IMX_GPIO_NR(3, 5)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDCE2	IMX_GPIO_NR(3, 6)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDCE3	IMX_GPIO_NR(3, 7)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_SDCE4	IMX_GPIO_NR(3, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PMIC_WAKE	IMX_GPIO_NR(3, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_PMIC_INT	IMX_GPIO_NR(2, 25)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_EPDC_VCOM	IMX_GPIO_NR(3, 17)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_NOW	IMX_GPIO_NR(1, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_CHARGE_DONE	IMX_GPIO_NR(1, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_ELAN_CE		IMX_GPIO_NR(2, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_ELAN_RST	IMX_GPIO_NR(3, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFYPOS_ELAN_INT	IMX_GPIO_NR(3, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:        if (gpio_request(CIRRFYPOS_MICROPHONE_DET, "rgmii_rst"))
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:                printk("cirrfypos Reset RGMII , CIRRFYPOS_MICROPHONE_DET \n");      
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:                gpio_direction_output(CIRRFYPOS_MICROPHONE_DET, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:        	gpio_direction_output(CIRRFYPOS_MICROPHONE_DET, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	        gpio_export(CIRRFYPOS_MICROPHONE_DET, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.cd_gpio = CIRRFYPOS_SD2_CD,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.wp_gpio = CIRRFYPOS_SD2_WP,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:#define CIRRFY_SD2_CD           IMX_GPIO_NR(1,4) 
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:        .cd_gpio = CIRRFY_SD2_CD, 
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.cd_gpio = CIRRFYPOS_SD3_CD,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.wp_gpio = CIRRFYPOS_SD3_WP,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	CIRRFYPOS_ECSPI1_CS0,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.hp_gpio = CIRRFYPOS_HEADPHONE_DET,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_CODEC_PWR_EN, "aud_4v2");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_CODEC_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_CODEC_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.hp_gpio = CIRRFYPOS_HEADPHONE_DET,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.mic_gpio = CIRRFYPOS_MICROPHONE_DET,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.gpio			= CIRRFYPOS_CODEC_PWR_EN,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_CSI0_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_CSI0_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_CSI0_RST, "cam-reset");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_CSI0_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_CSI0_PWN, "cam-pwdn");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_CSI0_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_CSI0_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_CSI0_RST, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_CSI0_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_CSI0_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_MIPICSI_RST, "cam-reset");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_MIPICSI_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_MIPICSI_PWN, "cam-pwdn");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_MIPICSI_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_MIPICSI_RST, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_MIPICSI_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.gpio_pmic_pwrgood = CIRRFYPOS_EPDC_PWRSTAT,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.gpio_pmic_vcom_ctrl = CIRRFYPOS_EPDC_VCOM,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.gpio_pmic_wakeup = CIRRFYPOS_EPDC_PMIC_WAKE,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.gpio_pmic_v3p3 = CIRRFYPOS_EPDC_PWRCTRL0,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.gpio_pmic_intr = CIRRFYPOS_EPDC_PMIC_INT,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		.irq = gpio_to_irq(CIRRFYPOS_CAP_TCH_INT0),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		.irq = gpio_to_irq(CIRRFYPOS_TS_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		.irq = gpio_to_irq(CIRRFYPOS_CAP_TCH_INT1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		.irq = gpio_to_irq(CIRRFYPOS_eCOMPASS_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		.irq  = gpio_to_irq(CIRRFYPOS_ALS_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		.irq = gpio_to_irq(CIRRFYPOS_ELAN_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_0, "epdc_d0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_1, "epdc_d1");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_2, "epdc_d2");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_3, "epdc_d3");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_4, "epdc_d4");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_5, "epdc_d5");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_6, "epdc_d6");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_7, "epdc_d7");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_GDCLK, "epdc_gdclk");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_GDSP, "epdc_gdsp");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_GDOE, "epdc_gdoe");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_GDRL, "epdc_gdrl");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCLK, "epdc_sdclk");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDOE, "epdc_sdoe");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDLE, "epdc_sdle");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDSHR, "epdc_sdshr");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_BDR0, "epdc_bdr0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCE0, "epdc_sdce0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCE1, "epdc_sdce1");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCE2, "epdc_sdce2");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_3);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_4);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_5);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_6);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDDO_7);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_GDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_GDSP);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_GDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_GDRL);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDLE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDSHR);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_BDR0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDCE0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDCE1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_EPDC_SDCE2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_3);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_4);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_5);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_6);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_7);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_GDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_GDSP);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_GDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_GDRL);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDLE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDSHR);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_BDR0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDCE0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDCE1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_EPDC_SDCE2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_1, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_2, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_3, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_4, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_5, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_6, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_7, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_GDCLK, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_GDSP, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_GDOE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_GDRL, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDCLK, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDOE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDLE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDSHR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_BDR0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDCE0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDCE1, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_EPDC_SDCE2, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_USB_OTG_PWR, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_USB_OTG_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_USB_H1_PWR, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_USB_H1_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret = gpio_request(CIRRFYPOS_USB_OTG_PWR, "usb-pwr");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		pr_err("failed to get GPIO CIRRFYPOS_USB_OTG_PWR: %d\n",
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_USB_OTG_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret = gpio_request(CIRRFYPOS_USB_H1_PWR, "usb-h1-pwr");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		pr_err("failed to get GPIO CIRRFYPOS_USB_H1_PWR: %d\n",
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_USB_H1_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_CAN1_STBY, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_set_value(CIRRFYPOS_CAN1_STBY, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_DISP_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_DISP_RST_B, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_DISP_RST_B, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_DISP_RST_B, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.dok = CIRRFYPOS_CHARGE_DOK_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.uok = CIRRFYPOS_CHARGE_UOK_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.chg = CIRRFYPOS_CHARGE_CHG_1_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.flt = CIRRFYPOS_CHARGE_FLT_1_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_AUX_5V_EN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_AUX_5V_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_PCIE_PWR_EN, "pcie_3v3_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_PCIE_PWR_EN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_PCIE_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_PCIE_PWR_EN);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_PCIE_RST_B_REVB, "pcie_reset_rebB");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_PCIE_RST_B_REVB, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_PCIE_RST_B_REVB, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_PCIE_RST_B_REVB);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_AUX_3V15_EN, "aux_3v15_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_AUX_3V15_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_AUX_3V15_EN, on);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_AUX_3V15_EN);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_GPS_EN, "gps_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_GPS_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_GPS_EN, on);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_free(CIRRFYPOS_GPS_EN);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~: * GPIO_LED(CIRRFYPOS_CHARGE_DONE, "chg_detect", 0, 1, "ac-online"),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	GPIO_LED(CIRRFYPOS_CHARGE_NOW, "chg_now_led", 0, 1,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	GPIO_LED(CIRRFYPOS_CHARGE_DONE, "chg_done_led", 0, 1,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	GPIO_BUTTON(CIRRFYPOS_VOLUME_UP, KEY_VOLUMEUP, 1, "volume-up", 0, 1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	GPIO_BUTTON(CIRRFYPOS_VOLUME_DN, KEY_VOLUMEDOWN, 1, "volume-down", 0, 1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	GPIO_BUTTON(CIRRFYPOS_POWER_OFF, KEY_POWER, 1, "power", 1, 1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.pcie_pwr_en	= CIRRFYPOS_PCIE_PWR_EN,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.pcie_rst	= CIRRFYPOS_PCIE_RST_B_REVB,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.pcie_wake_up	= CIRRFYPOS_PCIE_WAKE_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	.pcie_dis	= CIRRFYPOS_PCIE_DIS_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	ret = gpio_request(CIRRFYPOS_PFUZE_INT, "pFUZE-int");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_input(CIRRFYPOS_PFUZE_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		mx6q_sabresd_init_pfuze100(CIRRFYPOS_PFUZE_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_CABC_EN0, "cabc-en0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_CABC_EN0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_CABC_EN1, "cabc-en1");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_CABC_EN1, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_SENSOR_EN, "sensor-en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_SENSOR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_eCOMPASS_INT, "ecompass-int");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_eCOMPASS_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_ALS_INT, "als-int");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_input(CIRRFYPOS_ALS_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_request(CIRRFYPOS_AUX_5V_EN, "aux_5v_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_direction_output(CIRRFYPOS_AUX_5V_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:	gpio_set_value(CIRRFYPOS_AUX_5V_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_request(CIRRFYPOS_ELAN_INT, "elan-interrupt");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_input(CIRRFYPOS_ELAN_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_request(CIRRFYPOS_ELAN_CE, "elan-cs");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_output(CIRRFYPOS_ELAN_CE, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_output(CIRRFYPOS_ELAN_CE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_request(CIRRFYPOS_ELAN_RST, "elan-rst");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_output(CIRRFYPOS_ELAN_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_output(CIRRFYPOS_ELAN_RST, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_output(CIRRFYPOS_ELAN_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:		gpio_direction_output(CIRRFYPOS_ELAN_CE, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~: * initialize __mach_desc_MX6Q_CIRRFYPOS data structure.
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~://MACHINE_START(MX6Q_CIRRFYPOS, "Freescale i.MX 6Quad/DualLite/Solo Sabre-SD Board")
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c~:MACHINE_START(MX6Q_CIRRFY, "Freescale i.MX 6Quad Cirrfy POS Board")
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_USR_DEF_GRN_LED	IMX_GPIO_NR(1, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_USR_DEF_RED_LED	IMX_GPIO_NR(1, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_VOLUME_UP	IMX_GPIO_NR(1, 4)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_VOLUME_DN	IMX_GPIO_NR(1, 5)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_MICROPHONE_DET	IMX_GPIO_NR(1, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CSI0_PWN	IMX_GPIO_NR(1, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CSI0_RST	IMX_GPIO_NR(1, 17)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_ACCL_INT	IMX_GPIO_NR(1, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_MIPICSI_PWN	IMX_GPIO_NR(1, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_MIPICSI_RST	IMX_GPIO_NR(1, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_RGMII_RST	IMX_GPIO_NR(1, 25)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_RGMII_INT	IMX_GPIO_NR(1, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_UOK_B	IMX_GPIO_NR(1, 27)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_USBH1_PWR_EN	IMX_GPIO_NR(1, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DISP0_PWR_EN	IMX_GPIO_NR(1, 30)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_SD3_CD		IMX_GPIO_NR(2, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_SD3_WP		IMX_GPIO_NR(2, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_SD2_CD		IMX_GPIO_NR(2, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_SD2_WP		IMX_GPIO_NR(2, 3)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_DOK_B	IMX_GPIO_NR(2, 24)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_GPS_RESET	IMX_GPIO_NR(2, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_SENSOR_EN	IMX_GPIO_NR(2, 31)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_GPS_EN	IMX_GPIO_NR(3, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DISP0_RST_B	IMX_GPIO_NR(3, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_ALS_INT		IMX_GPIO_NR(3, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_CHG_2_B	IMX_GPIO_NR(3, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_FLT_2_B	IMX_GPIO_NR(3, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_BAR0_INT	IMX_GPIO_NR(3, 15)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_eCOMPASS_INT	IMX_GPIO_NR(3, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_GPS_PPS		IMX_GPIO_NR(3, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_PCIE_PWR_EN	IMX_GPIO_NR(3, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_USB_OTG_PWR	IMX_GPIO_NR(3, 22)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_USB_H1_PWR	IMX_GPIO_NR(1, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_CHG_1_B	IMX_GPIO_NR(3, 23)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_TS_INT		IMX_GPIO_NR(3, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DISP0_RD	IMX_GPIO_NR(3, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_POWER_OFF	IMX_GPIO_NR(3, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CAN1_STBY	IMX_GPIO_NR(4, 5)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_ECSPI1_CS0  IMX_GPIO_NR(4, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CODEC_PWR_EN	IMX_GPIO_NR(4, 10)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_HDMI_CEC_IN	IMX_GPIO_NR(4, 11)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_PCIE_DIS_B	IMX_GPIO_NR(4, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DI0_D0_CS	IMX_GPIO_NR(5, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_FLT_1_B	IMX_GPIO_NR(5, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_PCIE_WAKE_B	IMX_GPIO_NR(5, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CAP_TCH_INT1	IMX_GPIO_NR(6, 7)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CAP_TCH_INT0	IMX_GPIO_NR(6, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DISP_RST_B	IMX_GPIO_NR(6, 11)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DISP_PWR_EN	IMX_GPIO_NR(6, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CABC_EN0	IMX_GPIO_NR(6, 15)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CABC_EN1	IMX_GPIO_NR(6, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_AUX_3V15_EN	IMX_GPIO_NR(6, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DISP0_WR_REVB	IMX_GPIO_NR(6, 9)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_AUX_5V_EN	IMX_GPIO_NR(6, 10)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_DI1_D0_CS	IMX_GPIO_NR(6, 31)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_HEADPHONE_DET	IMX_GPIO_NR(7, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_PCIE_RST_B_REVB	IMX_GPIO_NR(7, 12)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_PMIC_INT_B	IMX_GPIO_NR(7, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_PFUZE_INT	IMX_GPIO_NR(7, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_0	IMX_GPIO_NR(2, 22)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_1	IMX_GPIO_NR(3, 10)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_2	IMX_GPIO_NR(3, 12)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_3	IMX_GPIO_NR(3, 11)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_4	IMX_GPIO_NR(2, 27)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_5	IMX_GPIO_NR(2, 30)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_6	IMX_GPIO_NR(2, 23)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_7	IMX_GPIO_NR(2, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_8	IMX_GPIO_NR(2, 24)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_9	IMX_GPIO_NR(3, 15)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_10	IMX_GPIO_NR(3, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_11	IMX_GPIO_NR(3, 23)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_12	IMX_GPIO_NR(3, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_13	IMX_GPIO_NR(3, 13)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_14	IMX_GPIO_NR(3, 14)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDDO_15	IMX_GPIO_NR(5, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_GDCLK	IMX_GPIO_NR(2, 17)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_GDSP	IMX_GPIO_NR(2, 16)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_GDOE	IMX_GPIO_NR(6, 6)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_GDRL	IMX_GPIO_NR(5, 4)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDCLK	IMX_GPIO_NR(3, 31)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDOEZ	IMX_GPIO_NR(3, 30)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDOED	IMX_GPIO_NR(3, 26)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDOE	IMX_GPIO_NR(3, 27)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDLE	IMX_GPIO_NR(3, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDCLKN	IMX_GPIO_NR(3, 0)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDSHR	IMX_GPIO_NR(2, 29)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PWRCOM	IMX_GPIO_NR(2, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PWRSTAT	IMX_GPIO_NR(2, 21)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PWRCTRL0	IMX_GPIO_NR(2, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PWRCTRL1	IMX_GPIO_NR(2, 19)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PWRCTRL2	IMX_GPIO_NR(2, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PWRCTRL3	IMX_GPIO_NR(3, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_BDR0	IMX_GPIO_NR(3, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_BDR1	IMX_GPIO_NR(3, 3)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDCE0	IMX_GPIO_NR(3, 4)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDCE1	IMX_GPIO_NR(3, 5)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDCE2	IMX_GPIO_NR(3, 6)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDCE3	IMX_GPIO_NR(3, 7)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_SDCE4	IMX_GPIO_NR(3, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PMIC_WAKE	IMX_GPIO_NR(3, 20)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_PMIC_INT	IMX_GPIO_NR(2, 25)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_EPDC_VCOM	IMX_GPIO_NR(3, 17)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_NOW	IMX_GPIO_NR(1, 2)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_CHARGE_DONE	IMX_GPIO_NR(1, 1)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_ELAN_CE		IMX_GPIO_NR(2, 18)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_ELAN_RST	IMX_GPIO_NR(3, 8)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFYPOS_ELAN_INT	IMX_GPIO_NR(3, 28)
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:        if (gpio_request(CIRRFYPOS_MICROPHONE_DET, "rgmii_rst"))
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:                printk("cirrfypos Reset RGMII , CIRRFYPOS_MICROPHONE_DET \n");      
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:                gpio_direction_output(CIRRFYPOS_MICROPHONE_DET, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:        	gpio_direction_output(CIRRFYPOS_MICROPHONE_DET, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	        gpio_export(CIRRFYPOS_MICROPHONE_DET, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.cd_gpio = CIRRFYPOS_SD2_CD,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.wp_gpio = CIRRFYPOS_SD2_WP,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:#define CIRRFY_SD2_CD           IMX_GPIO_NR(1,4) 
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:        .cd_gpio = CIRRFY_SD2_CD, 
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.cd_gpio = CIRRFYPOS_SD3_CD,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.wp_gpio = CIRRFYPOS_SD3_WP,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	CIRRFYPOS_ECSPI1_CS0,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.hp_gpio = CIRRFYPOS_HEADPHONE_DET,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_CODEC_PWR_EN, "aud_4v2");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_CODEC_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_CODEC_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.hp_gpio = CIRRFYPOS_HEADPHONE_DET,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.mic_gpio = CIRRFYPOS_MICROPHONE_DET,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.gpio			= CIRRFYPOS_CODEC_PWR_EN,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_CSI0_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_CSI0_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_CSI0_RST, "cam-reset");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_CSI0_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_CSI0_PWN, "cam-pwdn");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_CSI0_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_CSI0_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_CSI0_RST, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_CSI0_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_CSI0_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_MIPICSI_RST, "cam-reset");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_MIPICSI_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_MIPICSI_PWN, "cam-pwdn");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_MIPICSI_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_MIPICSI_RST, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_MIPICSI_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_MIPICSI_PWN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.gpio_pmic_pwrgood = CIRRFYPOS_EPDC_PWRSTAT,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.gpio_pmic_vcom_ctrl = CIRRFYPOS_EPDC_VCOM,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.gpio_pmic_wakeup = CIRRFYPOS_EPDC_PMIC_WAKE,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.gpio_pmic_v3p3 = CIRRFYPOS_EPDC_PWRCTRL0,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.gpio_pmic_intr = CIRRFYPOS_EPDC_PMIC_INT,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		.irq = gpio_to_irq(CIRRFYPOS_CAP_TCH_INT0),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		.irq = gpio_to_irq(CIRRFYPOS_TS_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		.irq = gpio_to_irq(CIRRFYPOS_CAP_TCH_INT1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		.irq = gpio_to_irq(CIRRFYPOS_eCOMPASS_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		.irq  = gpio_to_irq(CIRRFYPOS_ALS_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		.irq = gpio_to_irq(CIRRFYPOS_ELAN_INT),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_0, "epdc_d0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_1, "epdc_d1");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_2, "epdc_d2");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_3, "epdc_d3");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_4, "epdc_d4");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_5, "epdc_d5");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_6, "epdc_d6");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDDO_7, "epdc_d7");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_GDCLK, "epdc_gdclk");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_GDSP, "epdc_gdsp");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_GDOE, "epdc_gdoe");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_GDRL, "epdc_gdrl");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCLK, "epdc_sdclk");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDOE, "epdc_sdoe");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDLE, "epdc_sdle");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDSHR, "epdc_sdshr");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_BDR0, "epdc_bdr0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCE0, "epdc_sdce0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCE1, "epdc_sdce1");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret |= gpio_request(CIRRFYPOS_EPDC_SDCE2, "epdc_sdce2");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_3);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_4);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_5);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_6);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDDO_7);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_GDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_GDSP);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_GDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_GDRL);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDLE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDSHR);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_BDR0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDCE0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDCE1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_EPDC_SDCE2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_3);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_4);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_5);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_6);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDDO_7);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_GDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_GDSP);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_GDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_GDRL);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDCLK);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDOE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDLE);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDSHR);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_BDR0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDCE0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDCE1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_EPDC_SDCE2);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_1, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_2, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_3, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_4, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_5, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_6, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDDO_7, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_GDCLK, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_GDSP, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_GDOE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_GDRL, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDCLK, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDOE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDLE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDSHR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_BDR0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDCE0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDCE1, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_EPDC_SDCE2, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_USB_OTG_PWR, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_USB_OTG_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_USB_H1_PWR, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_USB_H1_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret = gpio_request(CIRRFYPOS_USB_OTG_PWR, "usb-pwr");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		pr_err("failed to get GPIO CIRRFYPOS_USB_OTG_PWR: %d\n",
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_USB_OTG_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret = gpio_request(CIRRFYPOS_USB_H1_PWR, "usb-h1-pwr");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		pr_err("failed to get GPIO CIRRFYPOS_USB_H1_PWR: %d\n",
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_USB_H1_PWR, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_CAN1_STBY, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_set_value(CIRRFYPOS_CAN1_STBY, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_DISP_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_DISP_RST_B, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_DISP_RST_B, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_DISP_RST_B, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.dok = CIRRFYPOS_CHARGE_DOK_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.uok = CIRRFYPOS_CHARGE_UOK_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.chg = CIRRFYPOS_CHARGE_CHG_1_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.flt = CIRRFYPOS_CHARGE_FLT_1_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_AUX_5V_EN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_AUX_5V_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_PCIE_PWR_EN, "pcie_3v3_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_PCIE_PWR_EN, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_PCIE_PWR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_PCIE_PWR_EN);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_PCIE_RST_B_REVB, "pcie_reset_rebB");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_PCIE_RST_B_REVB, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_PCIE_RST_B_REVB, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_PCIE_RST_B_REVB);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_AUX_3V15_EN, "aux_3v15_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_AUX_3V15_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_AUX_3V15_EN, on);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_AUX_3V15_EN);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_GPS_EN, "gps_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_GPS_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_GPS_EN, on);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_free(CIRRFYPOS_GPS_EN);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c: * GPIO_LED(CIRRFYPOS_CHARGE_DONE, "chg_detect", 0, 1, "ac-online"),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	GPIO_LED(CIRRFYPOS_CHARGE_NOW, "chg_now_led", 0, 1,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	GPIO_LED(CIRRFYPOS_CHARGE_DONE, "chg_done_led", 0, 1,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	GPIO_BUTTON(CIRRFYPOS_VOLUME_UP, KEY_VOLUMEUP, 1, "volume-up", 0, 1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	GPIO_BUTTON(CIRRFYPOS_VOLUME_DN, KEY_VOLUMEDOWN, 1, "volume-down", 0, 1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	GPIO_BUTTON(CIRRFYPOS_POWER_OFF, KEY_POWER, 1, "power", 1, 1),
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.pcie_pwr_en	= CIRRFYPOS_PCIE_PWR_EN,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.pcie_rst	= CIRRFYPOS_PCIE_RST_B_REVB,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.pcie_wake_up	= CIRRFYPOS_PCIE_WAKE_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	.pcie_dis	= CIRRFYPOS_PCIE_DIS_B,
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	ret = gpio_request(CIRRFYPOS_PFUZE_INT, "pFUZE-int");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_input(CIRRFYPOS_PFUZE_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		mx6q_sabresd_init_pfuze100(CIRRFYPOS_PFUZE_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_CABC_EN0, "cabc-en0");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_CABC_EN0, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_CABC_EN1, "cabc-en1");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_CABC_EN1, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_SENSOR_EN, "sensor-en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_SENSOR_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_eCOMPASS_INT, "ecompass-int");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_eCOMPASS_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_ALS_INT, "als-int");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_input(CIRRFYPOS_ALS_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_request(CIRRFYPOS_AUX_5V_EN, "aux_5v_en");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_direction_output(CIRRFYPOS_AUX_5V_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:	gpio_set_value(CIRRFYPOS_AUX_5V_EN, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_request(CIRRFYPOS_ELAN_INT, "elan-interrupt");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_input(CIRRFYPOS_ELAN_INT);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_request(CIRRFYPOS_ELAN_CE, "elan-cs");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_output(CIRRFYPOS_ELAN_CE, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_output(CIRRFYPOS_ELAN_CE, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_request(CIRRFYPOS_ELAN_RST, "elan-rst");
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_output(CIRRFYPOS_ELAN_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_output(CIRRFYPOS_ELAN_RST, 0);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_output(CIRRFYPOS_ELAN_RST, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:		gpio_direction_output(CIRRFYPOS_ELAN_CE, 1);
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c: * initialize __mach_desc_MX6Q_CIRRFYPOS data structure.
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c://MACHINE_START(MX6Q_CIRRFYPOS, "Freescale i.MX 6Quad/DualLite/Solo Sabre-SD Board")
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c:MACHINE_START(MX6Q_CIRRFY, "Freescale i.MX 6Quad Cirrfy POS Board")
+./arch/arm/mach-mx6/Makefile:obj-$(CONFIG_MACH_MX6Q_CIRRFYPOS) +=  board-mx6q_cirrfypos.o mx6q_sabresd_pmic_pfuze100.o 
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c.bak:#define CIRRFY_SD2_CD           IMX_GPIO_NR(1,4) 
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c.bak:        .cd_gpio = CIRRFY_SD2_CD, 
+./arch/arm/mach-mx6/board-mx6q_cirrfypos.c.bak:MACHINE_START(MX6Q_CIRRFY, "Freescale i.MX 6Quad Cirrfy POS Board")
+./arch/arm/mach-mx6/board-mx6q_sabresd.c:#define CIRRFY_SUSPEND_RESUME   IMX_GPIO_NR(1, 27)
+./arch/arm/mach-mx6/board-mx6q_sabresd.c:#define CIRRFY_SD2_CD           IMX_GPIO_NR(1,4) //Evan modified 2014.1.2
+./arch/arm/mach-mx6/board-mx6q_sabresd.c:        .cd_gpio = CIRRFY_SD2_CD, //Evan modofied for cirrfy pos
+./arch/arm/mach-mx6/board-mx6q_sabresd.c:	GPIO_BUTTON(CIRRFY_SUSPEND_RESUME, KEY_POWER, 1, "power", 1, 1),
+./arch/arm/mach-mx6/board-mx6q_sabresd.c.bak-:#define CIRRFY_SD2_CD           IMX_GPIO_NR(1,4) //Evan modified 2014.1.2
+./arch/arm/mach-mx6/board-mx6q_sabresd.c.bak-:        .cd_gpio = CIRRFY_SD2_CD, //Evan modofied for cirrfy pos
+./arch/arm/mach-mx6/Kconfig:config MACH_MX6Q_CIRRFYPOS
+./arch/arm/mach-mx6/Kconfig:        bool "Support i.MX 6Dual CIRRFYPOS platform"
+./arch/mach-mx6/Makefile:obj-$(CONFIG_MACH_MX6D_CIRRFYPOS) +=  board-mx6d_cirrfypos.o mx6q_sabresd_pmic_pfuze100.o
+./arch/mach-mx6/Kconfig:config MACH_MX6D_CIRRFYPOS
+./arch/mach-mx6/Kconfig:        bool "Support i.MX 6Dual CIRRFYPOS platform"
+./config_3D_WI_AUD.20140811:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./.config.AUD.pkgen:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./.config.20140212.gpio.wifi.ethernet:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./.config:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./.config.20140214.wifi:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./config20140221.evan.bak:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./2014.0223.kernel/config:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./.config.bak:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set
+./.config.20140213.gpio.wifi.ethernet.sata:# CONFIG_MACH_MX6Q_CIRRFYPOS is not set

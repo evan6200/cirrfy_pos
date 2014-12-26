@@ -1,0 +1,68 @@
+From dec85efac4a82037167576ac1ae7a53a4e89e72f Mon Sep 17 00:00:00 2001
+From: Jason Liu <r64343@freescale.com>
+Date: Sat, 20 Jul 2013 11:23:29 +0800
+Subject: [PATCH 2654/2666] ENGR00271977-2 imx6{s}_defconfig: enable
+ ARM_ERRATA_775420
+
+the ARM core version we are using on the i.MX6 is
+r2p10, thus, we need apply this ARM errata
+
+Signed-off-by: Jason Liu <r64343@freescale.com>
+---
+ arch/arm/configs/imx6_defconfig          |    1 +
+ arch/arm/configs/imx6_updater_defconfig  |    1 +
+ arch/arm/configs/imx6s_defconfig         |    1 +
+ arch/arm/configs/imx6s_updater_defconfig |    1 +
+ 4 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/configs/imx6_defconfig b/arch/arm/configs/imx6_defconfig
+index 7c7797c..da3d25d 100644
+--- a/arch/arm/configs/imx6_defconfig
++++ b/arch/arm/configs/imx6_defconfig
+@@ -381,6 +381,7 @@ CONFIG_ARM_ERRATA_751472=y
+ # CONFIG_ARM_ERRATA_753970 is not set
+ CONFIG_ARM_ERRATA_754322=y
+ # CONFIG_ARM_ERRATA_754327 is not set
++CONFIG_ARM_ERRATA_775420=y
+ CONFIG_ARM_GIC=y
+ 
+ #
+diff --git a/arch/arm/configs/imx6_updater_defconfig b/arch/arm/configs/imx6_updater_defconfig
+index d8bc2b2..2eea527 100644
+--- a/arch/arm/configs/imx6_updater_defconfig
++++ b/arch/arm/configs/imx6_updater_defconfig
+@@ -391,6 +391,7 @@ CONFIG_ARM_ERRATA_751472=y
+ # CONFIG_ARM_ERRATA_753970 is not set
+ CONFIG_ARM_ERRATA_754322=y
+ # CONFIG_ARM_ERRATA_754327 is not set
++CONFIG_ARM_ERRATA_775420=y
+ CONFIG_ARM_GIC=y
+ 
+ #
+diff --git a/arch/arm/configs/imx6s_defconfig b/arch/arm/configs/imx6s_defconfig
+index 1cae046..14e9ba5 100644
+--- a/arch/arm/configs/imx6s_defconfig
++++ b/arch/arm/configs/imx6s_defconfig
+@@ -384,6 +384,7 @@ CONFIG_CPU_HAS_PMU=y
+ CONFIG_ARM_ERRATA_743622=y
+ # CONFIG_ARM_ERRATA_753970 is not set
+ CONFIG_ARM_ERRATA_754322=y
++CONFIG_ARM_ERRATA_775420=y
+ CONFIG_ARM_GIC=y
+ 
+ #
+diff --git a/arch/arm/configs/imx6s_updater_defconfig b/arch/arm/configs/imx6s_updater_defconfig
+index b80f401..3fffe50 100644
+--- a/arch/arm/configs/imx6s_updater_defconfig
++++ b/arch/arm/configs/imx6s_updater_defconfig
+@@ -385,6 +385,7 @@ CONFIG_CPU_HAS_PMU=y
+ CONFIG_ARM_ERRATA_743622=y
+ # CONFIG_ARM_ERRATA_753970 is not set
+ CONFIG_ARM_ERRATA_754322=y
++CONFIG_ARM_ERRATA_775420=y
+ CONFIG_ARM_GIC=y
+ 
+ #
+-- 
+1.7.7.4
+

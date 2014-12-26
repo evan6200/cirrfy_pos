@@ -1,0 +1,19 @@
+  CHK     include/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[1]: `include/generated/mach-types.h' is up to date.
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  Kernel: arch/arm/boot/Image is ready
+  SHIPPED arch/arm/boot/compressed/lib1funcs.S
+  AS      arch/arm/boot/compressed/lib1funcs.o
+  LD      arch/arm/boot/compressed/vmlinux
+  OBJCOPY arch/arm/boot/zImage
+  Kernel: arch/arm/boot/zImage is ready
+  UIMAGE  arch/arm/boot/uImage
+Image Name:   Linux-3.0.35-2666-gbdde708
+Created:      Fri Jan  3 17:36:25 2014
+Image Type:   ARM Linux Kernel Image (uncompressed)
+Data Size:    3909564 Bytes = 3817.93 kB = 3.73 MB
+Load Address: 10008000
+Entry Point:  10008000
+  Image arch/arm/boot/uImage is ready

@@ -1,0 +1,1 @@
+cmd_drivers/dma/built-in.o :=  /opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-multilib-1.0/arm-fsl-linux-gnueabi/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/dma/built-in.o drivers/dma/dmaengine.o drivers/dma/pxp/built-in.o drivers/dma/imx-sdma.o drivers/dma/mxs-dma.o 

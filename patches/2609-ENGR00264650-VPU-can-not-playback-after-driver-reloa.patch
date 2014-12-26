@@ -1,0 +1,62 @@
+From 9720995292f0ce55973b19ffc740115e90352872 Mon Sep 17 00:00:00 2001
+From: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+Date: Wed, 3 Jul 2013 15:20:12 +0800
+Subject: [PATCH 2609/2666] ENGR00264650 VPU can not playback after driver
+ reload
+
+Picked from 3.5.7 branch and removed linux version check
+
+Bug: VPU can not playback after driver reload
+- To reproduce (if VPU is never powered off)
+0. Build VPU driver as a loadable module
+1. Playback
+2. Unload driver
+3. Reload driver
+4. Playback
+
+VPU was blocked in vpu_DecGetInitialInfo.
+
+Root cause:
+VPU is still alive after unload
+
+Solution:
+Reset VPU state before unload
+
+Signed-off-by: Hongzhang Yang <Hongzhang.Yang@freescale.com>
+---
+ drivers/mxc/vpu/mxc_vpu.c |   12 +++++++++++-
+ 1 files changed, 11 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/mxc/vpu/mxc_vpu.c b/drivers/mxc/vpu/mxc_vpu.c
+index 07f6d9d..fa00052 100644
+--- a/drivers/mxc/vpu/mxc_vpu.c
++++ b/drivers/mxc/vpu/mxc_vpu.c
+@@ -258,7 +258,7 @@ static int vpu_open(struct inode *inode, struct file *filp)
+ #ifdef CONFIG_SOC_IMX6Q
+ 		clk_enable(vpu_clk);
+ 		if (READ_REG(BIT_CUR_PC))
+-			printk(KERN_DEBUG "Not power off before vpu open!\n");
++			pr_debug("Not power off before vpu open!\n");
+ 		clk_disable(vpu_clk);
+ #endif
+ 	}
+@@ -1055,6 +1055,16 @@ static void __exit vpu_exit(void)
+ 	vpu_free_dma_buffer(&pic_para_mem);
+ 	vpu_free_dma_buffer(&user_data_mem);
+ 
++	/* reset VPU state */
++	if (!IS_ERR(vpu_regulator))
++		regulator_enable(vpu_regulator);
++	clk_enable(vpu_clk);
++	if (vpu_plat->reset)
++		vpu_plat->reset();
++	clk_disable(vpu_clk);
++	if (!IS_ERR(vpu_regulator))
++		regulator_disable(vpu_regulator);
++
+ 	clk_put(vpu_clk);
+ 
+ 	platform_driver_unregister(&mxcvpu_driver);
+-- 
+1.7.7.4
+

@@ -1,0 +1,46 @@
+From 08c697fd48bb90d48860c31834d56c4fc6c3125e Mon Sep 17 00:00:00 2001
+From: Wayne Zou <b36644@freescale.com>
+Date: Thu, 9 May 2013 12:40:43 +0800
+Subject: [PATCH 2545/2666] ENGR00261928 IPU device: Check invalid parameters
+ for frame width/height
+
+Check invalid parameters for frame width or frame height,
+which might be equal to zero.
+
+Signed-off-by: Wayne Zou <b36644@freescale.com>
+---
+ drivers/mxc/ipu3/ipu_device.c |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/mxc/ipu3/ipu_device.c b/drivers/mxc/ipu3/ipu_device.c
+index 2f90b36..cd49497 100644
+--- a/drivers/mxc/ipu3/ipu_device.c
++++ b/drivers/mxc/ipu3/ipu_device.c
+@@ -680,6 +680,11 @@ static void dump_check_warn(struct device *dev, int warn)
+ 
+ static int set_crop(struct ipu_crop *crop, int width, int height, int fmt)
+ {
++	if ((width == 0) || (height == 0)) {
++		pr_err("Invalid param: width=%d, height=%d\n", width, height);
++		return -EINVAL;
++	}
++
+ 	if ((IPU_PIX_FMT_TILED_NV12 == fmt) ||
+ 		(IPU_PIX_FMT_TILED_NV12F == fmt)) {
+ 		if (crop->w || crop->h) {
+@@ -719,6 +724,12 @@ static int set_crop(struct ipu_crop *crop, int width, int height, int fmt)
+ 		crop->h -= crop->h%8;
+ 	}
+ 
++	if ((crop->w == 0) || (crop->h == 0)) {
++		pr_err("Invalid crop param: crop.w=%d, crop.h=%d\n",
++			crop->w, crop->h);
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+1.7.7.4
+
